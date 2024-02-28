@@ -1,7 +1,11 @@
-#include "client.h"
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+
+namespace client
+{
+	void show();
+}
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +22,8 @@ int main(int argc, char *argv[])
 			break;
 		}
 	}
-	Client w;
-	w.show();
+
+	client::show();
+
 	return a.exec();
 }

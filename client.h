@@ -15,7 +15,11 @@ public:
 	Client(QWidget *parent = nullptr);
 	~Client();
 
+signals:
+	void event_close();
+
 private:
 	Ui::Client *ui;
+	void closeEvent(QCloseEvent*);
 };
 #endif // CLIENT_H
