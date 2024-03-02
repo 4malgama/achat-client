@@ -19,10 +19,23 @@ UI_SOURCES_DIR = ui_s
 
 SOURCES += \
 	main.cpp \
-	client.cpp
+	client.cpp \
+	network/account.cpp \
+	network/network.cpp \
+	network/packet_factory.cpp \
+	network/packets/auth_packet.cpp \
+	network/packets/ipacket.cpp \
+	settings/settings_manager.cpp
 
 HEADERS += \
-	client.h
+	client.h \
+	network/account.h \
+	network/network.h \
+	network/packet_factory.h \
+	network/packets.h \
+	network/packets/auth_packet.h \
+	network/packets/ipacket.h \
+	settings/settings_manager.h
 
 FORMS += \
 	client.ui

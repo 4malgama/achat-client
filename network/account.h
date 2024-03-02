@@ -1,0 +1,24 @@
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
+
+#include "network.h"
+
+class Account : public Network
+{
+	QString token;
+	//TODO Profile Data
+
+public:
+	explicit Account(QObject *parent = nullptr);
+	~Account();
+
+	void start();
+
+private:
+	void readEvent(const IPacket* packet) override;
+	void disconnectEvent() override;
+	void connectedEvent() override;
+	void failConnect() override;
+};
+
+#endif // ACCOUNT_H

@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <settings/settings_manager.h>
 
 namespace client
 {
@@ -10,6 +11,7 @@ namespace client
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
+	QSettings::setDefaultFormat(QSettings::IniFormat);
 
 	qApp->setOrganizationName("Amalgama");
 
@@ -25,5 +27,9 @@ int main(int argc, char *argv[])
 
 	client::show();
 
-	return a.exec();
+	int retCode = a.exec();
+
+	SettingsManager::getInstance().saveAll();
+
+	return retCode;
 }
