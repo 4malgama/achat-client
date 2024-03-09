@@ -47,6 +47,7 @@ public:
 	~Network();
 
 	void setInetAddress(const InetAddress& endPoint);
+	bool isConnected() const;
 
 protected:
 	virtual void readEvent(const IPacket* packet) = 0;

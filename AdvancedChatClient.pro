@@ -25,7 +25,8 @@ SOURCES += \
 	network/packet_factory.cpp \
 	network/packets/auth_packet.cpp \
 	network/packets/ipacket.cpp \
-	settings/settings_manager.cpp
+	settings/settings_manager.cpp \
+	widgets/profile_widget.cpp
 
 HEADERS += \
 	client.h \
@@ -35,10 +36,12 @@ HEADERS += \
 	network/packets.h \
 	network/packets/auth_packet.h \
 	network/packets/ipacket.h \
-	settings/settings_manager.h
+	settings/settings_manager.h \
+	widgets/profile_widget.h
 
 FORMS += \
-	client.ui
+	client.ui \
+	widgets/profile_widget.ui
 
 TRANSLATIONS += \
 	AdvancedChatClient_en_GB.ts

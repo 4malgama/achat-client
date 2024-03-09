@@ -29,6 +29,11 @@ void Network::setInetAddress(const InetAddress &endPoint)
 	inetAddress = endPoint;
 }
 
+bool Network::isConnected() const
+{
+	return connected;
+}
+
 void Network::tryConnect()
 {
 	socket.connectToHost(inetAddress.ip, inetAddress.port);
@@ -82,8 +87,8 @@ void Network::onStateChanged(QAbstractSocket::SocketState state)
 			case QTcpSocket::ConnectedState:
 			{
 				timeoutTimer->stop();
-				connectedEvent();
 				connected = true;
+				connectedEvent();
 				break;
 			}
 			case QTcpSocket::ConnectingState:
@@ -94,8 +99,8 @@ void Network::onStateChanged(QAbstractSocket::SocketState state)
 			{
 				if (connected)
 				{
-					disconnectEvent();
 					connected = false;
+					disconnectEvent();
 				}
 				break;
 			}

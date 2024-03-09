@@ -13,6 +13,7 @@ public:
 	~Account();
 
 	void start();
+	void login(const QString& login, const QString& password);
 
 private:
 	void readEvent(const IPacket* packet) override;

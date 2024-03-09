@@ -25,6 +25,17 @@ void Account::start()
 	tryConnect();
 }
 
+void Account::login(const QString &login, const QString &password)
+{
+	if (isConnected() == false)
+		return;
+
+	AuthPacket packet;
+	packet.login = login;
+
+	send(&packet);
+}
+
 void Account::readEvent(const IPacket* packet)
 {
 
@@ -37,10 +48,7 @@ void Account::disconnectEvent()
 
 void Account::connectedEvent()
 {
-	AuthPacket packet;
-	packet.login = "Amalgama";
-
-	send(&packet);
+	qInfo() << "Connected.";
 }
 
 void Account::failConnect()
