@@ -2,10 +2,35 @@
 #include <QLocale>
 #include <QTranslator>
 #include <settings/settings_manager.h>
+#include <QFile>
 
 namespace client
 {
 	void show();
+}
+
+namespace unload { void free(); }
+
+static void setDarkTheme()
+{
+	QFile styleSheetFile(":/r/themes/dark.qss");
+	if (styleSheetFile.open(QFile::ReadOnly))
+	{
+		QString styleSheet = QLatin1String(styleSheetFile.readAll());
+		qApp->setStyleSheet(styleSheet);
+		styleSheetFile.close();
+	}
+	else
+	{
+		qApp->setStyleSheet("");
+	}
+}
+
+static void _main_end()
+{
+	unload::free();
+
+	SettingsManager::getInstance().saveAll();
 }
 
 int main(int argc, char *argv[])
@@ -25,11 +50,13 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	setDarkTheme();
+
 	client::show();
 
 	int retCode = a.exec();
 
-	SettingsManager::getInstance().saveAll();
+	_main_end();
 
 	return retCode;
 }

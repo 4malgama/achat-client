@@ -1,6 +1,7 @@
 #include "account.h"
 #include "../client.h"
 #include "packets/auth_packet.h"
+#include "../widgets/server_message_widget.h"
 #include <QMessageBox>
 
 
@@ -43,18 +44,19 @@ void Account::readEvent(const IPacket* packet)
 
 void Account::disconnectEvent()
 {
-	QMessageBox::critical(client::window, "Ошибка подключения", "Нет соединения.", QMessageBox::Ok);
+	ServerMessageWidget::exec(client::window, "No connection.");
+	client::window->disableSideButtons();
 }
 
 void Account::connectedEvent()
 {
 	qInfo() << "Connected.";
+	client::window->authWindow();
 }
 
 void Account::failConnect()
 {
-	int btn = QMessageBox::critical(client::window, "Не удается установить соединение с сервером", "Не удается установить соединение с сервером.\nПревышен интервал ожидания для запроса.\nПровертье подключение к интернету.", QMessageBox::Retry | QMessageBox::Close);
-
-	if (btn == QMessageBox::Retry)
-		start();
+	//(new ServerMessageWidget(client::window, "Connect timeout.\nCheck your internet connection.\nTry again."))->exec();
+	ServerMessageWidget::exec(client::window, "Connect timeout.\nCheck your internet connection.\nTry again.");
+	client::window->disableSideButtons();
 }

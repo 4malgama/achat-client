@@ -70,6 +70,12 @@
          <height>30</height>
         </size>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="toolTip">
+        <string>Copy link</string>
+       </property>
        <property name="text">
         <string notr="true">PushButton</string>
        </property>
@@ -96,6 +102,9 @@
          <height>30</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Patronymic</string>
+       </property>
       </widget>
      </item>
      <item row="0" column="1">
@@ -111,6 +120,9 @@
          <width>16777215</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Firstname</string>
        </property>
       </widget>
      </item>
@@ -128,6 +140,12 @@
          <height>30</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+       <property name="toolTip">
+        <string>Surname</string>
+       </property>
       </widget>
      </item>
      <item row="1" column="0" colspan="3">
@@ -144,6 +162,9 @@
          <height>30</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Post</string>
+       </property>
       </widget>
      </item>
      <item row="2" column="0" colspan="3">
@@ -159,6 +180,9 @@
          <width>16777215</width>
          <height>160</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Description</string>
        </property>
       </widget>
      </item>
@@ -192,22 +216,22 @@
       </property>
       <layout class="QFormLayout" name="settingsLayout">
        <property name="horizontalSpacing">
-        <number>20</number>
+        <number>10</number>
        </property>
        <property name="verticalSpacing">
         <number>10</number>
        </property>
        <property name="leftMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>10</number>
+        <number>0</number>
        </property>
       </layout>
      </widget>
@@ -232,6 +256,9 @@
          <height>60</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Comment</string>
+       </property>
       </widget>
      </item>
      <item>
@@ -243,7 +270,7 @@
         <widget class="QPushButton" name="btnSendComment">
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>100</width>
            <height>30</height>
           </size>
          </property>
@@ -252,6 +279,9 @@
            <width>16777215</width>
            <height>30</height>
           </size>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="text">
           <string>Send</string>
@@ -274,6 +304,22 @@
       </layout>
      </item>
      <item>
+      <widget class="QLabel" name="lblNoComments">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>No comments</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QScrollArea" name="areaComments">
        <property name="widgetResizable">
         <bool>true</bool>
@@ -284,7 +330,7 @@
           <x>0</x>
           <y>0</y>
           <width>826</width>
-          <height>169</height>
+          <height>119</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="commentsLayout">

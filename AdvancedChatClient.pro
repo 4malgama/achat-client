@@ -18,6 +18,7 @@ UI_HEADERS_DIR = ui_h
 UI_SOURCES_DIR = ui_s
 
 SOURCES += \
+	free.cpp \
 	main.cpp \
 	client.cpp \
 	network/account.cpp \
@@ -26,7 +27,10 @@ SOURCES += \
 	network/packets/auth_packet.cpp \
 	network/packets/ipacket.cpp \
 	settings/settings_manager.cpp \
-	widgets/profile_widget.cpp
+	widgets/advert_widget.cpp \
+	widgets/authorization_widget.cpp \
+	widgets/profile_widget.cpp \
+	widgets/server_message_widget.cpp
 
 HEADERS += \
 	client.h \
@@ -37,11 +41,16 @@ HEADERS += \
 	network/packets/auth_packet.h \
 	network/packets/ipacket.h \
 	settings/settings_manager.h \
-	widgets/profile_widget.h
+	widgets/advert_widget.h \
+	widgets/authorization_widget.h \
+	widgets/profile_widget.h \
+	widgets/server_message_widget.h
 
 FORMS += \
 	client.ui \
-	widgets/profile_widget.ui
+	widgets/authorization_widget.ui \
+	widgets/profile_widget.ui \
+	widgets/server_message_widget.ui
 
 TRANSLATIONS += \
 	AdvancedChatClient_en_GB.ts
@@ -51,3 +60,6 @@ CONFIG += embed_translations
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+	resources.qrc

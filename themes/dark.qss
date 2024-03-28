@@ -1,0 +1,368 @@
+QWidget {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#Client {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #10161E, stop: 1 #1C3149);
+}
+
+#frameSide {
+    background-color: #244059;
+    border: 0px solid black;
+    border-right: 1px solid white;
+}
+
+#frame, #frameAdvert {
+    border: 0px solid transparent;
+}
+
+#frameSide QToolButton {
+    background-color: rgba(217, 217, 217, 0.1);
+    color: white;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#frameSide QToolButton:hover {
+    background-color: rgba(217, 217, 217, 0.2);
+    color: white;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#frameSide QToolButton:pressed {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#frameSide QToolButton:disabled {
+    background-color: rgba(100, 0, 0, 0.3);
+    border: 1px solid rgb(100, 0, 0);
+}
+
+#ProfileWidget #avatar {
+    color: white;
+}
+
+#ProfileWidget #btnProfileLink {
+    background-color: rgba(128, 232, 255, 0.3);
+    color: white;
+    font-size: 14px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #btnProfileLink:hover {
+    background-color: rgba(128, 232, 255, 0.5);
+    color: white;
+    font-weight: bold;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #btnProfileLink:pressed {
+    background-color: rgba(128, 232, 255, 0.1);
+    color: white;
+    font-weight: bold;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #leFirstname, #ProfileWidget #lePatronymic, #ProfileWidget #leSurname {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #leFirstname:focus, #ProfileWidget #lePatronymic:focus, #ProfileWidget #leSurname:focus {
+    background-color: rgba(255, 255, 255, 0.4);
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+#ProfileWidget #lePost, #ProfileWidget #textAboutMe {
+    background-color: rgba(186, 186, 186, 0.3);
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #lePost:focus, #ProfileWidget #textAboutMe:focus {
+    background-color: rgba(255, 255, 255, 0.4);
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+#ProfileWidget #textComment {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #textComment:focus {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    font-size: 16px;
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+#ProfileWidget #btnSendComment {
+    background-color: rgba(128, 232, 255, 0.3);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #btnSendComment:hover {
+    background-color: rgba(128, 232, 255, 0.5);
+    color: white;
+    font-weight: bold;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #btnSendComment:pressed {
+    background-color: rgba(128, 232, 255, 0.1);
+    color: white;
+    font-weight: bold;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #areaComments, #ProfileWidget #areaSettings {
+    background-color: transparent;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #settingsContent {
+    background-color: rgba(0, 0, 0, 0.0);
+    color: white;
+    font-size: 13px;
+    padding: 10px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #commentsContent {
+    background-color: rgba(0, 0, 0, 0.0);
+    color: white;
+    font-size: 13px;
+    padding: 10px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #lblNoComments {
+    color: white;
+    font-size: 14px;
+}
+
+#frameBorder {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 rgb(80, 100, 120), stop:1 rgb(100, 120, 140));
+    color: white;
+    border: 0px solid transparent;
+}
+
+#frameBorder #btnClose, #frameBorder #btnSize, #frameBorder #btnHide {
+    background-color: transparent;
+    color: white;
+    border: 0px solid transparent;
+}
+
+#frameBorder #btnClose:hover {
+    background-color: rgba(255, 0, 0, 0.5);
+    color: white;
+    border: 0px solid transparent;
+}
+
+#frameBorder #btnSize:hover, #frameBorder #btnHide:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 0px solid transparent;
+}
+
+#frameBorder #btnClose:pressed, #frameBorder #btnSize:pressed, #frameBorder #btnHide:pressed {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: white;
+    border: 0px solid transparent;
+}
+
+#ProfileWidget #settingsContent QLabel {
+    color: white;
+    font-size: 12px;
+}
+
+#ProfileWidget #settingsContent QComboBox, #ProfileWidget #settingsContent QLineEdit {
+    background-color: rgba(128, 232, 255, 0.3);
+    color: white;
+    font-size: 12px;
+    padding: 5px 10px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #settingsContent QComboBox:hover, #ProfileWidget #settingsContent QLineEdit:hover {
+    background-color: rgba(128, 232, 255, 0.5);
+    color: white;
+    font-size: 12px;
+    padding: 5px 10px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+#ProfileWidget #settingsContent QComboBox::drop-down {
+    background-color: transparent;
+    border: 0px solid transparent;
+    width: 30px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+#ProfileWidget #settingsContent QComboBox:on {
+    border: 1px solid white;
+    border-bottom: 0px solid transparent;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+#ProfileWidget #settingsContent QComboBox QAbstractItemView {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgb(30, 110, 130), stop:1 rgb(30, 80, 120));
+    outline: none;
+    color: white;
+    selection-color: rgb(12, 225, 253);
+    selection-background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid white;
+    border-top: 0px solid transparent;
+}
+
+#ProfileWidget #settingsContent QComboBox QAbstractItemView::item {
+    background-color: transparent;
+}
+
+#ProfileWidget #settingsContent QComboBox QAbstractItemView::item:selected {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#ProfileWidget #settingsContent QComboBox::down-arrow {
+    image: url(":/r/resources/images/expand_arrow.png");
+}
+
+AuthorizationWidget QWidget {
+    color: white;
+}
+
+AuthorizationWidget #title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+AuthorizationWidget QLineEdit {
+    background: rgba(0, 0, 0, 0.3);
+    border: 0px solid transparent;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 12px;
+}
+
+AuthorizationWidget QLineEdit:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+AuthorizationWidget QLineEdit:focus {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+AuthorizationWidget QPushButton {
+    background: transparent;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 13px;
+    height: 16px;
+}
+
+AuthorizationWidget QPushButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+AuthorizationWidget QPushButton:pressed {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+AuthorizationWidget QPushButton:disabled {
+    background: rgba(180, 180, 180, 0.1);
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 13px;
+    color: grey;
+}
+
+AuthorizationWidget QCheckBox::indicator {
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+AuthorizationWidget QCheckBox::indicator:unchecked {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+AuthorizationWidget QCheckBox::indicator:checked {
+    background: rgba(0, 0, 0, 0.3);
+    image: url(":/r/resources/images/check.png");
+}
+
+AuthorizationWidget QCheckBox::indicator:unchecked:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+AuthorizationWidget QCheckBox::indicator:checked:hover {
+    background: rgba(0, 0, 0, 0.4);
+    image: url(":/r/resources/images/check.png");
+}
+
+AuthorizationWidget QCheckBox::indicator:unchecked:pressed {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+AuthorizationWidget QCheckBox::indicator:checked:pressed {
+    background: rgba(0, 0, 0, 0.5);
+    image: url(":/r/resources/images/check.png");
+}
+
+ServerMessageWidget QWidget {
+    color: black;
+}
+
+ServerMessageWidget QPushButton {
+    background: rgb(160, 160, 160);
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 13px;
+}

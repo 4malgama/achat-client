@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/r">
+        <file>themes/dark.qss</file>
+        <file>resources/images/close.png</file>
+        <file>resources/images/minimize.png</file>
+        <file>resources/images/maximize.png</file>
+        <file>resources/images/minimize_2.png</file>
+        <file>resources/images/logout.png</file>
+        <file>resources/images/search.png</file>
+        <file>resources/images/settings.png</file>
+        <file>resources/images/speech_bubble.png</file>
+        <file>resources/images/user_male.png</file>
+        <file>resources/images/expand_arrow.png</file>
+        <file>resources/images/check.png</file>
+    </qresource>
+</RCC>
