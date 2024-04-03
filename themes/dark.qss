@@ -366,3 +366,20 @@ ServerMessageWidget QPushButton {
     padding: 5px;
     font-size: 13px;
 }
+
+MessageWidget QPushButton {
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 13px;
+}
+
+MessageWidget QPushButton:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+MessageWidget QPushButton:pressed {
+    background: rgba(0, 0, 0, 0.5);
+}

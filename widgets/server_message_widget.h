@@ -17,9 +17,11 @@ public:
 	explicit ServerMessageWidget(QWidget *parent, const QString& text);
 	~ServerMessageWidget();
 
-	int exec();
+	//int exec();
+	void open();
 
-	static int exec(QWidget* parent, const QString& text);
+	//static int exec(QWidget* parent, const QString& text);
+	static void open(QWidget* parent, const QString& text);
 
 private:
 	Ui::ServerMessageWidget *ui;

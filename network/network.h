@@ -50,7 +50,7 @@ public:
 	bool isConnected() const;
 
 protected:
-	virtual void readEvent(const IPacket* packet) = 0;
+	virtual void readEvent(IPacket* packet) = 0;
 	virtual void disconnectEvent() = 0;
 	virtual void connectedEvent() = 0;
 	virtual void failConnect() = 0;

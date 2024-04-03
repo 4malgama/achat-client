@@ -24,11 +24,22 @@ SOURCES += \
 	network/account.cpp \
 	network/network.cpp \
 	network/packet_factory.cpp \
+	network/packets/auth_accept_packet.cpp \
 	network/packets/auth_packet.cpp \
+	network/packets/auth_reject_packet.cpp \
+	network/packets/check_avatar_hash_packet.cpp \
+	network/packets/init_location_packet.cpp \
 	network/packets/ipacket.cpp \
+	network/packets/register_packet.cpp \
+	network/packets/update_avatar_packet.cpp \
+	network/stream_builder.cpp \
+	network/stream_parser.cpp \
+	resource_manager/resource_manager.cpp \
 	settings/settings_manager.cpp \
+	utils/CryptoUtils.cpp \
 	widgets/advert_widget.cpp \
 	widgets/authorization_widget.cpp \
+	widgets/message_widget.cpp \
 	widgets/profile_widget.cpp \
 	widgets/server_message_widget.cpp
 
@@ -38,11 +49,22 @@ HEADERS += \
 	network/network.h \
 	network/packet_factory.h \
 	network/packets.h \
+	network/packets/all.h \
+	network/packets/auth_accept_packet.h \
 	network/packets/auth_packet.h \
+	network/packets/auth_reject_packet.h \
+	network/packets/check_avatar_hash_packet.h \
+	network/packets/init_location_packet.h \
 	network/packets/ipacket.h \
+	network/packets/register_packet.h \
+	network/packets/update_avatar_packet.h \
+	network/stream_builder.h \
+	network/stream_parser.h \
+	resource_manager/resource_manager.h \
 	settings/settings_manager.h \
 	widgets/advert_widget.h \
 	widgets/authorization_widget.h \
+	widgets/message_widget.h \
 	widgets/profile_widget.h \
 	widgets/server_message_widget.h
 

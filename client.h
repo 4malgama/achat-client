@@ -32,7 +32,9 @@ public:
 
 	void openMyProfilePage();
 	void authWindow();
+	void closeAuthWindow();
 	void closePages();
+	void showMessage(const QString& text, quint8 icon = 0);
 
 	void enableSideButtons();
 	void disableSideButtons();
@@ -41,6 +43,7 @@ public:
 
 signals:
 	void event_close();
+	void event_resize(QSize size);
 
 private slots:
 	void on_btnProfile_clicked();
@@ -51,6 +54,7 @@ private slots:
 private:
 	Ui::Client *ui;
 	void closeEvent(QCloseEvent*);
+	void resizeEvent(QResizeEvent* event);
 	void mousePressEvent(QMouseEvent* event);
 	void mouseMoveEvent(QMouseEvent* event);
 	void mouseReleaseEvent(QMouseEvent* event);

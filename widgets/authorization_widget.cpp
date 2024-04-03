@@ -2,10 +2,17 @@
 #include "ui_authorization_widget.h"
 #include "../client.h"
 #include "../network/account.h"
+#include "server_message_widget.h"
 
 #include <QPainter>
+#include <QCryptographicHash>
 
 namespace client { extern Client* window; }
+
+static QByteArray hashPassword(const QString& password)
+{
+	return QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Algorithm::Md5).toHex();
+}
 
 AuthorizationWidget::AuthorizationWidget(QWidget *parent, bool registerState) :
 	QWidget(parent),
@@ -85,22 +92,29 @@ void AuthorizationWidget::onInputChanged()
 
 void AuthorizationWidget::onLoginClicked()
 {
-	ui->le_password->clear();
-	ui->cb_remember->setChecked(false);
-
 	if (registerState)
 	{
-		ui->le_confirm->clear();
-	}
+		QString login = ui->le_login->text();
+		QString password = ui->le_password->text();
+		QString confirm = ui->le_confirm->text();
 
-	if (registerState)
-	{
-		//todo: register
+		if (password == confirm)
+		{
+			client::window->acc->registration(login, password);
+		}
+		else
+		{
+			client::window->showMessage(tr("Passwords do not match"), 3);
+		}
 	}
 	else
 	{
-		client::window->acc->login(ui->le_login->text(), ui->le_password->text());
+		client::window->acc->login(ui->le_login->text(), hashPassword(ui->le_password->text()));
 	}
+
+	ui->le_password->clear();
+	ui->cb_remember->setChecked(false);
+	ui->le_confirm->clear();
 }
 
 void AuthorizationWidget::onSwitchFormClicked()

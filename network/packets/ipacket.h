@@ -15,7 +15,7 @@ public:
 	quint16 getId() const;
 
 	virtual QByteArray prepareToSend() const = 0;
-	virtual void prepareToRead(const QByteArray& data) const = 0;
+	virtual void prepareToRead(const QByteArray& data) = 0;
 };
 
 #endif // IPACKET_H

@@ -8,12 +8,13 @@ class AuthPacket : public IPacket
 {
 public:
 	QString login;
+	QString password;
 
 	AuthPacket();
 	~AuthPacket() override;
 
 	QByteArray prepareToSend() const override;
-	void prepareToRead(const QByteArray& data) const override;
+	void prepareToRead(const QByteArray& data) override;
 };
 
 #endif // AUTHPACKET_H

@@ -3,6 +3,7 @@
 #include <QTranslator>
 #include <settings/settings_manager.h>
 #include <QFile>
+#include <QMessageBox>
 
 namespace client
 {
@@ -10,6 +11,7 @@ namespace client
 }
 
 namespace unload { void free(); }
+namespace resourcemanager { void load(); }
 
 static void setDarkTheme()
 {
@@ -38,6 +40,8 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 	QSettings::setDefaultFormat(QSettings::IniFormat);
 
+	resourcemanager::load();
+
 	qApp->setOrganizationName("Amalgama");
 
 	QTranslator translator;
@@ -57,6 +61,11 @@ int main(int argc, char *argv[])
 	int retCode = a.exec();
 
 	_main_end();
+
+	if (retCode != 0)
+	{
+		QMessageBox::critical(nullptr, "Error", "The program exited with error.\nError code: " + QString::number(retCode));
+	}
 
 	return retCode;
 }

@@ -5,6 +5,8 @@
 #include "widgets/profile_widget.h"
 #include "widgets/advert_widget.h"
 #include "widgets/authorization_widget.h"
+#include "widgets/message_widget.h"
+#include "resource_manager/resource_manager.h"
 
 #include <QMouseEvent>
 #include <QDebug>
@@ -37,20 +39,6 @@ namespace profilewidget
 	ProfileWidget* getInstance();
 }
 
-// static QByteArray swapBytes_2(const QByteArray& data)
-// {
-// 	QByteArray result(data.size(), Qt::Uninitialized);
-// 	char* dst = result.data();
-// 	const char* src = data.constData();
-// 	const char* end = src + data.size();
-// 	for (; src != end; src += 2, dst += 2)
-// 	{
-// 		dst[0] = src[1];
-// 		dst[1] = src[0];
-// 	}
-// 	return result;
-// }
-
 Client::Client(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::Client)
@@ -60,7 +48,6 @@ Client::Client(QWidget *parent)
 
 	acc = new Account(this);
 	acc->setInetAddress(SettingsManager::getInstance().getEndPoint());
-	acc->start();
 
 	AdvertWidget* advert = new AdvertWidget(QColor(0, 210, 180), QColor(80, 200, 250), this);
 	advert->setTitle("Amalgama's Chat is available for free!");
@@ -68,6 +55,17 @@ Client::Client(QWidget *parent)
 	advert->setLinkText("Sign in");
 	advert->setLink("https://infotecs.ru/");
 	addAdvertPage(advert);
+
+	if (ResourceManager& rm = ResourceManager::instance(); rm.isLoaded() == false)
+	{
+		connect(&rm, &ResourceManager::event_finish, this, [this] {
+			acc->start();
+		});
+	}
+	else
+	{
+		acc->start();
+	}
 
 	show();
 }
@@ -95,7 +93,7 @@ void Client::openMyProfilePage()
 		currentPage = pw;
 	}
 
-	pw->setAvatar(QImage("cache/images/users/amalgama.jpg"));
+	pw->setAvatar(ResourceManager::instance().getAvatar());
 }
 
 void Client::authWindow()
@@ -109,6 +107,15 @@ void Client::authWindow()
 	authWidget->show();
 }
 
+void Client::closeAuthWindow()
+{
+	if (authWidget != nullptr)
+	{
+		authWidget->close(); //it is equals to delete
+		authWidget = nullptr;
+	}
+}
+
 void Client::closeEvent(QCloseEvent *)
 {
 	closePages();
@@ -120,6 +127,14 @@ void Client::closePages()
 {
 	if (pw != nullptr)
 		pw->close();
+}
+
+void Client::showMessage(const QString& text, quint8 icon)
+{
+	MessageWidget* mw = new MessageWidget(this);
+	mw->icon = (icon >= MessageWidget::UNKNOWN ? MessageWidget::UNKNOWN : ((MessageWidget::MessageIcon)icon));
+	mw->message = text;
+	mw->show();
 }
 
 void Client::enableSideButtons()
@@ -202,4 +217,9 @@ void Client::addAdvertPage(QWidget* page)
 {
 	ui->stackedWidget->addWidget(page);
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->count() - 1);
+}
+
+void Client::resizeEvent(QResizeEvent* event)
+{
+	emit event_resize(event->size());
 }

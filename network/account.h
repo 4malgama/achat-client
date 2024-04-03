@@ -14,12 +14,15 @@ public:
 
 	void start();
 	void login(const QString& login, const QString& password);
+	void registration(const QString& login, const QString& password);
 
 private:
-	void readEvent(const IPacket* packet) override;
+	void readEvent(IPacket* packet) override;
 	void disconnectEvent() override;
 	void connectedEvent() override;
 	void failConnect() override;
+
+	void onLoginSuccess();
 };
 
 #endif // ACCOUNT_H
