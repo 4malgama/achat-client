@@ -11,6 +11,7 @@ public:
 	quint16 errorCode;
 	QString login;
 	QString password;
+	quint64 uid;
 
 	RegisterPacket();
 	~RegisterPacket() override;

@@ -11,7 +11,9 @@ class ResourceManager : public QObject
 	Q_OBJECT
 
 	bool loaded;
+	quint64 current_uid;
 	QString m_Path;
+	QString m_UserPath;
 	QMap<QString, QImage> images;
 
 private:
@@ -26,6 +28,7 @@ public:
 
 	QImage getAvatar();
 	void setAvatar(const QImage& image);
+	void setAvatarData(const QByteArray& imageData);
 	QString getAvatarPath();
 
 	void addImage(const QString& name, const QImage& image);
@@ -35,13 +38,14 @@ public:
 	void cacheImage(const QString& path, const QByteArray& imageData);
 	void freeImage(const QString& path);
 
+	void initUser(quint64 uid, bool remember = false, const QString& login = QString(), const QString& password = QString());
+	QPair<QString, QString> getAutoLoginData();
+
 signals:
 	void event_finish();
 
 private:
 	void loadImages();
-
-	void loadAvatar();
 };
 
 #endif // RESOURCEMANAGER_H

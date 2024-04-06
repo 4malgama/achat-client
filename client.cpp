@@ -9,6 +9,9 @@
 #include "resource_manager/resource_manager.h"
 
 #include <QMouseEvent>
+#include <QHash>
+#include <QVariant>
+
 #include <QDebug>
 
 namespace client
@@ -45,6 +48,7 @@ Client::Client(QWidget *parent)
 {
 	ui->setupUi(this);
 	setWindowFlag(Qt::WindowType::FramelessWindowHint);
+	setWindowTitle(tr("Main"));
 
 	acc = new Account(this);
 	acc->setInetAddress(SettingsManager::getInstance().getEndPoint());
@@ -67,6 +71,9 @@ Client::Client(QWidget *parent)
 		acc->start();
 	}
 
+	pw = profilewidget::getInstance();
+	ui->frame->layout()->addWidget(pw);
+
 	show();
 }
 
@@ -87,13 +94,12 @@ void Client::openMyProfilePage()
 	}
 	else
 	{
-		pw = profilewidget::getInstance();
-		ui->frame->layout()->addWidget(pw);
 		pw->show();
 		currentPage = pw;
 	}
 
 	pw->setAvatar(ResourceManager::instance().getAvatar());
+	setWindowTitle(tr("Profile"));
 }
 
 void Client::authWindow()
@@ -217,6 +223,20 @@ void Client::addAdvertPage(QWidget* page)
 {
 	ui->stackedWidget->addWidget(page);
 	ui->stackedWidget->setCurrentIndex(ui->stackedWidget->count() - 1);
+}
+
+void Client::setProfileData(const QHash<QString, QVariant>& profileInfo)
+{
+	if (pw != nullptr)
+	{
+		pw->accountLink = profileInfo.value("login").toString();
+		pw->name1 = profileInfo.value("first_name").toString();
+		pw->name2 = profileInfo.value("sur_name").toString();
+		pw->name3 = profileInfo.value("patronymic").toString();
+		pw->post = profileInfo.value("post").toString();
+		pw->description = profileInfo.value("description").toString();
+		pw->updateData();
+	}
 }
 
 void Client::resizeEvent(QResizeEvent* event)

@@ -12,5 +12,6 @@
         <file>resources/images/user_male.png</file>
         <file>resources/images/expand_arrow.png</file>
         <file>resources/images/check.png</file>
+        <file>resources/images/synchonize.png</file>
     </qresource>
 </RCC>

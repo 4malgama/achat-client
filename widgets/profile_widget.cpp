@@ -1,5 +1,7 @@
 #include "profile_widget.h"
 #include "ui_profile_widget.h"
+#include "../network/account.h"
+#include "../client.h"
 
 #include <QLabel>
 #include <QCheckBox>
@@ -34,6 +36,8 @@ namespace profilewidget
 		return w;
 	}
 }
+
+namespace client { extern Client* window; }
 
 static QImage circleImage(const QImage& image, QSize size)
 {
@@ -82,6 +86,7 @@ ProfileWidget::ProfileWidget(QWidget *parent) :
 	ui(new Ui::ProfileWidget)
 {
 	ui->setupUi(this);
+	hide();
 
 	QComboBox* cb_see_profile_photo = (QComboBox*) addOption(OPTION_COMBOBOX, "see_profile_photo", tr("Who can see profile photo"), QVariant(0)).wgt;
 	cb_see_profile_photo->addItem(tr("Everyone"));
@@ -130,6 +135,15 @@ ProfileWidget::ProfileWidget(QWidget *parent) :
 
 	QLineEdit* le_display_name = (QLineEdit*) addOption(OPTION_TEXTBOX, "display_name", tr("Display name"), QVariant("")).wgt;
 	le_display_name->setPlaceholderText(tr("Leave it empty if you want to keep the same name"));
+
+	updateData();
+
+	connect(ui->btnUpdate, &QAbstractButton::clicked, this, [this] {
+		QHash<QString, QVariant> changes = getChanges();
+		updateData();
+		if (changes.isEmpty()) return;
+		client::window->acc->updateProfile(changes);
+	});
 }
 
 ProfileWidget::~ProfileWidget()
@@ -137,7 +151,7 @@ ProfileWidget::~ProfileWidget()
 	delete ui;
 }
 
-void ProfileWidget::closeEvent(QCloseEvent *event)
+void ProfileWidget::closeEvent(QCloseEvent *)
 {
 	emit event_close();
 	delete this;
@@ -199,4 +213,27 @@ void ProfileWidget::setAvatar(const QImage& image)
 {
 	QPixmap pixmap = QPixmap::fromImage(circleImage(image, ui->avatar->size()));
 	ui->avatar->setPixmap(pixmap);
+}
+
+void ProfileWidget::updateData()
+{
+	ui->btnProfileLink->setText(accountLink);
+	ui->leFirstname->setText(name1);
+	ui->leSurname->setText(name2);
+	ui->lePatronymic->setText(name3);
+	ui->lePost->setText(post);
+	ui->textAboutMe->setPlainText(description);
+}
+
+QHash<QString, QVariant> ProfileWidget::getChanges()
+{
+	QHash<QString, QVariant> changes;
+
+	if (ui->leFirstname->text() != name1) changes.insert("first_name", ui->leFirstname->text());
+	if (ui->leSurname->text() != name2) changes.insert("sur_name", ui->leSurname->text());
+	if (ui->lePatronymic->text() != name3) changes.insert("patronymic", ui->lePatronymic->text());
+	if (ui->lePost->text() != post) changes.insert("post", ui->lePost->text());
+	if (ui->textAboutMe->toPlainText() != description) changes.insert("description", ui->textAboutMe->toPlainText());
+
+	return changes;
 }

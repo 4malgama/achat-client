@@ -269,6 +269,20 @@ QWidget {
     image: url(":/r/resources/images/expand_arrow.png");
 }
 
+ProfileWidget #btnUpdate {
+    background: transparent;
+    border: 0px solid transparent;
+    border-radius: 15px;
+}
+
+ProfileWidget #btnUpdate:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+ProfileWidget #btnUpdate:pressed {
+    background: rgba(0, 0, 0, 0.1);
+}
+
 AuthorizationWidget QWidget {
     color: white;
 }

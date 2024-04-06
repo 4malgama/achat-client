@@ -42,10 +42,11 @@ int16_t StreamParser::parseInt16(bool* ok)
 	if (ok != nullptr)
 		*ok = true;
 
-	int16_t value = streamData[I++];
-	value |= streamData[I++] << 8;
+	QString hexString = streamData.mid(I, 2).toHex();
+	int16_t value = hexString.toLongLong(ok, 16);
+	I += 2;
 
-	return swapInt16(value);
+	return value;
 }
 
 
@@ -61,12 +62,11 @@ int32_t StreamParser::parseInt32(bool* ok)
 	if (ok != nullptr)
 		*ok = true;
 
-	int32_t value = streamData[I++];
-	value |= streamData[I++] << 8;
-	value |= streamData[I++] << 16;
-	value |= streamData[I++] << 24;
+	QString hexString = streamData.mid(I, 4).toHex();
+	int32_t value = hexString.toLongLong(ok, 16);
+	I += 4;
 
-	return swapInt32(value);
+	return value;
 }
 
 
@@ -82,16 +82,11 @@ int64_t StreamParser::parseInt64(bool* ok)
 	if (ok != nullptr)
 		*ok = true;
 
-	int64_t value = streamData[I++];
-	value |= streamData[I++] << 8;
-	value |= streamData[I++] << 16;
-	value |= streamData[I++] << 24;
-	value |= streamData[I++] << 32;
-	value |= streamData[I++] << 40;
-	value |= streamData[I++] << 48;
-	value |= streamData[I++] << 56;
+	QString hexString = streamData.mid(I, 8).toHex();
+	int64_t value = hexString.toLongLong(ok, 16);
+	I += 8;
 
-	return swapInt64(value);
+	return value;
 }
 
 
@@ -107,10 +102,11 @@ quint16 StreamParser::parseUInt16(bool* ok)
 	if (ok != nullptr)
 		*ok = true;
 
-	quint16 value = streamData[I++];
-	value |= streamData[I++] << 8;
+	QString hexString = streamData.mid(I, 2).toHex();
+	quint16 value = hexString.toLongLong(ok, 16);
+	I += 2;
 
-	return swapUInt16(value);
+	return value;
 }
 
 
@@ -126,12 +122,11 @@ quint32 StreamParser::parseUInt32(bool* ok)
 	if (ok != nullptr)
 		*ok = true;
 
-	quint32 value = streamData[I++];
-	value |= streamData[I++] << 8;
-	value |= streamData[I++] << 16;
-	value |= streamData[I++] << 24;
+	QString hexString = streamData.mid(I, 4).toHex();
+	quint32 value = hexString.toLongLong(ok, 16);
+	I += 4;
 
-	return swapUInt32(value);
+	return value;
 }
 
 
@@ -147,16 +142,11 @@ quint64 StreamParser::parseUInt64(bool* ok)
 	if (ok != nullptr)
 		*ok = true;
 
-	quint64 value = streamData[I++];
-	value |= streamData[I++] << 8;
-	value |= streamData[I++] << 16;
-	value |= streamData[I++] << 24;
-	value |= streamData[I++] << 32;
-	value |= streamData[I++] << 40;
-	value |= streamData[I++] << 48;
-	value |= streamData[I++] << 56;
+	QString hexString = streamData.mid(I, 8).toHex();
+	quint64 value = hexString.toULongLong(ok, 16);
+	I += 8;
 
-	return swapUInt64(value);
+	return value;
 }
 
 
@@ -192,7 +182,7 @@ QByteArray StreamParser::parseData(int length, int size, bool* ok)
 	QByteArray data = streamData.mid(I, length * size);
 	I += length * 2;
 
-	return (size == 1 ? swapData(data, size) : data);
+	return (size > 1 ? swapData(data, size) : data);
 }
 
 void StreamParser::shift(int shift)

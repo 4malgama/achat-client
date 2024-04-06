@@ -7,6 +7,8 @@
 class AuthAcceptPacket : public IPacket
 {
 public:
+	quint64 uid;
+
 	AuthAcceptPacket();
 	~AuthAcceptPacket() override;
 

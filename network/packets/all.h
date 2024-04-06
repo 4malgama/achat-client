@@ -8,5 +8,7 @@
 #include "init_location_packet.h"
 #include "check_avatar_hash_packet.h"
 #include "update_avatar_packet.h"
+#include "init_profile_packet.h"
+#include "update_profile_packet.h"
 
 #endif // ALL_H

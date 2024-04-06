@@ -2,11 +2,12 @@
 #define ACCOUNT_H
 
 #include "network.h"
+#include "../types/classes.h"
 
 class Account : public Network
 {
 	QString token;
-	//TODO Profile Data
+	ProfileData data;
 
 public:
 	explicit Account(QObject *parent = nullptr);
@@ -15,6 +16,7 @@ public:
 	void start();
 	void login(const QString& login, const QString& password);
 	void registration(const QString& login, const QString& password);
+	void updateProfile(const QHash<QString, QVariant>& profileInfo);
 
 private:
 	void readEvent(IPacket* packet) override;

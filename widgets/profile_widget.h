@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QVariant>
+#include <QHash>
+
 
 namespace Ui {
 	class ProfileWidget;
@@ -46,6 +48,10 @@ public:
 
 	Option& addOption(OptionView option, const QString& id, const QString& name, const QVariant& value);
 	void setAvatar(const QImage& image);
+
+	void updateData();
+
+	QHash<QString, QVariant> getChanges();
 
 signals:
 	void event_close();

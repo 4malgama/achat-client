@@ -3,9 +3,13 @@
 #include "../widgets/server_message_widget.h"
 #include "packets/all.h"
 #include "resource_manager/resource_manager.h"
+#include "../utils/json_utils.h"
+#include "settings/settings_manager.h"
 
 #include <QApplication>
 #include <QMessageBox>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include <QDebug>
 
@@ -18,6 +22,13 @@ namespace crypto
 {
 	QString PasswordHash(const QString& password);
 	QString FileHash(const QString& filePath);
+}
+
+namespace auth
+{
+	extern bool remember;
+	extern QString login;
+	extern QString password;
 }
 
 Account::Account(QObject *parent)
@@ -76,10 +87,12 @@ void Account::readEvent(IPacket* packet)
 	{
 		client::window->showMessage(P->reason, 2);
 		client::window->disableSideButtons();
+		client::window->authWindow();
 		return;
 	}
 	else if (AuthAcceptPacket* P = dynamic_cast<AuthAcceptPacket*>(packet))
 	{
+		data.uid = P->uid;
 		onLoginSuccess();
 		return;
 	}
@@ -87,6 +100,7 @@ void Account::readEvent(IPacket* packet)
 	{
 		if (P->success)
 		{
+			data.uid = P->uid;
 			onLoginSuccess();
 		}
 		else
@@ -95,6 +109,7 @@ void Account::readEvent(IPacket* packet)
 
 			client::window->showMessage(tr("Registration failed.\nReason: %1.").arg(reason), 2);
 			client::window->disableSideButtons();
+			client::window->authWindow();
 		}
 		return;
 	}
@@ -102,15 +117,28 @@ void Account::readEvent(IPacket* packet)
 	{
 		if (P->avatarData.isEmpty() == false)
 		{
-			QImage avatarImage = QImage::fromData(P->avatarData);
-
 			ResourceManager& rm = ResourceManager::instance();
-			rm.setAvatar(P->image);
-			rm.cacheImage("user\\avatar.jpg", P->avatarData);
-
-			qInfo() << "cached.";
+			rm.setAvatarData(P->avatarData);
 		}
 		return;
+	}
+	else if (InitProfilePacket* P = dynamic_cast<InitProfilePacket*>(packet))
+	{
+		if (P->profileData.isEmpty() == false)
+		{
+			client::window->setProfileData(P->profileData);
+		}
+		return;
+	}
+}
+
+void Account::updateProfile(const QHash<QString, QVariant>& profileInfo)
+{
+	if (profileInfo.isEmpty() == false)
+	{
+		UpdateProfilePacket packet;
+		packet.changes = JsonUtils::jsonToString(JsonUtils::hashmapToJson(profileInfo));
+		send(&packet);
 	}
 }
 
@@ -119,8 +147,22 @@ void Account::onLoginSuccess()
 	client::window->closeAuthWindow();
 	client::window->enableSideButtons();
 
+	if (auth::remember)
+	{
+		SettingsManager::getInstance().setLastUid(data.uid);
+	}
+	else
+	{
+		SettingsManager::getInstance().setLastUid(0);
+	}
+
+	ResourceManager& rm = ResourceManager::instance();
+	rm.initUser(data.uid, auth::remember, auth::login, auth::password);
+
+	data.avatar = rm.getAvatar();
+
 	CheckAvatarHashPacket packet;
-	packet.hash = crypto::FileHash(ResourceManager::instance().getAvatarPath());
+	packet.hash = crypto::FileHash(rm.getAvatarPath());
 	send(&packet);
 }
 
@@ -133,13 +175,31 @@ void Account::disconnectEvent()
 
 void Account::connectedEvent()
 {
-	client::window->authWindow();
 	QLocale locale = QLocale::system();
 	QString localeName = locale.name();
 
 	InitLocationPacket packet;
 	packet.location = localeName.mid(localeName.indexOf('_') + 1);
 	send(&packet);
+
+	quint64 uid = SettingsManager::getInstance().getLastUid();
+	if (uid != 0)
+	{
+		ResourceManager::instance().initUser(uid);
+		QPair<QString, QString> pair = ResourceManager::instance().getAutoLoginData();
+		if (pair.first.isEmpty() || pair.second.isEmpty())
+		{
+			client::window->authWindow();
+			return;
+		}
+		auth::remember = true;
+		auth::login = pair.first;
+		auth::password = pair.second;
+		login(pair.first, pair.second);
+		return;
+	}
+
+	client::window->authWindow();
 }
 
 void Account::failConnect()

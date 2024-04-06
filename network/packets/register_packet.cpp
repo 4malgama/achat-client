@@ -16,6 +16,7 @@ void RegisterPacket::prepareToRead(const QByteArray &data)
 {
     StreamParser sp(data);
     errorCode = sp.parseUInt16();
+    uid = sp.parseUInt64();
     success = errorCode == 0;
 }
 

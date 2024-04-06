@@ -17,6 +17,7 @@ UI_DIR = ui
 UI_HEADERS_DIR = ui_h
 UI_SOURCES_DIR = ui_s
 
+
 SOURCES += \
 	free.cpp \
 	main.cpp \
@@ -29,14 +30,17 @@ SOURCES += \
 	network/packets/auth_reject_packet.cpp \
 	network/packets/check_avatar_hash_packet.cpp \
 	network/packets/init_location_packet.cpp \
+	network/packets/init_profile_packet.cpp \
 	network/packets/ipacket.cpp \
 	network/packets/register_packet.cpp \
 	network/packets/update_avatar_packet.cpp \
+	network/packets/update_profile_packet.cpp \
 	network/stream_builder.cpp \
 	network/stream_parser.cpp \
 	resource_manager/resource_manager.cpp \
 	settings/settings_manager.cpp \
 	utils/CryptoUtils.cpp \
+	utils/json_utils.cpp \
 	widgets/advert_widget.cpp \
 	widgets/authorization_widget.cpp \
 	widgets/message_widget.cpp \
@@ -55,13 +59,18 @@ HEADERS += \
 	network/packets/auth_reject_packet.h \
 	network/packets/check_avatar_hash_packet.h \
 	network/packets/init_location_packet.h \
+	network/packets/init_profile_packet.h \
 	network/packets/ipacket.h \
 	network/packets/register_packet.h \
 	network/packets/update_avatar_packet.h \
+	network/packets/update_profile_packet.h \
 	network/stream_builder.h \
 	network/stream_parser.h \
 	resource_manager/resource_manager.h \
 	settings/settings_manager.h \
+	types/classes.h \
+	types/types_variables.h \
+	utils/json_utils.h \
 	widgets/advert_widget.h \
 	widgets/authorization_widget.h \
 	widgets/message_widget.h \

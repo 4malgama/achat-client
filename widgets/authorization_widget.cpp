@@ -8,8 +8,14 @@
 #include <QCryptographicHash>
 
 namespace client { extern Client* window; }
+namespace auth
+{
+	bool remember = false;
+	QString login;
+	QString password;
+}
 
-static QByteArray hashPassword(const QString& password)
+QByteArray HashPassword(const QString& password)
 {
 	return QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Algorithm::Md5).toHex();
 }
@@ -92,15 +98,17 @@ void AuthorizationWidget::onInputChanged()
 
 void AuthorizationWidget::onLoginClicked()
 {
+	auth::login = ui->le_login->text();
+	auth::password = ui->le_password->text();
+	auth::remember = ui->cb_remember->isChecked();
+
 	if (registerState)
 	{
-		QString login = ui->le_login->text();
-		QString password = ui->le_password->text();
 		QString confirm = ui->le_confirm->text();
 
-		if (password == confirm)
+		if (auth::password == confirm)
 		{
-			client::window->acc->registration(login, password);
+			client::window->acc->registration(auth::login, auth::password);
 		}
 		else
 		{
@@ -109,7 +117,7 @@ void AuthorizationWidget::onLoginClicked()
 	}
 	else
 	{
-		client::window->acc->login(ui->le_login->text(), hashPassword(ui->le_password->text()));
+		client::window->acc->login(auth::login, HashPassword(auth::password));
 	}
 
 	ui->le_password->clear();

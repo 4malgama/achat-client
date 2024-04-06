@@ -16,6 +16,9 @@ public:
 	Network::InetAddress getEndPoint();
 	void setEndPoint(const Network::InetAddress& endPoint);
 
+	quint64 getLastUid();
+	void setLastUid(quint64 uid);
+
 	void saveAll();
 };
 

@@ -40,6 +40,7 @@ public:
 	void disableSideButtons();
 
 	void addAdvertPage(QWidget* page);
+	void setProfileData(const QHash<QString, QVariant>& profileInfo);
 
 signals:
 	void event_close();

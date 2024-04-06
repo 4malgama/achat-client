@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
 	resourcemanager::load();
 
 	qApp->setOrganizationName("Amalgama");
+	qApp->setApplicationName("AChat Client");
 
 	QTranslator translator;
 	const QStringList uiLanguages = QLocale::system().uiLanguages();
