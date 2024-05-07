@@ -5,11 +5,13 @@
 #include "resource_manager/resource_manager.h"
 #include "../utils/json_utils.h"
 #include "settings/settings_manager.h"
+#include "../types/classes.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 
 #include <QDebug>
 
@@ -130,6 +132,43 @@ void Account::readEvent(IPacket* packet)
 		}
 		return;
 	}
+	else if (InitChatsPacket* P = dynamic_cast<InitChatsPacket*>(packet))
+	{
+		if (P->jsonData.isEmpty())
+			return;
+		QJsonDocument doc = QJsonDocument::fromJson(P->jsonData.toUtf8());
+		QJsonObject json = doc.object();
+		QJsonArray chats = json.value("chats").toArray();
+
+		QList<InitChatData> data;
+
+		for (QJsonValue&& chat : chats)
+		{
+			QJsonObject o = chat.toObject();
+
+			InitChatData chatData;
+
+			chatData.id = o.value("id").toInt();	//potential implicit narrowing
+			chatData.isGroup = o.value("is_group").toBool();
+			if (chatData.isGroup == false)
+			{
+				QJsonObject u = o.value("user").toObject();
+				chatData.user.uid = u.value("id").toInt(); //potential implicit narrowing
+				chatData.user.fname = u.value("name").toString();
+				chatData.user.sname = u.value("surname").toString();
+				chatData.user.mname = u.value("patronymic").toString();
+				chatData.user.post = u.value("post").toString();
+				if (u.value("avatar_data").isNull() == false)
+					chatData.user.avatar = QImage::fromData(QByteArray::fromBase64(u.value("avatar_data").toString().toUtf8()));
+			}
+
+			data.append(chatData);
+		}
+
+		client::window->initChats(data);
+
+		return;
+	}
 }
 
 void Account::updateProfile(const QHash<QString, QVariant>& profileInfo)
@@ -169,7 +208,7 @@ void Account::onLoginSuccess()
 void Account::disconnectEvent()
 {
 	ServerMessageWidget::open(client::window, "No connection.");
-	//todo close auth window
+	client::window->closeAuthWindow();
 	client::window->disableSideButtons();
 }
 

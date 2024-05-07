@@ -29,6 +29,7 @@ SOURCES += \
 	network/packets/auth_packet.cpp \
 	network/packets/auth_reject_packet.cpp \
 	network/packets/check_avatar_hash_packet.cpp \
+	network/packets/init_chats_packet.cpp \
 	network/packets/init_location_packet.cpp \
 	network/packets/init_profile_packet.cpp \
 	network/packets/ipacket.cpp \
@@ -39,10 +40,14 @@ SOURCES += \
 	network/stream_parser.cpp \
 	resource_manager/resource_manager.cpp \
 	settings/settings_manager.cpp \
+	test/widgets/ripple_button_widget.cpp \
 	utils/CryptoUtils.cpp \
 	utils/json_utils.cpp \
 	widgets/advert_widget.cpp \
 	widgets/authorization_widget.cpp \
+	widgets/chat_message_widget.cpp \
+	widgets/chat_row_widget.cpp \
+	widgets/chats_widget.cpp \
 	widgets/message_widget.cpp \
 	widgets/profile_widget.cpp \
 	widgets/server_message_widget.cpp
@@ -58,6 +63,7 @@ HEADERS += \
 	network/packets/auth_packet.h \
 	network/packets/auth_reject_packet.h \
 	network/packets/check_avatar_hash_packet.h \
+	network/packets/init_chats_packet.h \
 	network/packets/init_location_packet.h \
 	network/packets/init_profile_packet.h \
 	network/packets/ipacket.h \
@@ -68,11 +74,15 @@ HEADERS += \
 	network/stream_parser.h \
 	resource_manager/resource_manager.h \
 	settings/settings_manager.h \
+	test/widgets/ripple_button_widget.h \
 	types/classes.h \
 	types/types_variables.h \
 	utils/json_utils.h \
 	widgets/advert_widget.h \
 	widgets/authorization_widget.h \
+	widgets/chat_message_widget.h \
+	widgets/chat_row_widget.h \
+	widgets/chats_widget.h \
 	widgets/message_widget.h \
 	widgets/profile_widget.h \
 	widgets/server_message_widget.h
@@ -80,6 +90,7 @@ HEADERS += \
 FORMS += \
 	client.ui \
 	widgets/authorization_widget.ui \
+	widgets/chats_widget.ui \
 	widgets/profile_widget.ui \
 	widgets/server_message_widget.ui
 

@@ -11,7 +11,7 @@ class Account : public Network
 
 public:
 	explicit Account(QObject *parent = nullptr);
-	~Account();
+	virtual ~Account();
 
 	void start();
 	void login(const QString& login, const QString& password);

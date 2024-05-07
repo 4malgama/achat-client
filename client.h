@@ -10,6 +10,8 @@ QT_END_NAMESPACE
 class Account;
 class ProfileWidget;
 class AuthorizationWidget;
+class ChatsWidget;
+struct InitChatData;
 
 class Client : public QMainWindow
 {
@@ -19,10 +21,12 @@ class Client : public QMainWindow
 
 	ProfileWidget* pw = nullptr;
 	AuthorizationWidget* authWidget = nullptr;
+	ChatsWidget* cw = nullptr;
 
 	QPoint lastDragPos;
 	bool dragging = false;
 	bool isMaximized = false;
+
 
 public:
 	Client(QWidget *parent = nullptr);
@@ -31,10 +35,14 @@ public:
 	Account* acc;
 
 	void openMyProfilePage();
+	void openChatsPage();
 	void authWindow();
 	void closeAuthWindow();
 	void closePages();
 	void showMessage(const QString& text, quint8 icon = 0);
+
+	void addMessageToChat(int chatId, const QString& text, quint64 timestamp, bool isMine, bool showAvatar = false);
+	void initChats(const QList<InitChatData>& chats);
 
 	void enableSideButtons();
 	void disableSideButtons();
@@ -51,6 +59,8 @@ private slots:
 	void on_btnClose_clicked();
 	void on_btnSize_clicked();
 	void on_btnHide_clicked();
+
+	void on_btnChats_clicked();
 
 private:
 	Ui::Client *ui;

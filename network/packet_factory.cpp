@@ -3,19 +3,20 @@
 #include "packets.h"
 
 
-IPacket *PacketFactory::makePacket(quint32 id)
+std::unique_ptr<IPacket> PacketFactory::createPacket(uint32_t id)
 {
 	switch (id)
 	{
-		case AUTH_PACKET				: return new AuthPacket;
-		case AUTH_REJECT_PACKET			: return new AuthRejectPacket;
-		case AUTH_ACCEPT_PACKET			: return new AuthAcceptPacket;
-		case REGISTER_PACKET			: return new RegisterPacket;
-		case INIT_LOCATION_PACKET		: return new InitLocationPacket;
-		case CHECK_AVATAR_HASH_PACKET	: return new CheckAvatarHashPacket;
-		case UPDATE_AVATAR_PACKET		: return new UpdateAvatarPacket;
-		case INIT_PROFILE_PACKET		: return new InitProfilePacket;
-		case UPDATE_PROFILE_PACKET		: return new UpdateProfilePacket;
+		case AUTH_PACKET				: return std::make_unique<AuthPacket>();
+		case AUTH_REJECT_PACKET			: return std::make_unique<AuthRejectPacket>();
+		case AUTH_ACCEPT_PACKET			: return std::make_unique<AuthAcceptPacket>();
+		case REGISTER_PACKET			: return std::make_unique<RegisterPacket>();
+		case INIT_LOCATION_PACKET		: return std::make_unique<InitLocationPacket>();
+		case CHECK_AVATAR_HASH_PACKET	: return std::make_unique<CheckAvatarHashPacket>();
+		case UPDATE_AVATAR_PACKET		: return std::make_unique<UpdateAvatarPacket>();
+		case INIT_PROFILE_PACKET		: return std::make_unique<InitProfilePacket>();
+		case UPDATE_PROFILE_PACKET		: return std::make_unique<UpdateProfilePacket>();
+		case INIT_CHATS_PACKET			: return std::make_unique<InitChatsPacket>();
 		default							: return nullptr;
 	}
 }

@@ -11,7 +11,7 @@ MessageWidget::MessageWidget(Client *client)
 	btnClose = new QPushButton(this);
 	btnClose->setText(tr("Close"));
 	btnClose->setCursor(Qt::CursorShape::PointingHandCursor);
-	
+
 	setWindowFlags(Qt::WindowType::FramelessWindowHint);
 	setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground);
 	resize(400, 200);
@@ -39,7 +39,7 @@ void MessageWidget::paintEvent(QPaintEvent *event)
 			: (icon == MessageWidget::ERROR) ?
 				QColor(170, 40, 40)
 				: QColor(50, 50, 50);
-	
+
 	//background
 	QColor backgroundColor(tone);
 	QBrush brush(backgroundColor);

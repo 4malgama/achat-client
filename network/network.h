@@ -44,7 +44,7 @@ private:
 
 public:
 	explicit Network(QObject *parent = nullptr);
-	~Network();
+	virtual ~Network();
 
 	void setInetAddress(const InetAddress& endPoint);
 	bool isConnected() const;
@@ -65,7 +65,8 @@ private:
 	void onStateChanged(QAbstractSocket::SocketState state);
 	void onReadEvent();
 	void onTimeout();
-
+	void handleError(QAbstractSocket::SocketError socketError);
+	void processBuffer();
 
 };
 

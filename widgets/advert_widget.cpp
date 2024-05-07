@@ -23,6 +23,8 @@ AdvertWidget::AdvertWidget(QColor a, QColor b, QWidget *parent)
 {
 	background.a = a;
 	background.b = b;
+	gradient.setColorAt(0, background.a);
+	gradient.setColorAt(1, background.b);
 	setCursor(Qt::PointingHandCursor);
 }
 
@@ -31,9 +33,6 @@ void AdvertWidget::paintEvent(QPaintEvent *event)
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 
-	QLinearGradient gradient(rect().topLeft(), rect().topRight());
-	gradient.setColorAt(0, background.a);
-	gradient.setColorAt(1, background.b);
 	painter.fillRect(rect(), gradient);
 
 	painter.setPen(Qt::white);

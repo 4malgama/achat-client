@@ -10,5 +10,6 @@
 #include "update_avatar_packet.h"
 #include "init_profile_packet.h"
 #include "update_profile_packet.h"
+#include "init_chats_packet.h"
 
 #endif // ALL_H

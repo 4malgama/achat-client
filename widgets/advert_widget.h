@@ -35,6 +35,8 @@ signals:
 private:
 	void paintEvent(QPaintEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
+
+	QLinearGradient gradient;
 };
 
 #endif // ADVERTWIDGET_H

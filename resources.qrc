@@ -13,5 +13,7 @@
         <file>resources/images/expand_arrow.png</file>
         <file>resources/images/check.png</file>
         <file>resources/images/synchonize.png</file>
+        <file>resources/images/attach.png</file>
+        <file>resources/images/send.png</file>
     </qresource>
 </RCC>

@@ -1,7 +1,8 @@
 #ifndef PACKETFACTORY_H
 #define PACKETFACTORY_H
 
-#include <qglobal.h>
+#include <memory>
+#include <cstdint>
 
 class IPacket;
 
@@ -12,7 +13,7 @@ public:
 	PacketFactory(const PacketFactory&) = delete;
 	PacketFactory(PacketFactory&&) noexcept = delete;
 
-	static IPacket *makePacket(quint32 id);
+	static std::unique_ptr<IPacket> createPacket(uint32_t id);
 };
 
 #endif // PACKETFACTORY_H

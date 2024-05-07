@@ -29,10 +29,6 @@ namespace profilewidget
 			w = new ProfileWidget();
 			QObject::connect(w, &ProfileWidget::event_close, close);
 		}
-		else
-		{
-			w->activateWindow();
-		}
 		return w;
 	}
 }

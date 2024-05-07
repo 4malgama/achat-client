@@ -2,6 +2,7 @@
 #include "packet_factory.h"
 #include "packets/ipacket.h"
 #include <QTimer>
+#include <QDataStream>
 
 #include <QDebug>
 
@@ -17,6 +18,7 @@ Network::Network(QObject *parent)
 	connect(&socket, &QAbstractSocket::stateChanged, this, &Network::onStateChanged);
 	connect(&socket, &QIODevice::readyRead, this, &Network::onReadEvent);
 	connect(timeoutTimer, &QTimer::timeout, this, &Network::onTimeout);
+	connect(&socket, &QAbstractSocket::errorOccurred, this, &Network::handleError);
 }
 
 Network::~Network()
@@ -126,15 +128,12 @@ void Network::onReadEvent()
 		quint16 id = *(quint16*) QByteArray(data.mid(4, 2)).data();
 		id = _byteswap_ushort(id);
 
-		IPacket* packet = PacketFactory::makePacket(id);
+		std::unique_ptr<IPacket> packet = PacketFactory::createPacket(id);
 
 		if (packet != nullptr)
 		{
 			packet->prepareToRead(data.mid(6, packetSize - 6));
-
-			readEvent(packet);
-
-			delete packet;
+			readEvent(packet.get());
 		}
 
 		buffer.remove(0, packetSize);
@@ -142,8 +141,46 @@ void Network::onReadEvent()
 	}
 }
 
+// void Network::onReadEvent()
+// {
+// 	buffer.append(socket.readAll());
+// 	processBuffer();
+// }
+
+// void Network::processBuffer()
+// {
+// 	while (buffer.size() >= sizeof(quint32)) {
+// 		QDataStream stream(&buffer, QIODevice::ReadOnly);
+// 		quint32 packetSize;
+// 		quint16 id;
+// 		stream >> packetSize;
+// 		stream >> id;
+
+// 		// Check for invalid packet size
+// 		if (packetSize <= 0 || buffer.size() < packetSize)
+// 			return;
+
+// 		std::unique_ptr<IPacket> packet = PacketFactory::createPacket(id);
+
+// 		if (packet != nullptr) {
+// 			QByteArray packetData = buffer.mid(sizeof(quint32) + sizeof(quint16), packetSize);
+// 			packet->prepareToRead(packetData);
+// 			readEvent(packet.get());
+// 		}
+
+// 		buffer.remove(0, sizeof(quint32) + sizeof(quint16) + packetSize);
+// 	}
+// }
+
+
 void Network::onTimeout()
 {
 	tryDisconnect();
 	failConnect();
+}
+
+void Network::handleError(QAbstractSocket::SocketError socketError)
+{
+	Q_UNUSED(socketError)
+	qInfo() << socket.errorString();
 }

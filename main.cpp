@@ -37,13 +37,15 @@ static void _main_end()
 
 int main(int argc, char *argv[])
 {
+	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 	QApplication a(argc, argv);
 	QSettings::setDefaultFormat(QSettings::IniFormat);
 
 	resourcemanager::load();
 
-	qApp->setOrganizationName("Amalgama");
-	qApp->setApplicationName("AChat Client");
+	a.setOrganizationName("Amalgama");
+	a.setApplicationName("AChat Client");
+	a.setApplicationDisplayName("AChat Client");
 
 	QTranslator translator;
 	const QStringList uiLanguages = QLocale::system().uiLanguages();

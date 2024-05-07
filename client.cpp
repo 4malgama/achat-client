@@ -3,10 +3,14 @@
 #include "network/account.h"
 #include "settings/settings_manager.h"
 #include "widgets/profile_widget.h"
+#include "widgets/chats_widget.h"
 #include "widgets/advert_widget.h"
+#include "widgets/chat_message_widget.h"
+#include "widgets/chat_row_widget.h"
 #include "widgets/authorization_widget.h"
 #include "widgets/message_widget.h"
 #include "resource_manager/resource_manager.h"
+#include "types/classes.h"
 
 #include <QMouseEvent>
 #include <QHash>
@@ -42,6 +46,11 @@ namespace profilewidget
 	ProfileWidget* getInstance();
 }
 
+namespace chatswidget
+{
+	ChatsWidget* getInstance();
+}
+
 Client::Client(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::Client)
@@ -74,6 +83,9 @@ Client::Client(QWidget *parent)
 	pw = profilewidget::getInstance();
 	ui->frame->layout()->addWidget(pw);
 
+	cw = chatswidget::getInstance();
+	ui->frame->layout()->addWidget(cw);
+
 	show();
 }
 
@@ -87,19 +99,22 @@ void Client::openMyProfilePage()
 	if (!(currentPage == nullptr || currentPage == pw))
 		currentPage->hide();
 
-	if (pw != nullptr)
-	{
-		pw->show();
-		currentPage = pw;
-	}
-	else
-	{
-		pw->show();
-		currentPage = pw;
-	}
+	pw->show();
+	currentPage = pw;
 
 	pw->setAvatar(ResourceManager::instance().getAvatar());
 	setWindowTitle(tr("Profile"));
+}
+
+void Client::openChatsPage()
+{
+	if (!(currentPage == nullptr || currentPage == cw))
+		currentPage->hide();
+
+	cw->show();
+	currentPage = cw;
+
+	setWindowTitle(tr("Chats"));
 }
 
 void Client::authWindow()
@@ -133,6 +148,8 @@ void Client::closePages()
 {
 	if (pw != nullptr)
 		pw->close();
+	if (cw != nullptr)
+		cw->close();
 }
 
 void Client::showMessage(const QString& text, quint8 icon)
@@ -141,6 +158,28 @@ void Client::showMessage(const QString& text, quint8 icon)
 	mw->icon = (icon >= MessageWidget::UNKNOWN ? MessageWidget::UNKNOWN : ((MessageWidget::MessageIcon)icon));
 	mw->message = text;
 	mw->show();
+}
+
+void Client::addMessageToChat(int chatId, const QString &text, quint64 timestamp, bool isMine, bool showAvatar)
+{
+	if (cw == nullptr)
+		return;
+
+	ChatMessageWidget* message = new ChatMessageWidget(this, isMine);
+	message->setText(text);
+	message->setDateTime(QDateTime::fromMSecsSinceEpoch(timestamp));
+	//TODO Show Avatar
+
+	//TODO Find chat ID
+	cw->addMessageToCurrentChat(message);
+}
+
+void Client::initChats(const QList<InitChatData> &chats)
+{
+	if (cw != nullptr)
+	{
+		cw->addChats(chats);
+	}
 }
 
 void Client::enableSideButtons()
@@ -243,3 +282,9 @@ void Client::resizeEvent(QResizeEvent* event)
 {
 	emit event_resize(event->size());
 }
+
+void Client::on_btnChats_clicked()
+{
+	openChatsPage();
+}
+

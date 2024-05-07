@@ -6,6 +6,12 @@ QWidget {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #10161E, stop: 1 #1C3149);
 }
 
+Client #frame {
+    background: rgba(0,0,0,0.5);
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
 #frameSide {
     background-color: #244059;
     border: 0px solid black;
@@ -396,4 +402,52 @@ MessageWidget QPushButton:hover {
 
 MessageWidget QPushButton:pressed {
     background: rgba(0, 0, 0, 0.5);
+}
+
+ChatsWidget {
+    background: rgba(0,0,0,0.1);
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+ChatsWidget QScrollArea {
+    background: transparent;
+    color: white;
+    padding: 10px;
+    border: 0px solid transparent;
+    border-radius: 10px;
+}
+
+ChatsWidget #chatsContent, ChatsWidget #messagesContent {
+    background: transparent;
+}
+
+ChatsWidget #txtMessage {
+    background-color: rgba(0,0,0,0.3);
+    border: 0px solid transparent;
+    border-radius: 10px;
+    font-family: Verdana, Tahoma, sans-serif;
+    font-size: 13px;
+    padding: 3px;
+    color: white;
+    selection-color: #244059;
+    selection-background-color: #3CC6EE;
+}
+
+ChatsWidget #txtMessage:focus {
+    background-color: rgba(0,0,0,0.4);
+}
+
+ChatsWidget #btnAttach, ChatsWidget #btnSend {
+    background-color: #3B6891;
+    border: 0px solid transparent;
+    border-radius: 10px;
+    color: white;
+}
+
+ChatsWidget #btnAttach:hover, ChatsWidget #btnSend:hover {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0  #3CC6EE, stop: 1 #3C92EE);
+    border: 0px solid transparent;
+    border-radius: 10px;
+    border: 1px solid white;
 }
