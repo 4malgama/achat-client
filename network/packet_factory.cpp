@@ -17,6 +17,10 @@ std::unique_ptr<IPacket> PacketFactory::createPacket(uint32_t id)
 		case INIT_PROFILE_PACKET		: return std::make_unique<InitProfilePacket>();
 		case UPDATE_PROFILE_PACKET		: return std::make_unique<UpdateProfilePacket>();
 		case INIT_CHATS_PACKET			: return std::make_unique<InitChatsPacket>();
+		case GET_INIT_MESSAGES_PACKET	: return std::make_unique<GetInitMessagesPacket>();
+		case INIT_MESSAGES_PACKET		: return std::make_unique<InitMessagesPacket>();
+		case SEND_MESSAGE_PACKET		: return std::make_unique<SendMessagePacket>();
+		case NEW_MESSAGE_PACKET			: return std::make_unique<NewMessagePacket>();
 		default							: return nullptr;
 	}
 }

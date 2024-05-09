@@ -2,7 +2,7 @@ QT += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17
+CONFIG += c++20
 
 TARGET = AChatClient
 
@@ -29,11 +29,15 @@ SOURCES += \
 	network/packets/auth_packet.cpp \
 	network/packets/auth_reject_packet.cpp \
 	network/packets/check_avatar_hash_packet.cpp \
+	network/packets/get_init_messages_packet.cpp \
 	network/packets/init_chats_packet.cpp \
 	network/packets/init_location_packet.cpp \
+	network/packets/init_messages_packet.cpp \
 	network/packets/init_profile_packet.cpp \
 	network/packets/ipacket.cpp \
+	network/packets/new_message_packet.cpp \
 	network/packets/register_packet.cpp \
+	network/packets/send_message_packet.cpp \
 	network/packets/update_avatar_packet.cpp \
 	network/packets/update_profile_packet.cpp \
 	network/stream_builder.cpp \
@@ -63,11 +67,15 @@ HEADERS += \
 	network/packets/auth_packet.h \
 	network/packets/auth_reject_packet.h \
 	network/packets/check_avatar_hash_packet.h \
+	network/packets/get_init_messages_packet.h \
 	network/packets/init_chats_packet.h \
 	network/packets/init_location_packet.h \
+	network/packets/init_messages_packet.h \
 	network/packets/init_profile_packet.h \
 	network/packets/ipacket.h \
+	network/packets/new_message_packet.h \
 	network/packets/register_packet.h \
+	network/packets/send_message_packet.h \
 	network/packets/update_avatar_packet.h \
 	network/packets/update_profile_packet.h \
 	network/stream_builder.h \

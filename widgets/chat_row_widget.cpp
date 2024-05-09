@@ -2,6 +2,9 @@
 
 #include <QPainter>
 #include <QPainterPath>
+#include <QMouseEvent>
+#include <QLinearGradient>
+
 
 ChatRowWidget::ChatRowWidget(QWidget *parent)
 	: QWidget{parent}
@@ -62,6 +65,7 @@ bool ChatRowWidget::getSelected()
 void ChatRowWidget::initialize()
 {
 	setFixedHeight(80);
+	setCursor(Qt::PointingHandCursor);
 }
 
 void ChatRowWidget::paintEvent(QPaintEvent *)
@@ -69,9 +73,22 @@ void ChatRowWidget::paintEvent(QPaintEvent *)
 	QPainter painter(this);
 	painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
 
-	QColor bgColor = selected ? QColor(59, 104, 145) : QColor(36, 64, 89);
+	QColor bgColor = selected ? colors.bg.selected : colors.bg.common;
 
-	QPen pen = selected ? QPen(QColor(255, 255, 255), 1) : Qt::NoPen;
+	if (pressed)
+	{
+		bgColor = colors.bg.pressed;
+	}
+	else if (hovered)
+	{
+		bgColor = colors.bg.hovered;
+	}
+
+	QLinearGradient penGradient(0, 0, width(), height());
+	penGradient.setColorAt(0, QColor(249, 72, 134)); // #F94886
+	penGradient.setColorAt(1, QColor(72, 198, 249)); // #48C6F9
+
+	QPen pen = selected ? QPen(penGradient, 2) : Qt::NoPen;
 
 	painter.setBrush(bgColor);
 	painter.setPen(pen);
@@ -100,19 +117,24 @@ void ChatRowWidget::paintEvent(QPaintEvent *)
 void ChatRowWidget::enterEvent(QEvent *)
 {
 	hovered = true;
+	update();
 }
 
 void ChatRowWidget::leaveEvent(QEvent *)
 {
 	hovered = false;
+	update();
 }
 
-void ChatRowWidget::mousePressEvent(QMouseEvent *)
+void ChatRowWidget::mousePressEvent(QMouseEvent *e)
 {
-	pressed = true;
+	pressed = e->buttons() & Qt::LeftButton;
+	if (pressed) emit clicked();
+	update();
 }
 
-void ChatRowWidget::mouseReleaseEvent(QMouseEvent *)
+void ChatRowWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-	pressed = false;
+	pressed = e->buttons() &~ Qt::LeftButton;
+	update();
 }

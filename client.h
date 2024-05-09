@@ -12,6 +12,7 @@ class ProfileWidget;
 class AuthorizationWidget;
 class ChatsWidget;
 struct InitChatData;
+struct ChatMessage;
 
 class Client : public QMainWindow
 {
@@ -41,8 +42,9 @@ public:
 	void closePages();
 	void showMessage(const QString& text, quint8 icon = 0);
 
-	void addMessageToChat(int chatId, const QString& text, quint64 timestamp, bool isMine, bool showAvatar = false);
+	void addMessageToChat(quint64 chatId, ChatMessage* message);
 	void initChats(const QList<InitChatData>& chats);
+	void initMessages(quint64 chatId, const QList<ChatMessage>& messages);
 
 	void enableSideButtons();
 	void disableSideButtons();

@@ -21,13 +21,35 @@ struct InitChatData
 	ProfileData user;
 };
 
-struct ChatMessage
+struct ChatMessageUser
+{
+	uint64 uid;
+	QString fname;
+	QString sname;
+	QString mname;
+};
+
+struct ChatMessageAttachment
 {
 
 };
 
+struct ChatMessage
+{
+	uint64 id;
+	uint64 timestamp;
+	uint64 replyId;
+	uint64 forwardId;
+	QString content;
+	ChatMessage* replyMsg;
+	ChatMessage* forwardMsg;
+	ChatMessageUser user;
+	QList<ChatMessageAttachment> attachments;
+};
+
 struct ChatData
 {
+	bool initialized = false;
 	InitChatData data;
 	QList<ChatMessage> messages;
 };

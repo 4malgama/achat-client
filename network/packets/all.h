@@ -11,5 +11,9 @@
 #include "init_profile_packet.h"
 #include "update_profile_packet.h"
 #include "init_chats_packet.h"
+#include "get_init_messages_packet.h"
+#include "init_messages_packet.h"
+#include "send_message_packet.h"
+#include "new_message_packet.h"
 
 #endif // ALL_H

@@ -17,6 +17,10 @@ public:
 	void login(const QString& login, const QString& password);
 	void registration(const QString& login, const QString& password);
 	void updateProfile(const QHash<QString, QVariant>& profileInfo);
+	void requestMessages(quint64 chatId);
+	void sendMessage(quint64 chatId, const QString& jsonData);
+
+	const ProfileData* getData() const;
 
 private:
 	void readEvent(IPacket* packet) override;

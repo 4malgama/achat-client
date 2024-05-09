@@ -15,8 +15,18 @@ class ChatRowWidget : public QWidget
 	bool hovered = false;
 	bool pressed = false;
 
-public:
+	struct
+	{
+		struct
+		{
+			QColor common = QColor(36, 64, 89);
+			QColor selected = QColor(59, 104, 145);
+			QColor hovered = QColor(60, 92, 121);
+			QColor pressed = QColor(44, 59, 72);
+		} bg;
+	} colors;
 
+public:
 	explicit ChatRowWidget(QWidget *parent = nullptr);
 	ChatRowWidget(QWidget *parent, const QImage& avatar, const QString& displayName, const QString& post);
 
@@ -30,6 +40,9 @@ public:
 
 	void setSelected(bool state);
 	bool getSelected();
+
+signals:
+	void clicked();
 
 private:
 	void initialize();

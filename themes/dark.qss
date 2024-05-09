@@ -451,3 +451,13 @@ ChatsWidget #btnAttach:hover, ChatsWidget #btnSend:hover {
     border-radius: 10px;
     border: 1px solid white;
 }
+
+ChatsWidget #frame {
+    background: transparent;
+    border: 1px solid white;
+    border-radius: 10px
+}
+
+ChatsWidget #frame QLabel {
+    color: white;
+}

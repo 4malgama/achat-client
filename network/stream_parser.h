@@ -28,19 +28,13 @@ public:
 	inline bool isEmpty() const { return length == 0; }
 	inline int size() const { return length; }
 	inline int index() const { return I; }
-	
+
 	void shift(int shift);
 
 	void reset();
 	void load(const QByteArray& data);
 
 private:
-	inline int16_t swapInt16(int16_t value) { return (value << 8) | (value >> 8); }
-	inline int32_t swapInt32(int32_t value) { return (value << 24) | ((value << 8) & 0xFF0000) | ((value >> 8) & 0xFF00) | (value >> 24); }
-	inline int64_t swapInt64(int64_t value) { return (value << 56) | ((value << 40) & 0xFF000000) | ((value << 24) & 0xFF0000) | ((value << 8) & 0xFF00) | (value >> 56); }
-	inline quint16 swapUInt16(quint16 value) { return (value << 8) | (value >> 8); }
-	inline quint32 swapUInt32(quint32 value) { return (value << 24) | ((value << 8) & 0xFF0000) | ((value >> 8) & 0xFF00) | (value >> 24); }
-	inline quint64 swapUInt64(quint64 value) { return (value << 56) | ((value << 40) & 0xFF000000) | ((value << 24) & 0xFF0000) | ((value << 8) & 0xFF00) | (value >> 56); }
 	QByteArray swapData(const QByteArray& data, int size);
 };
 

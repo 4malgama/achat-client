@@ -46,11 +46,39 @@ public:
 
 private:
 	inline int16_t swapInt16(int16_t value) { return (value << 8) | (value >> 8); }
-	inline int32_t swapInt32(int32_t value) { return (value << 24) | ((value << 8) & 0xFF0000) | ((value >> 8) & 0xFF00) | (value >> 24); };
-	inline int64_t swapInt64(int64_t value) { return (value << 56) | ((value << 40) & 0xFF000000) | ((value << 24) & 0xFF0000) | ((value << 8) & 0xFF00) | (value >> 56); };
+	inline int32_t swapInt32(int32_t value) {
+		return ((value & 0xFF000000) >> 24) |
+			   ((value & 0x00FF0000) >> 8)  |
+			   ((value & 0x0000FF00) << 8)  |
+			   ((value & 0x000000FF) << 24);
+	}
+	inline int64_t swapInt64(int64_t value) {
+		return ((value & 0xFF00000000000000) >> 56) |
+			   ((value & 0x00FF000000000000) >> 40) |
+			   ((value & 0x0000FF0000000000) >> 24) |
+			   ((value & 0x000000FF00000000) >> 8)  |
+			   ((value & 0x00000000FF000000) << 8)  |
+			   ((value & 0x0000000000FF0000) << 24) |
+			   ((value & 0x000000000000FF00) << 40) |
+			   ((value & 0x00000000000000FF) << 56);
+	}
 	inline quint16 swapUInt16(quint16 value) { return (value << 8) | (value >> 8); }
-	inline quint32 swapUInt32(quint32 value) { return (value << 24) | ((value << 8) & 0xFF0000) | ((value >> 8) & 0xFF00) | (value >> 24); }
-	inline quint64 swapUInt64(quint64 value) { return (value << 56) | ((value << 40) & 0xFF000000) | ((value << 24) & 0xFF0000) | ((value << 8) & 0xFF00) | (value >> 56); }
+	inline quint32 swapUInt32(quint32 value) {
+		return ((value & 0xFF000000) >> 24) |
+			   ((value & 0x00FF0000) >> 8)  |
+			   ((value & 0x0000FF00) << 8)  |
+			   ((value & 0x000000FF) << 24);
+	}
+	inline quint64 swapUInt64(quint64 value) {
+		return ((value & 0xFF00000000000000) >> 56) |
+			   ((value & 0x00FF000000000000) >> 40) |
+			   ((value & 0x0000FF0000000000) >> 24) |
+			   ((value & 0x000000FF00000000) >> 8)  |
+			   ((value & 0x00000000FF000000) << 8)  |
+			   ((value & 0x0000000000FF0000) << 24) |
+			   ((value & 0x000000000000FF00) << 40) |
+			   ((value & 0x00000000000000FF) << 56);
+	}
 	QByteArray swapString(const QString& str);
 	QByteArray swapData(const QByteArray& data);
 };

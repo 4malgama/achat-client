@@ -16,6 +16,8 @@ public:
 		QString ip;
 		quint16 port;
 
+		//InetAddress()
+
 		InetAddress& operator= (InetAddress&& other) noexcept
 		{
 			ip = other.ip;

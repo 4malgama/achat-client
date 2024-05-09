@@ -148,12 +148,12 @@ void Account::readEvent(IPacket* packet)
 
 			InitChatData chatData;
 
-			chatData.id = o.value("id").toInt();	//potential implicit narrowing
+			chatData.id = o.value("id").toVariant().toULongLong();
 			chatData.isGroup = o.value("is_group").toBool();
 			if (chatData.isGroup == false)
 			{
 				QJsonObject u = o.value("user").toObject();
-				chatData.user.uid = u.value("id").toInt(); //potential implicit narrowing
+				chatData.user.uid = u.value("id").toVariant().toULongLong();
 				chatData.user.fname = u.value("name").toString();
 				chatData.user.sname = u.value("surname").toString();
 				chatData.user.mname = u.value("patronymic").toString();
@@ -169,6 +169,88 @@ void Account::readEvent(IPacket* packet)
 
 		return;
 	}
+	else if (InitMessagesPacket* P = dynamic_cast<InitMessagesPacket*>(packet))
+	{
+		if (P->jsonData.isEmpty())
+			return;
+
+		QJsonDocument doc = QJsonDocument::fromJson(P->jsonData.toUtf8());
+		QJsonObject json = doc.object();
+		QJsonArray messages = json.value("messages").toArray();
+		quint64 chatId = json.value("chat_id").toVariant().toULongLong();
+
+		QList<ChatMessage> data;
+
+		for (QJsonValue&& message : messages)
+		{
+			QJsonObject o = message.toObject();
+			ChatMessage msg;
+
+			msg.id = o.value("id").toVariant().toULongLong();
+			msg.timestamp = o.value("time").toVariant().toULongLong();
+			msg.content = o.value("content").toString();
+			msg.replyId = o.value("reply_id").toVariant().toULongLong();
+			msg.forwardId = o.value("forward_id").toVariant().toULongLong();
+
+			QJsonObject u = o.value("sender").toObject();
+
+			msg.user.uid = u.value("id").toVariant().toULongLong();
+			msg.user.fname = u.value("name").toString();
+			msg.user.sname = u.value("surname").toString();
+			msg.user.mname = u.value("patronymic").toString();
+
+			data.append(msg);
+		}
+
+		std::for_each(data.begin(), data.end(), [&data] (ChatMessage& msg) {
+			if (msg.replyId)
+			{
+				ChatMessage& reply = *std::find_if(data.begin(), data.end(), [&msg] (ChatMessage& m) -> bool {
+					return m.id == msg.replyId;
+				});
+				msg.replyMsg = &reply;
+			}
+			if (msg.forwardId)
+			{
+				ChatMessage& fwd = *std::find_if(data.begin(), data.end(), [&msg] (ChatMessage& m) -> bool {
+					return m.id == msg.forwardId;
+				});
+				msg.forwardMsg = &fwd;
+			}
+		});
+
+		client::window->initMessages(chatId, data);
+
+		return;
+	}
+	else if (NewMessagePacket* P = dynamic_cast<NewMessagePacket*>(packet))
+	{
+		if (P->jsonData.isEmpty())
+			return;
+
+		QJsonDocument doc = QJsonDocument::fromJson(P->jsonData.toUtf8());
+		QJsonObject json = doc.object();
+
+		quint64 chatId = json.value("chat_id").toVariant().toULongLong();
+
+		ChatMessage msg;
+		msg.id = json.value("id").toVariant().toULongLong();
+		msg.timestamp = json.value("time").toVariant().toULongLong();
+		msg.content = json.value("content").toString();
+		msg.replyId = json.value("reply_id").toVariant().toULongLong();
+		msg.forwardId = json.value("forward_id").toVariant().toULongLong();
+
+		QJsonObject sender = json.value("sender").toObject();
+
+		msg.user.uid = sender.value("id").toVariant().toULongLong();
+		msg.user.fname = sender.value("name").toString();
+		msg.user.sname = sender.value("surname").toString();
+		msg.user.mname = sender.value("patronymic").toString();
+
+		client::window->addMessageToChat(chatId, &msg);
+
+		return;
+	}
 }
 
 void Account::updateProfile(const QHash<QString, QVariant>& profileInfo)
@@ -179,6 +261,26 @@ void Account::updateProfile(const QHash<QString, QVariant>& profileInfo)
 		packet.changes = JsonUtils::jsonToString(JsonUtils::hashmapToJson(profileInfo));
 		send(&packet);
 	}
+}
+
+void Account::requestMessages(quint64 chatId)
+{
+	GetInitMessagesPacket packet;
+	packet.chatId = chatId;
+	send(&packet);
+}
+
+void Account::sendMessage(quint64 chatId, const QString &jsonData)
+{
+	SendMessagePacket packet;
+	packet.chatId = chatId;
+	packet.jsonData = jsonData;
+	send(&packet);
+}
+
+const ProfileData *Account::getData() const
+{
+	return &data;
 }
 
 void Account::onLoginSuccess()

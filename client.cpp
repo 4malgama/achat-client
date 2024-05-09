@@ -63,9 +63,9 @@ Client::Client(QWidget *parent)
 	acc->setInetAddress(SettingsManager::getInstance().getEndPoint());
 
 	AdvertWidget* advert = new AdvertWidget(QColor(0, 210, 180), QColor(80, 200, 250), this);
-	advert->setTitle("Amalgama's Chat is available for free!");
-	advert->setDescription("To get started, create an account or sign in.");
-	advert->setLinkText("Sign in");
+	advert->setTitle(tr("Amalgama's Chat is available for free!"));
+	advert->setDescription(tr("To get started, create an account or sign in."));
+	advert->setLinkText(tr("Sign in"));
 	advert->setLink("https://infotecs.ru/");
 	addAdvertPage(advert);
 
@@ -160,18 +160,12 @@ void Client::showMessage(const QString& text, quint8 icon)
 	mw->show();
 }
 
-void Client::addMessageToChat(int chatId, const QString &text, quint64 timestamp, bool isMine, bool showAvatar)
+void Client::addMessageToChat(quint64 chatId, ChatMessage* message)
 {
 	if (cw == nullptr)
 		return;
 
-	ChatMessageWidget* message = new ChatMessageWidget(this, isMine);
-	message->setText(text);
-	message->setDateTime(QDateTime::fromMSecsSinceEpoch(timestamp));
-	//TODO Show Avatar
-
-	//TODO Find chat ID
-	cw->addMessageToCurrentChat(message);
+	cw->addMessageToChat(chatId, message, message->user.uid == acc->getData()->uid);
 }
 
 void Client::initChats(const QList<InitChatData> &chats)
@@ -179,6 +173,14 @@ void Client::initChats(const QList<InitChatData> &chats)
 	if (cw != nullptr)
 	{
 		cw->addChats(chats);
+	}
+}
+
+void Client::initMessages(quint64 chatId, const QList<ChatMessage>& messages)
+{
+	if (cw != nullptr)
+	{
+		cw->initMessages(chatId, messages);
 	}
 }
 

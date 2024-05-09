@@ -25,7 +25,7 @@ SettingsManager::SettingsManager()
 
 Network::InetAddress SettingsManager::getEndPoint()
 {
-	return (Network::InetAddress) { .ip = settings::hostIp, .port = settings::hostPort };
+	return { .ip = settings::hostIp, .port = settings::hostPort };
 }
 
 void SettingsManager::setEndPoint(const Network::InetAddress &endPoint)
