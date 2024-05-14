@@ -12,6 +12,7 @@ namespace client
 
 namespace unload { void free(); }
 namespace resourcemanager { void load(); }
+namespace aes { void init(); }
 
 static void setDarkTheme()
 {
@@ -58,6 +59,8 @@ int main(int argc, char *argv[])
 	}
 
 	setDarkTheme();
+
+	aes::init();
 
 	client::show();
 

@@ -9,6 +9,7 @@ class Account : public Network
 	QString token;
 	ProfileData data;
 
+
 public:
 	explicit Account(QObject *parent = nullptr);
 	virtual ~Account();
@@ -29,6 +30,11 @@ private:
 	void failConnect() override;
 
 	void onLoginSuccess();
+
+	void handShake();
+	void handShakeFailed();
+	void handShakeSuccessful();
+	void authorization();
 };
 
 #endif // ACCOUNT_H

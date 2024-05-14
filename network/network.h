@@ -5,6 +5,7 @@
 
 class QTimer;
 class IPacket;
+class AES;
 
 class Network : public QObject
 {
@@ -52,6 +53,9 @@ public:
 	bool isConnected() const;
 
 protected:
+	bool encryption;
+	AES* aes;
+
 	virtual void readEvent(IPacket* packet) = 0;
 	virtual void disconnectEvent() = 0;
 	virtual void connectedEvent() = 0;
@@ -61,6 +65,7 @@ protected:
 	void tryConnect(const QString& ip, quint16 port);
 	void tryDisconnect();
 	void send(const IPacket* packet);
+	void sendOpen(const IPacket* packet);
 	void sendData(const QByteArray& data);
 
 private:

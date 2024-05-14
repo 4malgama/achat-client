@@ -1,6 +1,10 @@
 #ifndef ALL_H
 #define ALL_H
 
+#include "client_hello_packet.h"
+#include "server_hello_packet.h"
+#include "client_ready_packet.h"
+#include "server_ready_packet.h"
 #include "auth_packet.h"
 #include "auth_reject_packet.h"
 #include "auth_accept_packet.h"

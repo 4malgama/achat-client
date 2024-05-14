@@ -6,6 +6,8 @@
 #include "../utils/json_utils.h"
 #include "settings/settings_manager.h"
 #include "../types/classes.h"
+#include "../secure/certification/certification_manager.h"
+#include "../secure/encryption/aes.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -15,6 +17,16 @@
 
 #include <QDebug>
 
+
+static QVector<QString> vProtocols = {
+	"1.0"
+};
+
+static bool CheckAvailabilityProtocol(const QString& protocol)
+{
+	return vProtocols.contains(protocol);
+}
+
 namespace client
 {
 	extern Client* window;
@@ -22,7 +34,7 @@ namespace client
 
 namespace crypto
 {
-	QString PasswordHash(const QString& password);
+	QString MD5(const QString& password);
 	QString FileHash(const QString& filePath);
 }
 
@@ -85,7 +97,34 @@ void Account::registration(const QString &login, const QString &password)
 
 void Account::readEvent(IPacket* packet)
 {
-	if (AuthRejectPacket* P = dynamic_cast<AuthRejectPacket*>(packet))
+	if (ServerHelloPacket* P = dynamic_cast<ServerHelloPacket*>(packet))
+	{
+		bool ok = false;
+		if (CheckAvailabilityProtocol(P->protocol))
+		{
+			if (CertificationManager::verifyCertificate(P->certificate.toUtf8()))
+			{
+				QByteArray key = QByteArray::fromBase64(P->key.toUtf8());
+				QByteArray iv = QByteArray::fromBase64(P->iv.toUtf8());
+				if (key.size() == 32 && iv.size() == 16)
+				{
+					this->aes = new AES(AES::CBC_256);
+					this->aes->setKey(key);
+					this->aes->setIV(iv);
+					ok = true;
+					encryption = true;
+				}
+			}
+		}
+		if (!ok) handShakeFailed();
+		else handShakeSuccessful();
+		return;
+	}
+	else if (dynamic_cast<ServerReadyPacket*>(packet))
+	{
+		authorization();
+	}
+	else if (AuthRejectPacket* P = dynamic_cast<AuthRejectPacket*>(packet))
 	{
 		client::window->showMessage(P->reason, 2);
 		client::window->disableSideButtons();
@@ -307,14 +346,25 @@ void Account::onLoginSuccess()
 	send(&packet);
 }
 
-void Account::disconnectEvent()
+void Account::handShake()
 {
-	ServerMessageWidget::open(client::window, "No connection.");
-	client::window->closeAuthWindow();
-	client::window->disableSideButtons();
+	ClientHelloPacket packet;
+	send(&packet);
 }
 
-void Account::connectedEvent()
+void Account::handShakeFailed()
+{
+	tryDisconnect();
+	client::window->showMessage(tr("An error occurred while trying to\nestablish a secure connection."), 2);
+}
+
+void Account::handShakeSuccessful()
+{
+	ClientReadyPacket packet;
+	sendOpen(&packet);
+}
+
+void Account::authorization()
 {
 	QLocale locale = QLocale::system();
 	QString localeName = locale.name();
@@ -341,6 +391,18 @@ void Account::connectedEvent()
 	}
 
 	client::window->authWindow();
+}
+
+void Account::disconnectEvent()
+{
+	ServerMessageWidget::open(client::window, "No connection.");
+	client::window->closeAuthWindow();
+	client::window->disableSideButtons();
+}
+
+void Account::connectedEvent()
+{
+	handShake();
 }
 
 void Account::failConnect()

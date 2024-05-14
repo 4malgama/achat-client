@@ -4,9 +4,14 @@
 
 namespace crypto
 {
-	QString PasswordHash(const QString& password)
+	QString MD5(const QString& data)
 	{
-		return QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Algorithm::Md5).toHex();
+		return QCryptographicHash::hash(data.toUtf8(), QCryptographicHash::Md5).toHex();
+	}
+
+	QByteArray MD5(const QByteArray& data)
+	{
+		return QCryptographicHash::hash(data, QCryptographicHash::Md5);
 	}
 
 	QString FileHash(const QString& filePath)

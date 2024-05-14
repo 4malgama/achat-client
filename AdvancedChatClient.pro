@@ -17,6 +17,8 @@ UI_DIR = ui
 UI_HEADERS_DIR = ui_h
 UI_SOURCES_DIR = ui_s
 
+LIBS += -L"C:\Program Files (x86)\OpenSSL-Win32\lib\MinGW" -llibssl -llibcrypto
+LIBS += -L"C:\Program Files\OpenSSL-Win64\lib\MinGW" -llibssl -llibcrypto
 
 SOURCES += \
 	free.cpp \
@@ -29,6 +31,8 @@ SOURCES += \
 	network/packets/auth_packet.cpp \
 	network/packets/auth_reject_packet.cpp \
 	network/packets/check_avatar_hash_packet.cpp \
+	network/packets/client_hello_packet.cpp \
+	network/packets/client_ready_packet.cpp \
 	network/packets/get_init_messages_packet.cpp \
 	network/packets/init_chats_packet.cpp \
 	network/packets/init_location_packet.cpp \
@@ -38,11 +42,15 @@ SOURCES += \
 	network/packets/new_message_packet.cpp \
 	network/packets/register_packet.cpp \
 	network/packets/send_message_packet.cpp \
+	network/packets/server_hello_packet.cpp \
+	network/packets/server_ready_packet.cpp \
 	network/packets/update_avatar_packet.cpp \
 	network/packets/update_profile_packet.cpp \
 	network/stream_builder.cpp \
 	network/stream_parser.cpp \
 	resource_manager/resource_manager.cpp \
+	secure/certification/certification_manager.cpp \
+	secure/encryption/aes.cpp \
 	settings/settings_manager.cpp \
 	test/widgets/ripple_button_widget.cpp \
 	utils/CryptoUtils.cpp \
@@ -67,6 +75,8 @@ HEADERS += \
 	network/packets/auth_packet.h \
 	network/packets/auth_reject_packet.h \
 	network/packets/check_avatar_hash_packet.h \
+	network/packets/client_hello_packet.h \
+	network/packets/client_ready_packet.h \
 	network/packets/get_init_messages_packet.h \
 	network/packets/init_chats_packet.h \
 	network/packets/init_location_packet.h \
@@ -76,11 +86,15 @@ HEADERS += \
 	network/packets/new_message_packet.h \
 	network/packets/register_packet.h \
 	network/packets/send_message_packet.h \
+	network/packets/server_hello_packet.h \
+	network/packets/server_ready_packet.h \
 	network/packets/update_avatar_packet.h \
 	network/packets/update_profile_packet.h \
 	network/stream_builder.h \
 	network/stream_parser.h \
 	resource_manager/resource_manager.h \
+	secure/certification/certification_manager.h \
+	secure/encryption/aes.h \
 	settings/settings_manager.h \
 	test/widgets/ripple_button_widget.h \
 	types/classes.h \

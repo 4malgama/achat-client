@@ -21,6 +21,10 @@ std::unique_ptr<IPacket> PacketFactory::createPacket(uint32_t id)
 		case INIT_MESSAGES_PACKET		: return std::make_unique<InitMessagesPacket>();
 		case SEND_MESSAGE_PACKET		: return std::make_unique<SendMessagePacket>();
 		case NEW_MESSAGE_PACKET			: return std::make_unique<NewMessagePacket>();
+		case CLIENT_HELLO_PACKET		: return std::make_unique<ClientHelloPacket>();
+		case SERVER_HELLO_PACKET		: return std::make_unique<ServerHelloPacket>();
+		case CLIENT_READY_PACKET		: return std::make_unique<ClientReadyPacket>();
+		case SERVER_READY_PACKET		: return std::make_unique<ServerReadyPacket>();
 		default							: return nullptr;
 	}
 }

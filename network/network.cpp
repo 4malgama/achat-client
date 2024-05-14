@@ -1,10 +1,17 @@
 #include "network.h"
 #include "packet_factory.h"
 #include "packets/ipacket.h"
+#include "stream_builder.h"
+#include "../secure/encryption/aes.h"
 #include <QTimer>
 #include <QDataStream>
 
 #include <QDebug>
+
+namespace crypto
+{
+	QByteArray MD5(const QByteArray& data);
+}
 
 const quint32 Network::TIMEOUT = 5000;
 
@@ -12,6 +19,8 @@ Network::Network(QObject *parent)
 	: QObject{parent}
 {
 	connected = false;
+	encryption = false;
+	aes = nullptr;
 	timeoutTimer = new QTimer(this);
 	timeoutTimer->setInterval(TIMEOUT);
 	timeoutTimer->setTimerType(Qt::PreciseTimer);
@@ -24,6 +33,8 @@ Network::Network(QObject *parent)
 Network::~Network()
 {
 	tryDisconnect();
+	if (aes != nullptr)
+		delete aes;
 }
 
 void Network::setInetAddress(const InetAddress &endPoint)
@@ -66,6 +77,20 @@ void Network::send(const IPacket *packet)
 	if (packet == nullptr || packet->getId() == 0)
 		return;
 
+	QByteArray data = packet->prepareToSend();
+	if (encryption == true && aes != nullptr)
+	{
+		QByteArray cipher = aes->encrypt(data);
+		QDataStream stream(&data, QIODevice::WriteOnly);
+		stream << cipher;
+	}
+	sendData(data);
+}
+
+void Network::sendOpen(const IPacket *packet)
+{
+	if (packet == nullptr || packet->getId() == 0)
+		return;
 	QByteArray data = packet->prepareToSend();
 	sendData(data);
 }
@@ -123,7 +148,17 @@ void Network::onReadEvent()
 		if (buffer.size() < packetSize)
 			return;
 
-		QByteArray data = buffer.mid(0, packetSize);
+		QByteArray data;
+
+		if (encryption)
+		{
+			data = buffer.mid(4, packetSize);
+			data = aes->decrypt(data);
+		}
+		else
+		{
+			data =  buffer.mid(0, packetSize);
+		}
 
 		quint16 id = *(quint16*) QByteArray(data.mid(4, 2)).data();
 		id = _byteswap_ushort(id);
@@ -136,42 +171,18 @@ void Network::onReadEvent()
 			readEvent(packet.get());
 		}
 
-		buffer.remove(0, packetSize);
+		if (encryption)
+		{
+			buffer.remove(0, packetSize + 4);
+		}
+		else
+		{
+			buffer.remove(0, packetSize);
+		}
+
 		if (buffer.isEmpty()) break;
 	}
 }
-
-// void Network::onReadEvent()
-// {
-// 	buffer.append(socket.readAll());
-// 	processBuffer();
-// }
-
-// void Network::processBuffer()
-// {
-// 	while (buffer.size() >= sizeof(quint32)) {
-// 		QDataStream stream(&buffer, QIODevice::ReadOnly);
-// 		quint32 packetSize;
-// 		quint16 id;
-// 		stream >> packetSize;
-// 		stream >> id;
-
-// 		// Check for invalid packet size
-// 		if (packetSize <= 0 || buffer.size() < packetSize)
-// 			return;
-
-// 		std::unique_ptr<IPacket> packet = PacketFactory::createPacket(id);
-
-// 		if (packet != nullptr) {
-// 			QByteArray packetData = buffer.mid(sizeof(quint32) + sizeof(quint16), packetSize);
-// 			packet->prepareToRead(packetData);
-// 			readEvent(packet.get());
-// 		}
-
-// 		buffer.remove(0, sizeof(quint32) + sizeof(quint16) + packetSize);
-// 	}
-// }
-
 
 void Network::onTimeout()
 {
