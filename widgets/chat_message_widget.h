@@ -3,10 +3,14 @@
 
 #include <QWidget>
 #include <QDateTime>
+#include "../types/classes.h"
 
 class ChatMessageWidget : public QWidget
 {
 	Q_OBJECT
+
+	const int ATTACHMENT_HEIGHT;
+
 public:
 	explicit ChatMessageWidget(QWidget *parent = nullptr, bool isMine = true);
 
@@ -17,13 +21,18 @@ public:
 	QDateTime dateTime() const;
 	bool isMine() const;
 
+	QList<ChatMessageAttachment> attachments() const;
+	void setAttachments(const QList<ChatMessageAttachment> &newAttachments);
+
 signals:
 	void textChanged();
 	void dateChanged();
+	void attachmentsChanged();
 
 private slots:
 	void onTextChanged();
 	void onDateChanged();
+	void onAttachmentsChanged();
 
 private:
 	struct
@@ -36,6 +45,7 @@ private:
 	QString m_Text;
 	QDateTime m_DateTime;
 	bool m_Mine;
+	QList<ChatMessageAttachment> m_Attachments;
 
 	void paintEvent(QPaintEvent *event);
 };

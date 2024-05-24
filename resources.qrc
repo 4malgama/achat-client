@@ -15,5 +15,6 @@
         <file>resources/images/synchonize.png</file>
         <file>resources/images/attach.png</file>
         <file>resources/images/send.png</file>
+        <file>resources/images/file.png</file>
     </qresource>
 </RCC>

@@ -218,7 +218,7 @@ void Account::readEvent(IPacket* packet)
 		QJsonArray messages = json.value("messages").toArray();
 		quint64 chatId = json.value("chat_id").toVariant().toULongLong();
 
-		QList<ChatMessage> data;
+		QList<ChatMessage> listMessages;
 
 		for (QJsonValue&& message : messages)
 		{
@@ -238,27 +238,40 @@ void Account::readEvent(IPacket* packet)
 			msg.user.sname = u.value("surname").toString();
 			msg.user.mname = u.value("patronymic").toString();
 
-			data.append(msg);
+			QJsonArray jsonAttachments = o.value("attachments").toArray();
+
+			for (const QJsonValue& attachment : qAsConst(jsonAttachments))
+			{
+				QJsonObject obj = attachment.toObject();
+				quint64 id = obj.value("id").toVariant().toULongLong();
+				QString name = obj.value("name").toString();
+				QString type = obj.value("type").toString();
+				quint64 size = obj.value("size").toVariant().toULongLong();
+				ChatMessageAttachment a = { id, size, name, type };
+				msg.attachments.append(a);
+			}
+
+			listMessages.append(msg);
 		}
 
-		std::for_each(data.begin(), data.end(), [&data] (ChatMessage& msg) {
+		std::for_each(listMessages.begin(), listMessages.end(), [&listMessages] (ChatMessage& msg) {
 			if (msg.replyId)
 			{
-				ChatMessage& reply = *std::find_if(data.begin(), data.end(), [&msg] (ChatMessage& m) -> bool {
+				ChatMessage& reply = *std::find_if(listMessages.begin(), listMessages.end(), [&msg] (ChatMessage& m) -> bool {
 					return m.id == msg.replyId;
 				});
 				msg.replyMsg = &reply;
 			}
 			if (msg.forwardId)
 			{
-				ChatMessage& fwd = *std::find_if(data.begin(), data.end(), [&msg] (ChatMessage& m) -> bool {
+				ChatMessage& fwd = *std::find_if(listMessages.begin(), listMessages.end(), [&msg] (ChatMessage& m) -> bool {
 					return m.id == msg.forwardId;
 				});
 				msg.forwardMsg = &fwd;
 			}
 		});
 
-		client::window->initMessages(chatId, data);
+		client::window->initMessages(chatId, listMessages);
 
 		return;
 	}
@@ -285,6 +298,19 @@ void Account::readEvent(IPacket* packet)
 		msg.user.fname = sender.value("name").toString();
 		msg.user.sname = sender.value("surname").toString();
 		msg.user.mname = sender.value("patronymic").toString();
+
+		QJsonArray attachments = json.value("attachments").toArray();
+
+		for (const QJsonValue& attachment : qAsConst(attachments))
+		{
+			QJsonObject obj = attachment.toObject();
+			quint64 id = obj.value("id").toVariant().toULongLong();
+			QString name = obj.value("name").toString();
+			QString type = obj.value("type").toString();
+			quint64 size = obj.value("size").toVariant().toULongLong();
+			ChatMessageAttachment a = { id, size, name, type };
+			msg.attachments.append(a);
+		}
 
 		client::window->addMessageToChat(chatId, &msg);
 
@@ -395,7 +421,7 @@ void Account::authorization()
 
 void Account::disconnectEvent()
 {
-	ServerMessageWidget::open(client::window, "No connection.");
+	ServerMessageWidget::open(client::window, tr("No connection."));
 	client::window->closeAuthWindow();
 	client::window->disableSideButtons();
 }
@@ -407,6 +433,6 @@ void Account::connectedEvent()
 
 void Account::failConnect()
 {
-	ServerMessageWidget::open(client::window, "Connect timeout.\nCheck your internet connection.\nTry again.");
+	ServerMessageWidget::open(client::window, tr("Connect timeout.\nCheck your internet connection.\nTry again."));
 	client::window->disableSideButtons();
 }

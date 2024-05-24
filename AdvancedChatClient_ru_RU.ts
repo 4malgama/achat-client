@@ -6,36 +6,40 @@
     <message>
         <location filename="network/account.cpp" line="149"/>
         <source>Login already exists</source>
-        <translation type="unfinished"></translation>
+        <translation>Логин уже занят</translation>
     </message>
     <message>
         <location filename="network/account.cpp" line="149"/>
         <source>Unsafe password.</source>
-        <translation type="unfinished"></translation>
+        <translation>Небезопасный пароль.</translation>
     </message>
     <message>
         <location filename="network/account.cpp" line="151"/>
         <source>Registration failed.
 Reason: %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка регистрации.
+Причина: %1.</translation>
     </message>
     <message>
         <location filename="network/account.cpp" line="384"/>
         <source>An error occurred while trying to
 establish a secure connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Возникла ошибка при попытке
+установить безопасное соединение.</translation>
     </message>
     <message>
         <location filename="network/account.cpp" line="424"/>
         <source>No connection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет соединения.</translation>
     </message>
     <message>
         <location filename="network/account.cpp" line="436"/>
         <source>Connect timeout.
 Check your internet connection.
 Try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Время ожидания истекло.
+Проверьте доступ в интернет.
+Попробуйте еще раз.</translation>
     </message>
 </context>
 <context>
@@ -43,7 +47,7 @@ Try again.</source>
     <message>
         <location filename="widgets/attachment_button_widget.cpp" line="73"/>
         <source> Kb</source>
-        <translation type="unfinished"></translation>
+        <translation> Кб</translation>
     </message>
 </context>
 <context>
@@ -51,57 +55,57 @@ Try again.</source>
     <message>
         <location filename="widgets/authorization_widget.ui" line="38"/>
         <source>Log in</source>
-        <translation type="unfinished"></translation>
+        <translation>Войти</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.ui" line="26"/>
         <location filename="widgets/authorization_widget.ui" line="51"/>
         <source>Authorization</source>
-        <translation type="unfinished"></translation>
+        <translation>Авторизация</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.ui" line="66"/>
         <source>Remember</source>
-        <translation type="unfinished"></translation>
+        <translation>Запомнить</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.ui" line="87"/>
         <source>Login/Email</source>
-        <translation type="unfinished"></translation>
+        <translation>Логин/Почта</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.ui" line="109"/>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>Пароль</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.ui" line="128"/>
         <source>Confirm</source>
-        <translation type="unfinished"></translation>
+        <translation>Повтор</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.ui" line="147"/>
         <location filename="widgets/authorization_widget.cpp" line="73"/>
         <location filename="widgets/authorization_widget.cpp" line="80"/>
         <source>Register</source>
-        <translation type="unfinished"></translation>
+        <translation>Регистрация</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.cpp" line="72"/>
         <location filename="widgets/authorization_widget.cpp" line="81"/>
         <location filename="widgets/authorization_widget.cpp" line="82"/>
         <source>Login</source>
-        <translation type="unfinished"></translation>
+        <translation>Вход</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.cpp" line="74"/>
         <source>Create account</source>
-        <translation type="unfinished"></translation>
+        <translation>Создать аккаунт</translation>
     </message>
     <message>
         <location filename="widgets/authorization_widget.cpp" line="115"/>
         <source>Passwords do not match</source>
-        <translation type="unfinished"></translation>
+        <translation>Пароли не совпадают</translation>
     </message>
 </context>
 <context>
@@ -109,34 +113,41 @@ Try again.</source>
     <message>
         <location filename="widgets/chats_widget.ui" line="94"/>
         <source>Message...</source>
-        <translation type="unfinished"></translation>
+        <translation>Сообщение...</translation>
     </message>
     <message>
         <location filename="widgets/chats_widget.ui" line="116"/>
         <location filename="widgets/chats_widget.ui" line="148"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="widgets/chats_widget.cpp" line="239"/>
         <source>Some file(s) can not be open.</source>
-        <translation type="unfinished"></translation>
+        <translation>Один или несколько файлов не могут быть открыты.</translation>
     </message>
     <message>
         <location filename="widgets/chats_widget.cpp" line="255"/>
         <source>Select file</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбрать файл</translation>
     </message>
     <message>
         <location filename="widgets/chats_widget.cpp" line="265"/>
         <source>The file you selected is too large!
 Maximum file size: %1 Kb.</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбранный файл слишком велик!
+Максимальный размер файла: %1 Кб.</translation>
+    </message>
+    <message>
+        <source>The file you selected is too large!
+Maximum file size: 50 Mb.</source>
+        <translation type="vanished">Выбранный файл слишком велик!
+Максимальный размер файла: 50Мб.</translation>
     </message>
     <message>
         <location filename="widgets/chats_widget.cpp" line="271"/>
         <source>The maximum number of files should not exceed 10.</source>
-        <translation type="unfinished"></translation>
+        <translation>Максимальное число файлов 10.</translation>
     </message>
 </context>
 <context>
@@ -144,7 +155,7 @@ Maximum file size: %1 Kb.</source>
     <message>
         <location filename="client.ui" line="17"/>
         <source>Client</source>
-        <translation type="unfinished"></translation>
+        <translation>Клиент</translation>
     </message>
     <message>
         <location filename="client.ui" line="100"/>
@@ -156,37 +167,37 @@ Maximum file size: %1 Kb.</source>
         <location filename="client.ui" line="359"/>
         <location filename="client.ui" line="397"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="client.cpp" line="60"/>
         <source>Main</source>
-        <translation type="unfinished"></translation>
+        <translation>Клиент</translation>
     </message>
     <message>
         <location filename="client.cpp" line="66"/>
         <source>Amalgama&apos;s Chat is available for free!</source>
-        <translation type="unfinished"></translation>
+        <translation>Amalgama&apos;s Chat доступен для скачивания!</translation>
     </message>
     <message>
         <location filename="client.cpp" line="67"/>
         <source>To get started, create an account or sign in.</source>
-        <translation type="unfinished"></translation>
+        <translation>Войдите или зарегистрируйтесь, что бы начать.</translation>
     </message>
     <message>
         <location filename="client.cpp" line="68"/>
         <source>Sign in</source>
-        <translation type="unfinished"></translation>
+        <translation>Войти</translation>
     </message>
     <message>
         <location filename="client.cpp" line="106"/>
         <source>Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Профиль</translation>
     </message>
     <message>
         <location filename="client.cpp" line="117"/>
         <source>Chats</source>
-        <translation type="unfinished"></translation>
+        <translation>Список чатов</translation>
     </message>
 </context>
 <context>
@@ -194,12 +205,12 @@ Maximum file size: %1 Kb.</source>
     <message>
         <location filename="widgets/message_widget.cpp" line="12"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрыть</translation>
     </message>
     <message>
         <location filename="widgets/message_widget.cpp" line="21"/>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation>Сообщение</translation>
     </message>
 </context>
 <context>
@@ -207,67 +218,67 @@ Maximum file size: %1 Kb.</source>
     <message>
         <location filename="widgets/profile_widget.ui" line="52"/>
         <source>No image</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет фото</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="77"/>
         <source>Copy link</source>
-        <translation type="unfinished"></translation>
+        <translation>Скопировать ссылку</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="106"/>
         <source>Firstname</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="125"/>
         <source>Patronymic</source>
-        <translation type="unfinished"></translation>
+        <translation>Отчество</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="147"/>
         <source>Surname</source>
-        <translation type="unfinished"></translation>
+        <translation>Фамилия</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="166"/>
         <source>Post</source>
-        <translation type="unfinished"></translation>
+        <translation>Должность</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="185"/>
         <source>Description</source>
-        <translation type="unfinished"></translation>
+        <translation>Описание</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="207"/>
         <source>Save and update</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить и обновить</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="210"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="289"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Комментарий</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="316"/>
         <source>Send</source>
-        <translation type="unfinished"></translation>
+        <translation>Отправить</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.ui" line="344"/>
         <source>No comments</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет комментариев</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="87"/>
         <source>Who can see profile photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может видеть фото профиля</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="88"/>
@@ -280,7 +291,7 @@ Maximum file size: %1 Kb.</source>
         <location filename="widgets/profile_widget.cpp" line="123"/>
         <location filename="widgets/profile_widget.cpp" line="128"/>
         <source>Everyone</source>
-        <translation type="unfinished"></translation>
+        <translation>Все</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="89"/>
@@ -292,7 +303,7 @@ Maximum file size: %1 Kb.</source>
         <location filename="widgets/profile_widget.cpp" line="124"/>
         <location filename="widgets/profile_widget.cpp" line="129"/>
         <source>Friends</source>
-        <translation type="unfinished"></translation>
+        <translation>Друзья</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="90"/>
@@ -302,69 +313,69 @@ Maximum file size: %1 Kb.</source>
         <location filename="widgets/profile_widget.cpp" line="110"/>
         <location filename="widgets/profile_widget.cpp" line="120"/>
         <source>Only me</source>
-        <translation type="unfinished"></translation>
+        <translation>Только я</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="92"/>
         <source>Who can see profile description</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может видеть описание профиля</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="97"/>
         <source>Who can see my profile comments</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может видеть комментарии профиля</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="102"/>
         <source>Who can leave comments</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может оставлять комментарии</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="107"/>
         <source>Who can see my post</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может видеть мою должность</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="112"/>
         <source>Who can send friend request</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может отправлять мне заявки в друзья</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="114"/>
         <source>Friends of friends</source>
-        <translation type="unfinished"></translation>
+        <translation>Друзья друзей</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="115"/>
         <location filename="widgets/profile_widget.cpp" line="125"/>
         <location filename="widgets/profile_widget.cpp" line="130"/>
         <source>Nobody</source>
-        <translation type="unfinished"></translation>
+        <translation>Никто</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="117"/>
         <source>Who can see my online status</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может видеть мой онлайн статус</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="122"/>
         <source>Who can send message to me</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может мне писать</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="127"/>
         <source>Who can invite me to groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Кто может приглашать меня в группы</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="132"/>
         <source>Display name</source>
-        <translation type="unfinished"></translation>
+        <translation>Отображаемое имя</translation>
     </message>
     <message>
         <location filename="widgets/profile_widget.cpp" line="133"/>
         <source>Leave it empty if you want to keep the same name</source>
-        <translation type="unfinished"></translation>
+        <translation>Оставьте пустым, если вы желаете оставить ваше имя</translation>
     </message>
 </context>
 <context>
@@ -372,12 +383,12 @@ Maximum file size: %1 Kb.</source>
     <message>
         <location filename="widgets/server_message_widget.ui" line="32"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation>Текст</translation>
     </message>
     <message>
         <location filename="widgets/server_message_widget.ui" line="60"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>ОК</translation>
     </message>
 </context>
 </TS>

@@ -2,7 +2,6 @@
 #include "../packets.h"
 #include "../stream_builder.h"
 
-
 SendMessagePacket::SendMessagePacket()
 	: IPacket(SEND_MESSAGE_PACKET)
 {

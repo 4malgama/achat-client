@@ -414,8 +414,15 @@ ChatsWidget QScrollArea {
     background: transparent;
     color: white;
     padding: 10px;
-    border: 0px solid transparent;
+    border: none;
     border-radius: 10px;
+}
+
+ChatsWidget QScrollArea QScrollBar:horizontal, QScrollBar:vertical {
+    width: 0px;
+    height: 0px;
+    background: transparent;
+    border: none;
 }
 
 ChatsWidget #chatsContent, ChatsWidget #messagesContent {

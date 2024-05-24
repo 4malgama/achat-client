@@ -56,6 +56,7 @@ SOURCES += \
 	utils/CryptoUtils.cpp \
 	utils/json_utils.cpp \
 	widgets/advert_widget.cpp \
+	widgets/attachment_button_widget.cpp \
 	widgets/authorization_widget.cpp \
 	widgets/chat_message_widget.cpp \
 	widgets/chat_row_widget.cpp \
@@ -101,6 +102,7 @@ HEADERS += \
 	types/types_variables.h \
 	utils/json_utils.h \
 	widgets/advert_widget.h \
+	widgets/attachment_button_widget.h \
 	widgets/authorization_widget.h \
 	widgets/chat_message_widget.h \
 	widgets/chat_row_widget.h \
@@ -117,7 +119,8 @@ FORMS += \
 	widgets/server_message_widget.ui
 
 TRANSLATIONS += \
-	AdvancedChatClient_en_GB.ts
+	AdvancedChatClient_en_GB.ts \
+	AdvancedChatClient_ru_RU.ts
 CONFIG += lrelease
 CONFIG += embed_translations
 
@@ -127,3 +130,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
 	resources.qrc
+
+DISTFILES += \
+	AdvancedChatClient_ru_RU.ts

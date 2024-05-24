@@ -18,6 +18,8 @@ class ChatsWidget : public QWidget
 {
 	Q_OBJECT
 
+	const int MAX_FILE_SIZE;
+
 	QHash<quint64, ChatData> chats;
 	ChatData* selectedChat = nullptr;
 	ChatRowWidget* selectedRowChat = nullptr;
@@ -38,6 +40,7 @@ signals:
 private:
 	Ui::ChatsWidget *ui;
 	void closeEvent(QCloseEvent *event);
+	void showEvent(QShowEvent*);
 
 	void onTextMessageChanged();
 	void onSendClicked();

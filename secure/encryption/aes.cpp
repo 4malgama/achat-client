@@ -52,7 +52,7 @@ QByteArray AES::encrypt(const QByteArray &data, const QByteArray &key)
 	EVP_CIPHER_CTX* ctx;
 	int len;
 	int cipher_len;
-	unsigned char cipher[data.size() + EVP_MAX_BLOCK_LENGTH];
+	unsigned char* cipher = new unsigned char [data.size() + EVP_MAX_BLOCK_LENGTH];
 
 	if (!(ctx = EVP_CIPHER_CTX_new()))
 		handleError();
@@ -73,7 +73,9 @@ QByteArray AES::encrypt(const QByteArray &data, const QByteArray &key)
 	cipher_len += len;
 
 	EVP_CIPHER_CTX_free(ctx);
-	return QByteArray(reinterpret_cast<const char*>(cipher), cipher_len);
+	QByteArray result = QByteArray(reinterpret_cast<const char*>(cipher), cipher_len);
+	delete[] cipher;
+	return result;
 }
 
 /* static */ QByteArray AES::encrypt(Mode mode, const QByteArray &data, const QByteArray &key)
@@ -102,7 +104,7 @@ QByteArray AES::decrypt(const QByteArray &data, const QByteArray &key)
 	EVP_CIPHER_CTX* ctx;
 	int len;
 	int plain_len;
-	unsigned char plain[data.size() + EVP_MAX_BLOCK_LENGTH];
+	unsigned char* plain = new unsigned char [data.size() + EVP_MAX_BLOCK_LENGTH];
 
 	if (!(ctx = EVP_CIPHER_CTX_new()))
 		handleError();
@@ -123,7 +125,9 @@ QByteArray AES::decrypt(const QByteArray &data, const QByteArray &key)
 	plain_len += len;
 
 	EVP_CIPHER_CTX_free(ctx);
-	return QByteArray(reinterpret_cast<const char*>(plain), plain_len);
+	QByteArray result = QByteArray(reinterpret_cast<const char*>(plain), plain_len);
+	delete[] plain;
+	return result;
 }
 
 QByteArray AES::decrypt(Mode mode, const QByteArray &data, const QByteArray &key)

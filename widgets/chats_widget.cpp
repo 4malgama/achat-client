@@ -6,6 +6,8 @@
 #include "../client.h"
 #include "../network/account.h"
 #include <QHBoxLayout>
+#include <QScrollBar>
+#include <QTimer>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -15,7 +17,7 @@
 #include <QDir>
 
 
-#define MAX_ATTACH_FILE_SIZE 1024 * 1024 * 50	//50Mb
+#define MAX_ATTACH_FILE_SIZE 1024 * 1024 * 10	//10Mb
 
 
 namespace chatswidget
@@ -42,6 +44,7 @@ namespace client { extern Client* window; }
 
 ChatsWidget::ChatsWidget(QWidget *parent) :
 	QWidget(parent),
+	MAX_FILE_SIZE(MAX_ATTACH_FILE_SIZE),
 	ui(new Ui::ChatsWidget)
 {
 	ui->setupUi(this);
@@ -97,13 +100,19 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 				ui->txtMessage->show();
 				resetAttachments();
 				if (!selectedChat->initialized)
+				{
 					client::window->acc->requestMessages(chat.id);
+				}
 				else
+				{
 					initMessages(selectedChat->data.id, selectedChat->messages);
+				}
+
 			});
 			this->chats.insert(chat.id, {
 								   .initialized = false,
-								   .data = chat
+								   .data = chat,
+								   .messages = QList<ChatMessage>()
 							   });
 			ui->verticalLayout_2->insertWidget(0, wgt);
 		}
@@ -142,8 +151,14 @@ void ChatsWidget::initMessages(quint64 chatId, const QList<ChatMessage> &message
 			ChatMessageWidget* wgt = new ChatMessageWidget(this, message.user.uid == client::window->acc->getData()->uid);
 			wgt->setText(message.content);
 			wgt->setDateTime(QDateTime::fromSecsSinceEpoch(message.timestamp));
+			wgt->setAttachments(message.attachments);
 			addMessageToCurrentChat(wgt);
 		}
+
+		QTimer::singleShot(200, this, [this] {
+			QScrollBar* scrollBar = ui->scrollMessages->verticalScrollBar();
+			scrollBar->setValue(scrollBar->maximum());
+		});
 	}
 }
 
@@ -176,6 +191,7 @@ void ChatsWidget::addMessageToChat(quint64 chatId, ChatMessage* message, bool is
 			ChatMessageWidget* messageWgt = new ChatMessageWidget(this, isMine);
 			messageWgt->setText(message->content);
 			messageWgt->setDateTime(QDateTime::fromSecsSinceEpoch(message->timestamp));
+			messageWgt->setAttachments(message->attachments);
 			addMessageToCurrentChat(messageWgt);
 		}
 	}
@@ -185,6 +201,11 @@ void ChatsWidget::closeEvent(QCloseEvent *)
 {
 	emit event_close();
 	delete this;
+}
+
+void ChatsWidget::showEvent(QShowEvent *)
+{
+	//deptecated
 }
 
 void ChatsWidget::onTextMessageChanged()
@@ -212,8 +233,38 @@ void ChatsWidget::onSendClicked()
 		QJsonObject json;
 		json.insert("content", text);
 
+		// start files
+		QJsonArray jsonAttachments;
+		for (const QString& path : qAsConst(attachments))
+		{
+			QFile file(path);
+			if (file.open(QIODevice::ReadOnly))
+			{
+				QString fileName = file.fileName();
+				fileName = fileName.mid(fileName.lastIndexOf('/') + 1);
+				QByteArray fileData = file.readAll();
+				if (fileData.isEmpty())
+					continue;
+
+				QJsonObject jsonAttachment;
+				jsonAttachment.insert("name", fileName);
+				jsonAttachment.insert("data", QString(fileData.toBase64()));
+				jsonAttachments.append(jsonAttachment);
+				file.close();
+			}
+			else
+			{
+				client::window->showMessage(tr("Some file(s) can not be open."), 1);
+				return;
+			}
+		}
+		json.insert("attachments", jsonAttachments);
+		// end files
+
 		QByteArray data = QJsonDocument(json).toJson(QJsonDocument::Compact);
 		client::window->acc->sendMessage(selectedChat->data.id, data);
+		attachments.clear();
+		resetAttachments();
 	}
 }
 
@@ -229,7 +280,7 @@ void ChatsWidget::onAttachClicked()
 		{
 			if (fileInfo.size() > MAX_ATTACH_FILE_SIZE || fileInfo.size() == 0)
 			{
-				client::window->showMessage(tr("The file you selected is too large!\nMaximum file size: 50 Mb."), 2);
+				client::window->showMessage(tr("The file you selected is too large!\nMaximum file size: %1 Kb.").arg(MAX_FILE_SIZE / 1024), 2);
 				return;
 			}
 
@@ -242,20 +293,6 @@ void ChatsWidget::onAttachClicked()
 			addAttachment(fileInfo);
 		}
 	}
-
-	// 1. Сохранять в массив QFile до 10 файлов.
-	/// QList - V
-	// 2. Отобразить QFrame с QGridLayout на 2 колонки и 5 строчек, туда засунуть QLabel пустые, и по мере добавления файлов выдавать им названия файлов.
-	/// QFrame - V
-	/// QGridLayout - V
-	/// Алгоритм назначения столбца и строки - V
-	// 3. Отправляя сообщение, читаем каждый файл и переводим его в Base64, добавляя как QJsonObject.
-	/// Изменить jsonData, добавить attachments. Для этого надо обработать каждый файл из списка - X
-	/// Каждый файл перевести в Base64 - X
-	// 4. У QJsonObject файла должны быть следующие поля:
-	//    name - Название файла включая формат
-	//    data - Base64 содержимое файла
-	// 5. Изменение виджета сообщения
 }
 
 void ChatsWidget::clearLayout(QLayout* l)
@@ -288,7 +325,7 @@ void ChatsWidget::addAttachment(const QFileInfo& info)
 	QLabel* lbl = ui->frame->findChild<QLabel*>("attach" + QString::number(attachments.size()));
 	if (lbl == nullptr)
 		return;
-	lbl->setText(QString("[%1] %2").arg(info.suffix().toUpper()).arg(info.baseName()));
+	lbl->setText(QString("[%1] %2").arg(info.suffix().toUpper(), info.baseName()));
 }
 
 void ChatsWidget::resetAttachments()

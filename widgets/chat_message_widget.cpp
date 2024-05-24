@@ -1,10 +1,11 @@
 #include "chat_message_widget.h"
-
+#include "attachment_button_widget.h"
 #include <QPainter>
 
 
 ChatMessageWidget::ChatMessageWidget(QWidget *parent, bool isMine)
 	: QWidget{parent}
+	, ATTACHMENT_HEIGHT(30)
 {
 	m_Colors.text = QColor(255, 255, 255);
 	m_Colors.background = isMine ? QColor(59, 104, 145) : QColor(29, 52, 73);
@@ -13,6 +14,7 @@ ChatMessageWidget::ChatMessageWidget(QWidget *parent, bool isMine)
 
 	connect(this, &ChatMessageWidget::textChanged, this, &ChatMessageWidget::onTextChanged);
 	connect(this, &ChatMessageWidget::dateChanged, this, &ChatMessageWidget::onDateChanged);
+	connect(this, &ChatMessageWidget::attachmentsChanged, this, &ChatMessageWidget::onAttachmentsChanged);
 }
 
 void ChatMessageWidget::setText(const QString &t)
@@ -47,19 +49,50 @@ void ChatMessageWidget::onDateChanged()
 	update();
 }
 
+void ChatMessageWidget::onAttachmentsChanged()
+{
+	int i = 0;
+	QFont defaultFont("Segoe UI", 12, QFont::Normal);
+	QFontMetrics fontMetrics(defaultFont);
+	int skipHeight = fontMetrics.boundingRect(m_Text).height();
+	for (const ChatMessageAttachment& a : m_Attachments)
+	{
+		AttachmentButtonWidget* btn = new AttachmentButtonWidget(this);
+		btn->setFileName(a.name);
+		btn->setFileSize(a.size / 1024.0);
+		btn->setPixmap(QPixmap(":/r/resources/images/file.png"));
+		btn->setFixedSize(width() - 20, 30);
+		btn->move(10, ATTACHMENT_HEIGHT * i + skipHeight + 5);
+		btn->show();
+		i++;
+	}
+
+	onTextChanged();
+}
+
+QList<ChatMessageAttachment> ChatMessageWidget::attachments() const
+{
+	return m_Attachments;
+}
+
+void ChatMessageWidget::setAttachments(const QList<ChatMessageAttachment> &newAttachments)
+{
+	m_Attachments = newAttachments;
+	emit attachmentsChanged();
+}
+
 void ChatMessageWidget::onTextChanged()
 {
 	QFont font("Segoe UI", 12, QFont::Normal);
 
 	QFontMetrics fontMetrics(font);
-	int width = fontMetrics.boundingRect(m_Text).width();
-	int height = fontMetrics.boundingRect(m_Text).height();
-	setFixedSize(width + 100, height + 30);
+	const int attachmentHeight = m_Attachments.size() * ATTACHMENT_HEIGHT;
+	setFixedSize(fontMetrics.boundingRect(m_Text).width() + 100, fontMetrics.boundingRect(m_Text).height() + 30 + attachmentHeight);
 
 	update();
 }
 
-void ChatMessageWidget::paintEvent(QPaintEvent *event)
+void ChatMessageWidget::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
 	painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
@@ -74,6 +107,20 @@ void ChatMessageWidget::paintEvent(QPaintEvent *event)
 	painter.setFont(font);
 	painter.setPen(m_Colors.text);
 	painter.drawText(rect().adjusted(10, 5, -5, -10), Qt::AlignLeft | Qt::TextWordWrap, m_Text);
+
+	// QPixmap attachmentImage(":/r/resources/images/file.png");
+
+	// int i = 0;
+	// for (const ChatMessageAttachment& a : m_Attachments)
+	// {
+	// 	painter.setPen(Qt::NoPen);
+	// 	painter.drawPixmap(rect().adjusted(10, 10 + i * ATTACHMENT_HEIGHT, 30 + 10, 10 + (i + 1) * ATTACHMENT_HEIGHT), attachmentImage.scaled(QSize(30, 30)));
+	// 	painter.setPen(Qt::white);
+	// 	painter.drawText(rect().adjusted(10 + ATTACHMENT_HEIGHT, 10 + i * ATTACHMENT_HEIGHT, -10 + ATTACHMENT_HEIGHT, -10 + i * ATTACHMENT_HEIGHT), Qt::AlignLeft | Qt::AlignTop, a.name);
+	// 	painter.setPen(Qt::gray);
+	// 	painter.drawText(rect().adjusted(10 + ATTACHMENT_HEIGHT, 10 + i * ATTACHMENT_HEIGHT, -10 + ATTACHMENT_HEIGHT, -10 + i * ATTACHMENT_HEIGHT), Qt::AlignLeft | Qt::AlignBottom, QString::number(a.size));
+	// 	i++;
+	// }
 
 	//draw datetime
 	QFont dateTimeFont("Segoe UI", 8, QFont::Normal);

@@ -80,9 +80,16 @@ void Network::send(const IPacket *packet)
 	QByteArray data = packet->prepareToSend();
 	if (encryption == true && aes != nullptr)
 	{
-		QByteArray cipher = aes->encrypt(data);
-		QDataStream stream(&data, QIODevice::WriteOnly);
-		stream << cipher;
+		try {
+			QByteArray cipher = aes->encrypt(data);
+			QDataStream stream(&data, QIODevice::WriteOnly);
+			stream << cipher;
+		}
+		catch (int e)
+		{
+			qInfo() << "Error of AES occured (" << e << ")";
+			return;
+		}
 	}
 	sendData(data);
 }

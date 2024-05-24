@@ -31,7 +31,10 @@ struct ChatMessageUser
 
 struct ChatMessageAttachment
 {
-
+	uint64 id;
+	uint64 size;
+	QString name;
+	QString type;
 };
 
 struct ChatMessage
