@@ -61,6 +61,7 @@ SOURCES += \
 	widgets/chat_message_widget.cpp \
 	widgets/chat_row_widget.cpp \
 	widgets/chats_widget.cpp \
+	widgets/dropdown_menu.cpp \
 	widgets/message_widget.cpp \
 	widgets/profile_widget.cpp \
 	widgets/server_message_widget.cpp
@@ -107,6 +108,7 @@ HEADERS += \
 	widgets/chat_message_widget.h \
 	widgets/chat_row_widget.h \
 	widgets/chats_widget.h \
+	widgets/dropdown_menu.h \
 	widgets/message_widget.h \
 	widgets/profile_widget.h \
 	widgets/server_message_widget.h

@@ -1,7 +1,13 @@
 #include "chat_message_widget.h"
 #include "attachment_button_widget.h"
+#include "../client.h"
 #include <QPainter>
 
+
+namespace client
+{
+	extern Client* window;
+}
 
 ChatMessageWidget::ChatMessageWidget(QWidget *parent, bool isMine)
 	: QWidget{parent}
@@ -12,9 +18,17 @@ ChatMessageWidget::ChatMessageWidget(QWidget *parent, bool isMine)
 	m_Colors.date = QColor(255, 255, 255, 130);
 	m_Mine = isMine;
 
+	setContextMenuPolicy(Qt::CustomContextMenu);
+
+	connect(m_Menu.addAction(tr("Reply")), &QAction::triggered, this, &ChatMessageWidget::onReply);
+	connect(m_Menu.addAction(tr("Forward")), &QAction::triggered, this, &ChatMessageWidget::onForward);
+	connect(m_Menu.addAction(tr("Copy text")), &QAction::triggered, this, &ChatMessageWidget::onCopyText);
+	connect(m_Menu.addAction(tr("Delete")), &QAction::triggered, this, &ChatMessageWidget::onDelete);
+
 	connect(this, &ChatMessageWidget::textChanged, this, &ChatMessageWidget::onTextChanged);
 	connect(this, &ChatMessageWidget::dateChanged, this, &ChatMessageWidget::onDateChanged);
 	connect(this, &ChatMessageWidget::attachmentsChanged, this, &ChatMessageWidget::onAttachmentsChanged);
+	connect(this, &QWidget::customContextMenuRequested, this, &ChatMessageWidget::onMenuCalled);
 }
 
 void ChatMessageWidget::setText(const QString &t)
@@ -70,6 +84,46 @@ void ChatMessageWidget::onAttachmentsChanged()
 	onTextChanged();
 }
 
+void ChatMessageWidget::onMenuCalled(const QPoint&)
+{
+	QPoint pos = QCursor::pos();
+	QSize size = m_Menu.sizeHint();
+
+	if (size.width() + pos.x() > client::window->pos().x() + client::window->size().width())
+	{
+		pos.setX(pos.x() - size.width());
+		m_Menu.toRight = false;
+	}
+	else
+	{
+		pos.setX(pos.x());
+		m_Menu.toRight = true;
+	}
+	pos.setY(pos.y());
+	m_Menu.move(pos);
+	m_Menu.exec();
+}
+
+void ChatMessageWidget::onReply()
+{
+
+}
+
+void ChatMessageWidget::onForward()
+{
+
+}
+
+void ChatMessageWidget::onCopyText()
+{
+
+}
+
+void ChatMessageWidget::onDelete()
+{
+
+}
+
 QList<ChatMessageAttachment> ChatMessageWidget::attachments() const
 {
 	return m_Attachments;
@@ -107,20 +161,6 @@ void ChatMessageWidget::paintEvent(QPaintEvent *)
 	painter.setFont(font);
 	painter.setPen(m_Colors.text);
 	painter.drawText(rect().adjusted(10, 5, -5, -10), Qt::AlignLeft | Qt::TextWordWrap, m_Text);
-
-	// QPixmap attachmentImage(":/r/resources/images/file.png");
-
-	// int i = 0;
-	// for (const ChatMessageAttachment& a : m_Attachments)
-	// {
-	// 	painter.setPen(Qt::NoPen);
-	// 	painter.drawPixmap(rect().adjusted(10, 10 + i * ATTACHMENT_HEIGHT, 30 + 10, 10 + (i + 1) * ATTACHMENT_HEIGHT), attachmentImage.scaled(QSize(30, 30)));
-	// 	painter.setPen(Qt::white);
-	// 	painter.drawText(rect().adjusted(10 + ATTACHMENT_HEIGHT, 10 + i * ATTACHMENT_HEIGHT, -10 + ATTACHMENT_HEIGHT, -10 + i * ATTACHMENT_HEIGHT), Qt::AlignLeft | Qt::AlignTop, a.name);
-	// 	painter.setPen(Qt::gray);
-	// 	painter.drawText(rect().adjusted(10 + ATTACHMENT_HEIGHT, 10 + i * ATTACHMENT_HEIGHT, -10 + ATTACHMENT_HEIGHT, -10 + i * ATTACHMENT_HEIGHT), Qt::AlignLeft | Qt::AlignBottom, QString::number(a.size));
-	// 	i++;
-	// }
 
 	//draw datetime
 	QFont dateTimeFont("Segoe UI", 8, QFont::Normal);

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QDateTime>
 #include "../types/classes.h"
+#include "dropdown_menu.h"
 
 class ChatMessageWidget : public QWidget
 {
@@ -33,6 +34,11 @@ private slots:
 	void onTextChanged();
 	void onDateChanged();
 	void onAttachmentsChanged();
+	void onMenuCalled(const QPoint& pos);
+	void onReply();
+	void onForward();
+	void onCopyText();
+	void onDelete();
 
 private:
 	struct
@@ -41,6 +47,8 @@ private:
 		QColor background;
 		QColor date;
 	} m_Colors;
+
+	DropdownMenu m_Menu;
 
 	QString m_Text;
 	QDateTime m_DateTime;

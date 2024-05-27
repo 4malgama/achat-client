@@ -109,6 +109,29 @@ Try again.</source>
     </message>
 </context>
 <context>
+    <name>ChatMessageWidget</name>
+    <message>
+        <location filename="widgets/chat_message_widget.cpp" line="15"/>
+        <source>Reply</source>
+        <translation>Ответить</translation>
+    </message>
+    <message>
+        <location filename="widgets/chat_message_widget.cpp" line="16"/>
+        <source>Forward</source>
+        <translation>Переслать</translation>
+    </message>
+    <message>
+        <location filename="widgets/chat_message_widget.cpp" line="17"/>
+        <source>Copy text</source>
+        <translation>Копировать текст</translation>
+    </message>
+    <message>
+        <location filename="widgets/chat_message_widget.cpp" line="18"/>
+        <source>Delete</source>
+        <translation>Удалить</translation>
+    </message>
+</context>
+<context>
     <name>ChatsWidget</name>
     <message>
         <location filename="widgets/chats_widget.ui" line="94"/>
@@ -122,17 +145,17 @@ Try again.</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="239"/>
+        <location filename="widgets/chats_widget.cpp" line="257"/>
         <source>Some file(s) can not be open.</source>
         <translation>Один или несколько файлов не могут быть открыты.</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="255"/>
+        <location filename="widgets/chats_widget.cpp" line="273"/>
         <source>Select file</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="265"/>
+        <location filename="widgets/chats_widget.cpp" line="283"/>
         <source>The file you selected is too large!
 Maximum file size: %1 Kb.</source>
         <translation>Выбранный файл слишком велик!
@@ -145,7 +168,7 @@ Maximum file size: 50 Mb.</source>
 Максимальный размер файла: 50Мб.</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="271"/>
+        <location filename="widgets/chats_widget.cpp" line="289"/>
         <source>The maximum number of files should not exceed 10.</source>
         <translation>Максимальное число файлов 10.</translation>
     </message>
