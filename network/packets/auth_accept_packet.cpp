@@ -5,7 +5,7 @@
 #include <QDebug>
 
 AuthAcceptPacket::AuthAcceptPacket()
-    : IPacket(AUTH_ACCEPT_PACKET)
+	: IPacket(AUTH_ACCEPT_PACKET)
 {
 
 }
@@ -17,13 +17,17 @@ AuthAcceptPacket::~AuthAcceptPacket()
 
 QByteArray AuthAcceptPacket::prepareToSend() const
 {
-    return QByteArray();
+	return QByteArray();
 }
 
 void AuthAcceptPacket::prepareToRead(const QByteArray &data)
 {
-    bool ok;
-
-    StreamParser sp(data);
-    uid = sp.parseUInt64(&ok);
+	StreamParser sp(data);
+	uid = sp.parseUInt64();
+	bool hasToken = sp.parseByte();
+	if (hasToken)
+	{
+		quint16 length = sp.parseUInt16();
+		token = sp.parseString(length);
+	}
 }

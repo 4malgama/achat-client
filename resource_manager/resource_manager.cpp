@@ -161,6 +161,31 @@ void ResourceManager::initUser(quint64 uid, bool remember, const QString& login,
 	}
 }
 
+void ResourceManager::initUser(quint64 uid, const QString &token)
+{
+	if (uid == 0 || uid == current_uid)
+		return;
+
+	current_uid = uid;
+
+	m_UserPath = m_Path + "users\\user_" + QString::number(current_uid) + "\\";
+
+	QDir dir(m_UserPath);
+
+	if (!dir.exists())
+		dir.mkpath(".");
+
+	if (!token.isEmpty())
+	{
+		QFile file(m_UserPath + "\\login.cfg");
+		if (file.open(QIODevice::WriteOnly))
+		{
+			file.write(token.toUtf8());
+			file.close();
+		}
+	}
+}
+
 QPair<QString, QString> ResourceManager::getAutoLoginData()
 {
 	QFile file(m_UserPath + "\\auto_login.bin");
@@ -175,4 +200,16 @@ QPair<QString, QString> ResourceManager::getAutoLoginData()
 		return QPair<QString, QString>();
 
 	return QPair<QString, QString>(token.left(i), token.mid(i + 1));
+}
+
+QString ResourceManager::getToken()
+{
+	QFile file(m_UserPath + "\\login.cfg");
+	if (!file.exists() || !file.open(QIODevice::ReadOnly))
+		return QString();
+
+	QByteArray token = file.readAll();
+	file.close();
+
+	return QString::fromUtf8(token);
 }

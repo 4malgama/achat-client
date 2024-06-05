@@ -16,6 +16,7 @@ public:
 
 	void start();
 	void login(const QString& login, const QString& password);
+	void login(const QString& token);
 	void registration(const QString& login, const QString& password);
 	void updateProfile(const QHash<QString, QVariant>& profileInfo);
 	void requestMessages(quint64 chatId);
@@ -29,7 +30,7 @@ private:
 	void connectedEvent() override;
 	void failConnect() override;
 
-	void onLoginSuccess();
+	void onLoginSuccess(const QString& token = QString());
 
 	void handShake();
 	void handShakeFailed();

@@ -42,6 +42,7 @@ SOURCES += \
 	network/packets/new_message_packet.cpp \
 	network/packets/register_packet.cpp \
 	network/packets/send_message_packet.cpp \
+	network/packets/send_token_packet.cpp \
 	network/packets/server_hello_packet.cpp \
 	network/packets/server_ready_packet.cpp \
 	network/packets/update_avatar_packet.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
 	network/packets/new_message_packet.h \
 	network/packets/register_packet.h \
 	network/packets/send_message_packet.h \
+	network/packets/send_token_packet.h \
 	network/packets/server_hello_packet.h \
 	network/packets/server_ready_packet.h \
 	network/packets/update_avatar_packet.h \

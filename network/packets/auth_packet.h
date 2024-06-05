@@ -9,6 +9,7 @@ class AuthPacket : public IPacket
 public:
 	QString login;
 	QString password;
+	bool remember;
 
 	AuthPacket();
 	~AuthPacket() override;

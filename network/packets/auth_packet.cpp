@@ -20,6 +20,7 @@ QByteArray AuthPacket::prepareToSend() const
 {
 	StreamBuilder sb;
 	sb.addUInt16(id);
+	sb.addBool(remember);
 	sb.addUInt16(login.length());
 	sb.addUInt16(password.length());
 	sb.addString(login);

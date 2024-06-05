@@ -72,7 +72,21 @@ void Account::login(const QString &login, const QString &password)
 	AuthPacket packet;
 	packet.login = login;
 	packet.password = password;
+	packet.remember = auth::remember;
 
+	send(&packet);
+}
+
+void Account::login(const QString &token)
+{
+	if (isConnected() == false)
+		return;
+
+	if (token.isEmpty())
+		return;
+
+	SendTokenPacket packet;
+	packet.token = token;
 	send(&packet);
 }
 
@@ -134,7 +148,7 @@ void Account::readEvent(IPacket* packet)
 	else if (AuthAcceptPacket* P = dynamic_cast<AuthAcceptPacket*>(packet))
 	{
 		data.uid = P->uid;
-		onLoginSuccess();
+		onLoginSuccess(P->token);
 		return;
 	}
 	else if (RegisterPacket* P = dynamic_cast<RegisterPacket*>(packet))
@@ -348,7 +362,7 @@ const ProfileData *Account::getData() const
 	return &data;
 }
 
-void Account::onLoginSuccess()
+void Account::onLoginSuccess(const QString& token)
 {
 	client::window->closeAuthWindow();
 	client::window->enableSideButtons();
@@ -363,7 +377,8 @@ void Account::onLoginSuccess()
 	}
 
 	ResourceManager& rm = ResourceManager::instance();
-	rm.initUser(data.uid, auth::remember, auth::login, auth::password);
+	//rm.initUser(data.uid, auth::remember, auth::login, auth::password);
+	rm.initUser(data.uid, token);
 
 	data.avatar = rm.getAvatar();
 
@@ -403,18 +418,32 @@ void Account::authorization()
 	if (uid != 0)
 	{
 		ResourceManager::instance().initUser(uid);
-		QPair<QString, QString> pair = ResourceManager::instance().getAutoLoginData();
-		if (pair.first.isEmpty() || pair.second.isEmpty())
+		QString token = ResourceManager::instance().getToken();
+		if (token.isEmpty())
 		{
 			client::window->authWindow();
 			return;
 		}
 		auth::remember = true;
-		auth::login = pair.first;
-		auth::password = pair.second;
-		login(pair.first, pair.second);
+		login(token);
 		return;
 	}
+
+	// if (uid != 0)
+	// {
+	// 	ResourceManager::instance().initUser(uid);
+	// 	QPair<QString, QString> pair = ResourceManager::instance().getAutoLoginData();
+	// 	if (pair.first.isEmpty() || pair.second.isEmpty())
+	// 	{
+	// 		client::window->authWindow();
+	// 		return;
+	// 	}
+	// 	auth::remember = true;
+	// 	auth::login = pair.first;
+	// 	auth::password = pair.second;
+	// 	login(pair.first, pair.second);
+	// 	return;
+	// }
 
 	client::window->authWindow();
 }

@@ -38,8 +38,10 @@ public:
 	void cacheImage(const QString& path, const QByteArray& imageData);
 	void freeImage(const QString& path);
 
-	void initUser(quint64 uid, bool remember = false, const QString& login = QString(), const QString& password = QString());
+	void initUser(quint64 uid, bool remember, const QString& login = QString(), const QString& password = QString());
+	void initUser(quint64 uid, const QString& token = QString());
 	QPair<QString, QString> getAutoLoginData();
+	QString getToken();
 
 signals:
 	void event_finish();
