@@ -17,10 +17,13 @@ UI_DIR = ui
 UI_HEADERS_DIR = ui_h
 UI_SOURCES_DIR = ui_s
 
+RC_ICONS = resources/icons/icon64.ico
+
 LIBS += -L"C:\Program Files (x86)\OpenSSL-Win32\lib\MinGW" -llibssl -llibcrypto
 LIBS += -L"C:\Program Files\OpenSSL-Win64\lib\MinGW" -llibssl -llibcrypto
 
 SOURCES += \
+	application.cpp \
 	free.cpp \
 	main.cpp \
 	client.cpp \
@@ -55,6 +58,7 @@ SOURCES += \
 	settings/settings_manager.cpp \
 	test/widgets/ripple_button_widget.cpp \
 	utils/CryptoUtils.cpp \
+	utils/image_utils.cpp \
 	utils/json_utils.cpp \
 	widgets/advert_widget.cpp \
 	widgets/attachment_button_widget.cpp \
@@ -68,6 +72,7 @@ SOURCES += \
 	widgets/server_message_widget.cpp
 
 HEADERS += \
+	application.h \
 	client.h \
 	network/account.h \
 	network/network.h \
@@ -103,6 +108,7 @@ HEADERS += \
 	test/widgets/ripple_button_widget.h \
 	types/classes.h \
 	types/types_variables.h \
+	utils/image_utils.h \
 	utils/json_utils.h \
 	widgets/advert_widget.h \
 	widgets/attachment_button_widget.h \

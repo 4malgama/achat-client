@@ -16,5 +16,7 @@
         <file>resources/images/attach.png</file>
         <file>resources/images/send.png</file>
         <file>resources/images/file.png</file>
+        <file>resources/icons/icon16.ico</file>
+        <file>resources/logo/achat-client_tray.png</file>
     </qresource>
 </RCC>

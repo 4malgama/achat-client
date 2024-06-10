@@ -1,9 +1,10 @@
-#include <QApplication>
+#include "application.h"
 #include <QLocale>
 #include <QTranslator>
 #include <settings/settings_manager.h>
 #include <QFile>
 #include <QMessageBox>
+
 
 namespace client
 {
@@ -36,10 +37,16 @@ static void _main_end()
 	SettingsManager::getInstance().saveAll();
 }
 
+namespace app
+{
+	Application* a = nullptr;
+}
+
 int main(int argc, char *argv[])
 {
 	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-	QApplication a(argc, argv);
+	Application a(argc, argv);
+	app::a = &a;
 	QSettings::setDefaultFormat(QSettings::IniFormat);
 
 	resourcemanager::load();

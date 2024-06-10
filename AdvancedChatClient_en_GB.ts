@@ -4,37 +4,45 @@
 <context>
     <name>Account</name>
     <message>
-        <location filename="network/account.cpp" line="149"/>
+        <location filename="network/account.cpp" line="163"/>
         <source>Login already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="149"/>
+        <location filename="network/account.cpp" line="163"/>
         <source>Unsafe password.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="151"/>
+        <location filename="network/account.cpp" line="165"/>
         <source>Registration failed.
 Reason: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="384"/>
+        <location filename="network/account.cpp" line="399"/>
         <source>An error occurred while trying to
 establish a secure connection.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="424"/>
+        <location filename="network/account.cpp" line="453"/>
         <source>No connection.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="436"/>
+        <location filename="network/account.cpp" line="465"/>
         <source>Connect timeout.
 Check your internet connection.
 Try again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Application</name>
+    <message>
+        <location filename="application.cpp" line="22"/>
+        <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -107,22 +115,22 @@ Try again.</source>
 <context>
     <name>ChatMessageWidget</name>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="15"/>
+        <location filename="widgets/chat_message_widget.cpp" line="23"/>
         <source>Reply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="16"/>
+        <location filename="widgets/chat_message_widget.cpp" line="24"/>
         <source>Forward</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="17"/>
+        <location filename="widgets/chat_message_widget.cpp" line="25"/>
         <source>Copy text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="18"/>
+        <location filename="widgets/chat_message_widget.cpp" line="26"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -141,23 +149,23 @@ Try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="257"/>
+        <location filename="widgets/chats_widget.cpp" line="265"/>
         <source>Some file(s) can not be open.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="273"/>
+        <location filename="widgets/chats_widget.cpp" line="281"/>
         <source>Select file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="283"/>
+        <location filename="widgets/chats_widget.cpp" line="291"/>
         <source>The file you selected is too large!
 Maximum file size: %1 Kb.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="289"/>
+        <location filename="widgets/chats_widget.cpp" line="297"/>
         <source>The maximum number of files should not exceed 10.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -182,33 +190,38 @@ Maximum file size: %1 Kb.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="60"/>
+        <location filename="client.cpp" line="65"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="66"/>
+        <location filename="client.cpp" line="71"/>
         <source>Amalgama&apos;s Chat is available for free!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="67"/>
+        <location filename="client.cpp" line="72"/>
         <source>To get started, create an account or sign in.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="68"/>
+        <location filename="client.cpp" line="73"/>
         <source>Sign in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="106"/>
+        <location filename="client.cpp" line="111"/>
         <source>Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="117"/>
+        <location filename="client.cpp" line="122"/>
         <source>Chats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="255"/>
+        <source>The application continues to work in the background</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

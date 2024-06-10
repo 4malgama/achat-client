@@ -197,6 +197,14 @@ void ChatsWidget::addMessageToChat(quint64 chatId, ChatMessage* message, bool is
 	}
 }
 
+const ChatData* ChatsWidget::getChatData(quint64 chatId) const
+{
+	if (!chats.contains(chatId))
+		return nullptr;
+
+	return &chats.constFind(chatId).value();
+}
+
 void ChatsWidget::closeEvent(QCloseEvent *)
 {
 	emit event_close();

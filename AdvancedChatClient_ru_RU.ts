@@ -4,42 +4,50 @@
 <context>
     <name>Account</name>
     <message>
-        <location filename="network/account.cpp" line="149"/>
+        <location filename="network/account.cpp" line="163"/>
         <source>Login already exists</source>
         <translation>Логин уже занят</translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="149"/>
+        <location filename="network/account.cpp" line="163"/>
         <source>Unsafe password.</source>
         <translation>Небезопасный пароль.</translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="151"/>
+        <location filename="network/account.cpp" line="165"/>
         <source>Registration failed.
 Reason: %1.</source>
         <translation>Ошибка регистрации.
 Причина: %1.</translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="384"/>
+        <location filename="network/account.cpp" line="399"/>
         <source>An error occurred while trying to
 establish a secure connection.</source>
         <translation>Возникла ошибка при попытке
 установить безопасное соединение.</translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="424"/>
+        <location filename="network/account.cpp" line="453"/>
         <source>No connection.</source>
         <translation>Нет соединения.</translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="436"/>
+        <location filename="network/account.cpp" line="465"/>
         <source>Connect timeout.
 Check your internet connection.
 Try again.</source>
         <translation>Время ожидания истекло.
 Проверьте доступ в интернет.
 Попробуйте еще раз.</translation>
+    </message>
+</context>
+<context>
+    <name>Application</name>
+    <message>
+        <location filename="application.cpp" line="22"/>
+        <source>Exit</source>
+        <translation>Выйти</translation>
     </message>
 </context>
 <context>
@@ -111,22 +119,22 @@ Try again.</source>
 <context>
     <name>ChatMessageWidget</name>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="15"/>
+        <location filename="widgets/chat_message_widget.cpp" line="23"/>
         <source>Reply</source>
         <translation>Ответить</translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="16"/>
+        <location filename="widgets/chat_message_widget.cpp" line="24"/>
         <source>Forward</source>
         <translation>Переслать</translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="17"/>
+        <location filename="widgets/chat_message_widget.cpp" line="25"/>
         <source>Copy text</source>
         <translation>Копировать текст</translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="18"/>
+        <location filename="widgets/chat_message_widget.cpp" line="26"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
@@ -145,17 +153,17 @@ Try again.</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="257"/>
+        <location filename="widgets/chats_widget.cpp" line="265"/>
         <source>Some file(s) can not be open.</source>
         <translation>Один или несколько файлов не могут быть открыты.</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="273"/>
+        <location filename="widgets/chats_widget.cpp" line="281"/>
         <source>Select file</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="283"/>
+        <location filename="widgets/chats_widget.cpp" line="291"/>
         <source>The file you selected is too large!
 Maximum file size: %1 Kb.</source>
         <translation>Выбранный файл слишком велик!
@@ -168,7 +176,7 @@ Maximum file size: 50 Mb.</source>
 Максимальный размер файла: 50Мб.</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="289"/>
+        <location filename="widgets/chats_widget.cpp" line="297"/>
         <source>The maximum number of files should not exceed 10.</source>
         <translation>Максимальное число файлов 10.</translation>
     </message>
@@ -193,34 +201,39 @@ Maximum file size: 50 Mb.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="60"/>
+        <location filename="client.cpp" line="65"/>
         <source>Main</source>
         <translation>Клиент</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="66"/>
+        <location filename="client.cpp" line="71"/>
         <source>Amalgama&apos;s Chat is available for free!</source>
         <translation>Amalgama&apos;s Chat доступен для скачивания!</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="67"/>
+        <location filename="client.cpp" line="72"/>
         <source>To get started, create an account or sign in.</source>
         <translation>Войдите или зарегистрируйтесь, что бы начать.</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="68"/>
+        <location filename="client.cpp" line="73"/>
         <source>Sign in</source>
         <translation>Войти</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="106"/>
+        <location filename="client.cpp" line="111"/>
         <source>Profile</source>
         <translation>Профиль</translation>
     </message>
     <message>
-        <location filename="client.cpp" line="117"/>
+        <location filename="client.cpp" line="122"/>
         <source>Chats</source>
         <translation>Список чатов</translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="255"/>
+        <source>The application continues to work in the background</source>
+        <translation>Приложение продолжает работать в фоне</translation>
     </message>
 </context>
 <context>

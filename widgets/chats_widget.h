@@ -33,6 +33,7 @@ public:
 	void addMessageToCurrentChat(ChatMessageWidget* message);
 	void initMessages(quint64 chatId, const QList<ChatMessage>& messages);
 	void addMessageToChat(quint64 chatId, ChatMessage* message, bool isMine);
+	const ChatData* getChatData(quint64 chatId) const;
 
 signals:
 	void event_close();

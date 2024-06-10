@@ -1,5 +1,6 @@
 #include "client.h"
 #include "ui_client.h"
+#include "application.h"
 #include "network/account.h"
 #include "settings/settings_manager.h"
 #include "widgets/profile_widget.h"
@@ -11,12 +12,15 @@
 #include "widgets/message_widget.h"
 #include "resource_manager/resource_manager.h"
 #include "types/classes.h"
+#include "utils/image_utils.h"
 
 #include <QMouseEvent>
 #include <QHash>
 #include <QVariant>
 
 #include <QDebug>
+
+namespace app { extern Application* a; }
 
 namespace client
 {
@@ -36,6 +40,7 @@ namespace client
 		}
 		else
 		{
+			window->show();
 			window->activateWindow();
 		}
 	}
@@ -165,7 +170,17 @@ void Client::addMessageToChat(quint64 chatId, ChatMessage* message)
 	if (cw == nullptr)
 		return;
 
-	cw->addMessageToChat(chatId, message, message->user.uid == acc->getData()->uid);
+	bool isMine = message->user.uid == acc->getData()->uid;
+	cw->addMessageToChat(chatId, message, isMine);
+
+	if (isMine) return;
+
+	const ChatData* chatData = cw->getChatData(chatId);
+	if (chatData != nullptr)
+	{
+		QIcon icon = QIcon(QPixmap::fromImage(ImageUtils::CropImageToCircle(chatData->data.user.avatar)));
+		app::a->message(icon, message->user.sname + " " + message->user.fname, message->content);
+	}
 }
 
 void Client::initChats(const QList<InitChatData> &chats)
@@ -235,7 +250,9 @@ void Client::on_btnProfile_clicked()
 
 void Client::on_btnClose_clicked()
 {
-	close();
+	//close();
+	hide();
+	app::a->message(tr("The application continues to work in the background"));
 }
 
 
