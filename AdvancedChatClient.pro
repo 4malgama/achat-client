@@ -66,6 +66,7 @@ SOURCES += \
 	widgets/chat_message_widget.cpp \
 	widgets/chat_row_widget.cpp \
 	widgets/chats_widget.cpp \
+	widgets/console_widget.cpp \
 	widgets/dropdown_menu.cpp \
 	widgets/message_widget.cpp \
 	widgets/profile_widget.cpp \
@@ -116,6 +117,7 @@ HEADERS += \
 	widgets/chat_message_widget.h \
 	widgets/chat_row_widget.h \
 	widgets/chats_widget.h \
+	widgets/console_widget.h \
 	widgets/dropdown_menu.h \
 	widgets/message_widget.h \
 	widgets/profile_widget.h \
@@ -125,6 +127,7 @@ FORMS += \
 	client.ui \
 	widgets/authorization_widget.ui \
 	widgets/chats_widget.ui \
+	widgets/console_widget.ui \
 	widgets/profile_widget.ui \
 	widgets/server_message_widget.ui
 

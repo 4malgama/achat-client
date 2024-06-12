@@ -228,6 +228,9 @@
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
+         <property name="toolTip">
+          <string>Profile</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
@@ -265,6 +268,9 @@
          </property>
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="toolTip">
+          <string>Chat list</string>
          </property>
          <property name="text">
           <string>...</string>
@@ -304,6 +310,9 @@
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
+         <property name="toolTip">
+          <string>Find people</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
@@ -336,6 +345,44 @@
         </spacer>
        </item>
        <item>
+        <widget class="QToolButton" name="btnConsole">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="toolTip">
+          <string>Opens console window</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/r/resources/images/console.png</normaloff>:/r/resources/images/console.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QToolButton" name="btnSettings">
          <property name="enabled">
           <bool>true</bool>
@@ -354,6 +401,9 @@
          </property>
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="toolTip">
+          <string>Settings</string>
          </property>
          <property name="text">
           <string>...</string>
@@ -392,6 +442,9 @@
          </property>
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="toolTip">
+          <string>Log out</string>
          </property>
          <property name="text">
           <string>...</string>

@@ -35,6 +35,8 @@ public:
 	void addMessageToChat(quint64 chatId, ChatMessage* message, bool isMine);
 	const ChatData* getChatData(quint64 chatId) const;
 
+	void clearCurrentChat();
+
 signals:
 	void event_close();
 

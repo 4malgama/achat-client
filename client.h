@@ -64,6 +64,8 @@ private slots:
 
 	void on_btnChats_clicked();
 
+	void on_btnConsole_clicked();
+
 private:
 	Ui::Client *ui;
 	void closeEvent(QCloseEvent*);

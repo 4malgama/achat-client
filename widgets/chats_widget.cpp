@@ -127,9 +127,9 @@ void ChatsWidget::addMessageToCurrentChat(ChatMessageWidget *message)
 	message->setParent(this);
 	if (message->isMine())
 	{
-		QSpacerItem* item = new QSpacerItem(1, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+		QSpacerItem* spacer = new QSpacerItem(1, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
 		QHBoxLayout* layout = new QHBoxLayout;
-		layout->addItem(item);
+		layout->addItem(spacer);
 		layout->addWidget(message);
 		ui->msgLayout->addLayout(layout);
 	}
@@ -203,6 +203,11 @@ const ChatData* ChatsWidget::getChatData(quint64 chatId) const
 		return nullptr;
 
 	return &chats.constFind(chatId).value();
+}
+
+void ChatsWidget::clearCurrentChat()
+{
+	clearLayout(ui->msgLayout);
 }
 
 void ChatsWidget::closeEvent(QCloseEvent *)
@@ -308,20 +313,15 @@ void ChatsWidget::clearLayout(QLayout* l)
 	if (l == nullptr)
 		return;
 
-	for ( ; l->count() > 1 ; )
+	while (QLayoutItem* child = l->takeAt(0))
 	{
-		QLayoutItem* item = l->takeAt(0);
-		QWidget* wgt = item->widget();
-		if (item->spacerItem())
+		if (QWidget* w = child->widget())
+			w->deleteLater();
+		else if (QSpacerItem* spacerItem = child->spacerItem(); spacerItem == ui->mainSpacer)
 			continue;
-		if (wgt != nullptr)
-		{
-			wgt->deleteLater();
-		}
-		else
-		{
-			clearLayout(item->layout());
-		}
+		else if (QLayout* childLayout = child->layout())
+			clearLayout(childLayout);
+		delete child;
 	}
 }
 

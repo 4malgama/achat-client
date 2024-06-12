@@ -4,6 +4,7 @@
 #include <settings/settings_manager.h>
 #include <QFile>
 #include <QMessageBox>
+#include <QCommandLineParser>
 
 
 namespace client
@@ -40,6 +41,8 @@ static void _main_end()
 namespace app
 {
 	Application* a = nullptr;
+	bool debugMode = false;
+	QString logPath;
 }
 
 int main(int argc, char *argv[])
@@ -48,6 +51,24 @@ int main(int argc, char *argv[])
 	Application a(argc, argv);
 	app::a = &a;
 	QSettings::setDefaultFormat(QSettings::IniFormat);
+
+	{
+		QCommandLineParser parser;
+		parser.setApplicationDescription("AChat-Client");
+		parser.addHelpOption();
+		parser.addVersionOption();
+
+		QCommandLineOption debug_opt("debug", "Starts application with debug mode.");
+		QCommandLineOption logFile_opt(QStringList() << "L" << "log-file", "Output log file.");
+
+		parser.addOption(debug_opt);
+		parser.addOption(logFile_opt);
+
+		parser.process(a);
+
+		app::debugMode = parser.isSet(debug_opt);
+		app::logPath = parser.value(logFile_opt);
+	}
 
 	resourcemanager::load();
 

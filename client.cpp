@@ -20,7 +20,11 @@
 
 #include <QDebug>
 
-namespace app { extern Application* a; }
+namespace app
+{
+	extern Application* a;
+	extern bool debugMode;
+}
 
 namespace client
 {
@@ -56,6 +60,11 @@ namespace chatswidget
 	ChatsWidget* getInstance();
 }
 
+namespace console
+{
+	void show();
+}
+
 Client::Client(QWidget *parent)
 	: QMainWindow(parent)
 	, ui(new Ui::Client)
@@ -63,6 +72,11 @@ Client::Client(QWidget *parent)
 	ui->setupUi(this);
 	setWindowFlag(Qt::WindowType::FramelessWindowHint);
 	setWindowTitle(tr("Main"));
+
+	if (!app::debugMode)
+		ui->btnConsole->hide();
+
+	ui->btnConsole->setEnabled(app::debugMode);
 
 	acc = new Account(this);
 	acc->setInetAddress(SettingsManager::getInstance().getEndPoint());
@@ -305,5 +319,11 @@ void Client::resizeEvent(QResizeEvent* event)
 void Client::on_btnChats_clicked()
 {
 	openChatsPage();
+}
+
+
+void Client::on_btnConsole_clicked()
+{
+	console::show();
 }
 

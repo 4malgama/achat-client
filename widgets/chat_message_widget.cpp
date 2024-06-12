@@ -140,8 +140,14 @@ void ChatMessageWidget::onTextChanged()
 	QFont font("Segoe UI", 12, QFont::Normal);
 
 	QFontMetrics fontMetrics(font);
+
 	const int attachmentHeight = m_Attachments.size() * ATTACHMENT_HEIGHT;
-	setFixedSize(fontMetrics.boundingRect(m_Text).width() + 100, fontMetrics.boundingRect(m_Text).height() + 30 + attachmentHeight);
+
+	//setFixedSize(fontMetrics.boundingRect(m_Text).width() + 100, fontMetrics.boundingRect(m_Text).height() + 30 + attachmentHeight);
+	int maxTextWidth = static_cast<int>(client::window->width() * 0.4f);
+	QRect boundingRect = fontMetrics.boundingRect(QRect(0, 0, maxTextWidth, 0), Qt::TextWordWrap, m_Text);
+
+	setFixedSize(boundingRect.width() + 100, boundingRect.height() + 30 + attachmentHeight);
 
 	update();
 }
