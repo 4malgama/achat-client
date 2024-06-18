@@ -11,6 +11,7 @@ class Account;
 class ProfileWidget;
 class AuthorizationWidget;
 class ChatsWidget;
+class SearchWidget;
 struct InitChatData;
 struct ChatMessage;
 
@@ -23,6 +24,7 @@ class Client : public QMainWindow
 	ProfileWidget* pw = nullptr;
 	AuthorizationWidget* authWidget = nullptr;
 	ChatsWidget* cw = nullptr;
+	SearchWidget* sw = nullptr;
 
 	QPoint lastDragPos;
 	bool dragging = false;
@@ -37,6 +39,7 @@ public:
 
 	void openMyProfilePage();
 	void openChatsPage();
+	void openSearchPage();
 	void authWindow();
 	void closeAuthWindow();
 	void closePages();
@@ -65,6 +68,8 @@ private slots:
 	void on_btnChats_clicked();
 
 	void on_btnConsole_clicked();
+
+	void on_btnSearch_clicked();
 
 private:
 	Ui::Client *ui;

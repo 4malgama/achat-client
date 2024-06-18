@@ -94,7 +94,7 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 					selectedRowChat->setSelected(false);
 				wgt->setSelected(true);
 				selectedRowChat = wgt;
-				clearLayout(ui->msgLayout);
+				clearCurrentChat();
 				ui->btnAttach->show();
 				ui->btnSend->show();
 				ui->txtMessage->show();
@@ -208,6 +208,7 @@ const ChatData* ChatsWidget::getChatData(quint64 chatId) const
 void ChatsWidget::clearCurrentChat()
 {
 	clearLayout(ui->msgLayout);
+	ui->msgLayout->addItem(new QSpacerItem(0, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 }
 
 void ChatsWidget::closeEvent(QCloseEvent *)
@@ -218,7 +219,7 @@ void ChatsWidget::closeEvent(QCloseEvent *)
 
 void ChatsWidget::showEvent(QShowEvent *)
 {
-	//deptecated
+	//deprecated
 }
 
 void ChatsWidget::onTextMessageChanged()
@@ -317,8 +318,6 @@ void ChatsWidget::clearLayout(QLayout* l)
 	{
 		if (QWidget* w = child->widget())
 			w->deleteLater();
-		else if (QSpacerItem* spacerItem = child->spacerItem(); spacerItem == ui->mainSpacer)
-			continue;
 		else if (QLayout* childLayout = child->layout())
 			clearLayout(childLayout);
 		delete child;

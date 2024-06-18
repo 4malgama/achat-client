@@ -21,6 +21,7 @@ public:
 	void updateProfile(const QHash<QString, QVariant>& profileInfo);
 	void requestMessages(quint64 chatId);
 	void sendMessage(quint64 chatId, const QString& jsonData);
+	void sendSearch(const QString& searchText);
 
 	const ProfileData* getData() const;
 

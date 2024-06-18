@@ -39,7 +39,7 @@ static QImage circleImage(const QImage& image, QSize size)
 {
 	QImage output(size, QImage::Format_ARGB32);
 	output.fill(Qt::transparent);
-	
+
 	QBrush brush(image.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
 	QPainter p(&output);

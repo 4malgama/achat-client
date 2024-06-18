@@ -44,6 +44,7 @@ SOURCES += \
 	network/packets/ipacket.cpp \
 	network/packets/new_message_packet.cpp \
 	network/packets/register_packet.cpp \
+	network/packets/search_packet.cpp \
 	network/packets/send_message_packet.cpp \
 	network/packets/send_token_packet.cpp \
 	network/packets/server_hello_packet.cpp \
@@ -70,6 +71,8 @@ SOURCES += \
 	widgets/dropdown_menu.cpp \
 	widgets/message_widget.cpp \
 	widgets/profile_widget.cpp \
+	widgets/search_result_widget.cpp \
+	widgets/search_widget.cpp \
 	widgets/server_message_widget.cpp
 
 HEADERS += \
@@ -94,6 +97,7 @@ HEADERS += \
 	network/packets/ipacket.h \
 	network/packets/new_message_packet.h \
 	network/packets/register_packet.h \
+	network/packets/search_packet.h \
 	network/packets/send_message_packet.h \
 	network/packets/send_token_packet.h \
 	network/packets/server_hello_packet.h \
@@ -121,6 +125,8 @@ HEADERS += \
 	widgets/dropdown_menu.h \
 	widgets/message_widget.h \
 	widgets/profile_widget.h \
+	widgets/search_result_widget.h \
+	widgets/search_widget.h \
 	widgets/server_message_widget.h
 
 FORMS += \
@@ -129,6 +135,7 @@ FORMS += \
 	widgets/chats_widget.ui \
 	widgets/console_widget.ui \
 	widgets/profile_widget.ui \
+	widgets/search_widget.ui \
 	widgets/server_message_widget.ui
 
 TRANSLATIONS += \

@@ -404,13 +404,13 @@ MessageWidget QPushButton:pressed {
     background: rgba(0, 0, 0, 0.5);
 }
 
-ChatsWidget {
+ChatsWidget, SearchWidget {
     background: rgba(0,0,0,0.1);
     border: 0px solid transparent;
     border-radius: 10px;
 }
 
-ChatsWidget QScrollArea {
+ChatsWidget QScrollArea, SearchWidget QScrollArea {
     background: transparent;
     color: white;
     padding: 10px;
@@ -418,14 +418,14 @@ ChatsWidget QScrollArea {
     border-radius: 10px;
 }
 
-ChatsWidget QScrollArea QScrollBar:horizontal, QScrollBar:vertical {
+ChatsWidget QScrollArea QScrollBar:horizontal, SearchWidget QScrollArea QScrollBar:horizontal, QScrollBar:vertical {
     width: 0px;
     height: 0px;
     background: transparent;
     border: none;
 }
 
-ChatsWidget #chatsContent, ChatsWidget #messagesContent {
+ChatsWidget #chatsContent, ChatsWidget #messagesContent, SearchWidget #resultsContent {
     background: transparent;
 }
 
@@ -445,18 +445,22 @@ ChatsWidget #txtMessage:focus {
     background-color: rgba(0,0,0,0.4);
 }
 
-ChatsWidget #btnAttach, ChatsWidget #btnSend {
+ChatsWidget #btnAttach, ChatsWidget #btnSend, SearchWidget #btnSearch {
     background-color: #3B6891;
     border: 0px solid transparent;
     border-radius: 10px;
     color: white;
 }
 
-ChatsWidget #btnAttach:hover, ChatsWidget #btnSend:hover {
+ChatsWidget #btnAttach:hover, ChatsWidget #btnSend:hover, SearchWidget #btnSearch:hover {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0  #3CC6EE, stop: 1 #3C92EE);
     border: 0px solid transparent;
     border-radius: 10px;
     border: 1px solid white;
+}
+
+ChatsWidget #btnAttach:pressed, ChatsWidget #btnSend:pressed, SearchWidget #btnSearch:pressed {
+    background-color: #244059;
 }
 
 ChatsWidget #frame {
@@ -467,4 +471,16 @@ ChatsWidget #frame {
 
 ChatsWidget #frame QLabel {
     color: white;
+}
+
+SearchWidget QLineEdit {
+    background-color: rgba(0,0,0,0.3);
+    border: 0px solid transparent;
+    border-radius: 10px;
+    font-family: Verdana, Tahoma, sans-serif;
+    font-size: 13px;
+    padding: 3px;
+    color: white;
+    selection-color: #244059;
+    selection-background-color: #3CC6EE;
 }

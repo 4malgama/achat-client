@@ -73,6 +73,9 @@
        <property name="cursor">
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="toolTip">
         <string>Copy link</string>
        </property>
@@ -203,6 +206,9 @@
        <property name="cursor">
         <cursorShape>PointingHandCursor</cursorShape>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="toolTip">
         <string>Save and update</string>
        </property>
@@ -311,6 +317,9 @@
          </property>
          <property name="cursor">
           <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
          </property>
          <property name="text">
           <string>Send</string>

@@ -5,9 +5,11 @@
 #include "settings/settings_manager.h"
 #include "widgets/profile_widget.h"
 #include "widgets/chats_widget.h"
+#include "widgets/search_widget.h"
 #include "widgets/advert_widget.h"
 #include "widgets/chat_message_widget.h"
 #include "widgets/chat_row_widget.h"
+#include "widgets/search_result_widget.h"
 #include "widgets/authorization_widget.h"
 #include "widgets/message_widget.h"
 #include "resource_manager/resource_manager.h"
@@ -60,6 +62,11 @@ namespace chatswidget
 	ChatsWidget* getInstance();
 }
 
+namespace searchwidget
+{
+	SearchWidget* getInstance();
+}
+
 namespace console
 {
 	void show();
@@ -105,6 +112,9 @@ Client::Client(QWidget *parent)
 	cw = chatswidget::getInstance();
 	ui->frame->layout()->addWidget(cw);
 
+	sw = searchwidget::getInstance();
+	ui->frame->layout()->addWidget(sw);
+
 	show();
 }
 
@@ -121,7 +131,10 @@ void Client::openMyProfilePage()
 	pw->show();
 	currentPage = pw;
 
-	pw->setAvatar(ResourceManager::instance().getAvatar());
+	QImage avatar = ResourceManager::instance().getAvatar();
+	if (avatar.isNull())
+		avatar = ImageUtils::GetImageFromName(acc->getData()->fname);
+	pw->setAvatar(avatar);
 	setWindowTitle(tr("Profile"));
 }
 
@@ -134,6 +147,15 @@ void Client::openChatsPage()
 	currentPage = cw;
 
 	setWindowTitle(tr("Chats"));
+}
+
+void Client::openSearchPage()
+{
+	if (!(currentPage == nullptr || currentPage == sw))
+		currentPage->hide();
+
+	sw->show();
+	currentPage = sw;
 }
 
 void Client::authWindow()
@@ -308,6 +330,14 @@ void Client::setProfileData(const QHash<QString, QVariant>& profileInfo)
 		pw->post = profileInfo.value("post").toString();
 		pw->description = profileInfo.value("description").toString();
 		pw->updateData();
+
+		// For generate new colored avatar
+		{
+			QImage avatar = ResourceManager::instance().getAvatar();
+			if (avatar.isNull())
+				avatar = ImageUtils::GetImageFromName(acc->getData()->fname);
+			pw->setAvatar(avatar);
+		}
 	}
 }
 
@@ -325,5 +355,11 @@ void Client::on_btnChats_clicked()
 void Client::on_btnConsole_clicked()
 {
 	console::show();
+}
+
+
+void Client::on_btnSearch_clicked()
+{
+	openSearchPage();
 }
 
