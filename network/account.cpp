@@ -9,11 +9,14 @@
 #include "../types/classes.h"
 #include "../secure/certification/certification_manager.h"
 #include "../secure/encryption/aes.h"
-#include "../widgets/search_result_widget.h""
+#include "../widgets/search_result_widget.h"
 #include "../widgets/search_widget.h"
 
 #include <QApplication>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QFile>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -371,6 +374,28 @@ void Account::readEvent(IPacket* packet)
 		searchwidget::getInstance()->addResults(results);
 		return;
 	}
+	else if (SendFilePacket* P = dynamic_cast<SendFilePacket*>(packet))
+	{
+		if (P->fileData.isEmpty())
+			return;
+
+		QString path = QFileDialog::getSaveFileName(client::window, tr("Path to downloaded file"), QDir::homePath() + "\\" + P->fileName);
+		if (path.isEmpty())
+			return;
+
+		QFile file(path);
+		if (file.open(QIODevice::WriteOnly))
+		{
+			file.write(P->fileData);
+			file.close();
+		}
+		else
+		{
+			client::window->showMessage(tr("Some error occurred when the program tried to open the file.\nCheck your FILE PATH or WRITE permissions."), 1);
+		}
+
+		return;
+	}
 }
 
 void Account::updateProfile(const QHash<QString, QVariant>& profileInfo)
@@ -405,6 +430,13 @@ void Account::sendSearch(const QString &searchText)
 
 	SearchPacket packet;
 	packet.json = QJsonDocument(json).toJson(QJsonDocument::Compact);
+	send(&packet);
+}
+
+void Account::downloadFile(uint64 attachmentId)
+{
+	DownloadFilePacket packet;
+	packet.fileId = attachmentId;
 	send(&packet);
 }
 

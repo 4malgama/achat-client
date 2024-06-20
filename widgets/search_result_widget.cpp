@@ -13,6 +13,7 @@ SearchResultWidget::SearchResultWidget(QWidget *parent)
 	connect(this, SIGNAL(displayNameChanged()), this, SLOT(onSomeChanged()));
 	setFixedHeight(80);
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+	setCursor(Qt::PointingHandCursor);
 }
 
 SearchResultWidget::SearchResultWidget(QWidget *parent, const QPixmap &pixmap, const QString &login, const QString &displayName)
@@ -28,6 +29,7 @@ SearchResultWidget::SearchResultWidget(QWidget *parent, const QPixmap &pixmap, c
 	connect(this, SIGNAL(displayNameChanged()), this, SLOT(onSomeChanged()));
 	setFixedHeight(80);
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
+	setCursor(Qt::PointingHandCursor);
 }
 
 void SearchResultWidget::paintEvent(QPaintEvent *)
@@ -82,7 +84,10 @@ void SearchResultWidget::mousePressEvent(QMouseEvent *event)
 void SearchResultWidget::mouseReleaseEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton)
+	{
+		emit clicked();
 		pressed = false;
+	}
 	update();
 }
 

@@ -56,6 +56,7 @@ private:
 	QList<ChatMessageAttachment> m_Attachments;
 
 	void paintEvent(QPaintEvent *event);
+	void onDownloadClicked(uint64 id);
 };
 
 #endif // CHATMESSAGEWIDGET_H

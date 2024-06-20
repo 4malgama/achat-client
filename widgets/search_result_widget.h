@@ -22,10 +22,9 @@ public:
 
 signals:
 	void pixmapChanged();
-
 	void loginChanged();
-
 	void displayNameChanged();
+	void clicked();
 
 private slots:
 	void onSomeChanged();

@@ -27,6 +27,8 @@ std::unique_ptr<IPacket> PacketFactory::createPacket(uint32_t id)
 		case CLIENT_READY_PACKET		: return std::make_unique<ClientReadyPacket>();
 		case SERVER_READY_PACKET		: return std::make_unique<ServerReadyPacket>();
 		case SEARCH_PACKET				: return std::make_unique<SearchPacket>();
+		case DOWNLOAD_FILE_PACKET		: return std::make_unique<DownloadFilePacket>();
+		case SEND_FILE_PACKET			: return std::make_unique<SendFilePacket>();
 		default							: return nullptr;
 	}
 }

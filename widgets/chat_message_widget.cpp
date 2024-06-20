@@ -1,6 +1,7 @@
 #include "chat_message_widget.h"
 #include "attachment_button_widget.h"
 #include "../client.h"
+#include "../network/account.h"
 #include <QPainter>
 
 
@@ -72,6 +73,8 @@ void ChatMessageWidget::onAttachmentsChanged()
 	for (const ChatMessageAttachment& a : m_Attachments)
 	{
 		AttachmentButtonWidget* btn = new AttachmentButtonWidget(this);
+		uint64 id = a.id;
+		connect(btn, &QAbstractButton::clicked, this, [this, id] { onDownloadClicked(id); });
 		btn->setFileName(a.name);
 		btn->setFileSize(a.size / 1024.0);
 		btn->setPixmap(QPixmap(":/r/resources/images/file.png"));
@@ -173,4 +176,9 @@ void ChatMessageWidget::paintEvent(QPaintEvent *)
 	painter.setFont(dateTimeFont);
 	painter.setPen(m_Colors.date);
 	painter.drawText(rect().adjusted(10, 10, -5, -10), Qt::AlignLeft | Qt::AlignBottom, m_DateTime.toString("dd.MM.yyyy hh:mm"));
+}
+
+void ChatMessageWidget::onDownloadClicked(uint64 id)
+{
+	client::window->acc->downloadFile(id);
 }

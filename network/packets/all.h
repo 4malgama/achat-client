@@ -21,5 +21,7 @@
 #include "new_message_packet.h"
 #include "send_token_packet.h"
 #include "search_packet.h"
+#include "download_file_packet.h"
+#include "send_file_packet.h"
 
 #endif // ALL_H

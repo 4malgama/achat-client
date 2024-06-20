@@ -36,6 +36,7 @@ SOURCES += \
 	network/packets/check_avatar_hash_packet.cpp \
 	network/packets/client_hello_packet.cpp \
 	network/packets/client_ready_packet.cpp \
+	network/packets/download_file_packet.cpp \
 	network/packets/get_init_messages_packet.cpp \
 	network/packets/init_chats_packet.cpp \
 	network/packets/init_location_packet.cpp \
@@ -45,6 +46,7 @@ SOURCES += \
 	network/packets/new_message_packet.cpp \
 	network/packets/register_packet.cpp \
 	network/packets/search_packet.cpp \
+	network/packets/send_file_packet.cpp \
 	network/packets/send_message_packet.cpp \
 	network/packets/send_token_packet.cpp \
 	network/packets/server_hello_packet.cpp \
@@ -89,6 +91,7 @@ HEADERS += \
 	network/packets/check_avatar_hash_packet.h \
 	network/packets/client_hello_packet.h \
 	network/packets/client_ready_packet.h \
+	network/packets/download_file_packet.h \
 	network/packets/get_init_messages_packet.h \
 	network/packets/init_chats_packet.h \
 	network/packets/init_location_packet.h \
@@ -98,6 +101,7 @@ HEADERS += \
 	network/packets/new_message_packet.h \
 	network/packets/register_packet.h \
 	network/packets/search_packet.h \
+	network/packets/send_file_packet.h \
 	network/packets/send_message_packet.h \
 	network/packets/send_token_packet.h \
 	network/packets/server_hello_packet.h \
