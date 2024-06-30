@@ -23,6 +23,7 @@ public:
 	void sendMessage(quint64 chatId, const QString& jsonData);
 	void sendSearch(const QString& searchText);
 	void downloadFile(uint64 attachmentId);
+	void createChat(uint64 userId);
 
 	const ProfileData* getData() const;
 

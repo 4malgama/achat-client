@@ -1,6 +1,7 @@
 #include "console_widget.h"
 #include "ui_console_widget.h"
 #include "chats_widget.h"
+#include "../client.h"
 
 
 namespace console
@@ -34,6 +35,11 @@ namespace console
 	}
 }
 
+namespace client
+{
+	extern Client* window;
+}
+
 namespace chatswidget
 {
 	ChatsWidget* getInstance();
@@ -45,6 +51,7 @@ ConsoleWidget::ConsoleWidget(QWidget *parent) :
 {
 	ui->setupUi(this);
 	setStyleSheet("#plainTextEdit { color: rgb(0, 255, 0); background: black; font-family: 'Cascadia Mono'; font-size: 12pt; }");
+	ui->plainTextEdit->setWordWrapMode(QTextOption::WordWrap);
 	show();
 }
 
@@ -82,6 +89,19 @@ void ConsoleWidget::processCommand(const QString &command)
 	{
 		chatswidget::getInstance()->clearCurrentChat();
 	}
+	else if (command == "gpt")
+	{
+		client::window->createChatGPT();
+	}
+	else if (command == "set_proxy")
+	{
+
+	}
+	else
+	{
+		writeLine("Invalid command: " + command);
+		printHelp();
+	}
 }
 
 void ConsoleWidget::printHelp()
@@ -89,4 +109,6 @@ void ConsoleWidget::printHelp()
 	writeLine("Commands:");
 	writeLine("help              - Print this page.");
 	writeLine("clear_visual_chat - Clear visual messages in current chat");
+	writeLine("gpt               - Add ChatGPT to chats.");
+	writeLine("set_proxy         - Sets proxy for ChatGPT or other Network Services.");
 }

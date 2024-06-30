@@ -341,6 +341,23 @@ void Client::setProfileData(const QHash<QString, QVariant>& profileInfo)
 	}
 }
 
+void Client::openChat(quint64 id)
+{
+	if (cw != nullptr)
+	{
+		cw->openChat(id);
+		openChatsPage();
+	}
+}
+
+void Client::createChatGPT()
+{
+	if (cw != nullptr)
+	{
+		cw->addChatGPT();
+	}
+}
+
 void Client::resizeEvent(QResizeEvent* event)
 {
 	emit event_resize(event->size());

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+class GPTService;
 class QFileInfo;
 class ChatMessageWidget;
 class ChatRowWidget;
@@ -21,9 +22,14 @@ class ChatsWidget : public QWidget
 	const int MAX_FILE_SIZE;
 
 	QHash<quint64, ChatData> chats;
+	QHash<quint64, ChatData> bots;
 	ChatData* selectedChat = nullptr;
 	ChatRowWidget* selectedRowChat = nullptr;
 	QList<QString> attachments;
+	bool gptEnabled = false;
+	bool selectedAI = false;
+
+	GPTService* gpt;
 
 public:
 	explicit ChatsWidget(QWidget *parent = nullptr);
@@ -33,9 +39,13 @@ public:
 	void addMessageToCurrentChat(ChatMessageWidget* message);
 	void initMessages(quint64 chatId, const QList<ChatMessage>& messages);
 	void addMessageToChat(quint64 chatId, ChatMessage* message, bool isMine);
+	void addMessageToBot(quint64 botId, ChatMessage* message, bool isMine);
 	const ChatData* getChatData(quint64 chatId) const;
 
 	void clearCurrentChat();
+
+	void openChat(quint64 id);
+	void addChatGPT();
 
 signals:
 	void event_close();

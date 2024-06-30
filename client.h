@@ -55,6 +55,9 @@ public:
 	void addAdvertPage(QWidget* page);
 	void setProfileData(const QHash<QString, QVariant>& profileInfo);
 
+	void openChat(quint64 id);
+	void createChatGPT();
+
 signals:
 	void event_close();
 	void event_resize(QSize size);

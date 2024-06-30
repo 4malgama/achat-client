@@ -62,6 +62,11 @@ bool ChatRowWidget::getSelected()
 	return selected;
 }
 
+void ChatRowWidget::click()
+{
+	emit clicked();
+}
+
 void ChatRowWidget::initialize()
 {
 	setFixedHeight(80);

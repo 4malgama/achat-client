@@ -362,12 +362,32 @@ void Account::readEvent(IPacket* packet)
 			QString _login = obj.value("login").toString();
 			QString _dName = obj.value("display_name").toString();
 			QString _avatar = obj.value("avatar_data").toString();
+			quint64 _userId = obj.value("user_id").toVariant().toULongLong();
+			quint64 _chatId = (obj.contains("chat_id") ? obj.value("chat_id").toVariant().toULongLong() : 0);
 
-			QByteArray imageData = QByteArray::fromBase64(_avatar.toUtf8());
 			QPixmap pixmap;
-			pixmap.loadFromData(imageData);
+
+			if (!_avatar.isNull())
+			{
+				QByteArray imageData = QByteArray::fromBase64(_avatar.toUtf8());
+				pixmap.loadFromData(imageData);
+			}
+			else
+			{
+				pixmap = QPixmap::fromImage(ImageUtils::GetImageFromName(_dName));
+			}
 
 			SearchResultWidget* result = new SearchResultWidget(client::window, pixmap, _login, _dName);
+			connect(result, &SearchResultWidget::clicked, this, [id = _chatId, _userId, this] {
+				if (id != 0)
+				{
+					client::window->openChat(id);
+				}
+				else
+				{
+					createChat(_userId);
+				}
+			});
 			results.append(result);
 		}
 
@@ -379,7 +399,7 @@ void Account::readEvent(IPacket* packet)
 		if (P->fileData.isEmpty())
 			return;
 
-		QString path = QFileDialog::getSaveFileName(client::window, tr("Path to downloaded file"), QDir::homePath() + "\\" + P->fileName);
+		QString path = QFileDialog::getSaveFileName(client::window, tr("Path to downloaded file"), QDir::rootPath() + P->fileName);
 		if (path.isEmpty())
 			return;
 
@@ -438,6 +458,11 @@ void Account::downloadFile(uint64 attachmentId)
 	DownloadFilePacket packet;
 	packet.fileId = attachmentId;
 	send(&packet);
+}
+
+void Account::createChat(uint64 userId)
+{
+
 }
 
 const ProfileData *Account::getData() const

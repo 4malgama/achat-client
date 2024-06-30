@@ -132,7 +132,19 @@ void ResourceManager::freeImage(const QString& path)
 
 void ResourceManager::loadImages()
 {
-	//TODO
+	loadImage("gpt.jpg");
+}
+
+void ResourceManager::loadImage(const QString &path)
+{
+	QFileInfo fi(m_Path + "images\\" + path);
+
+	QDir dir(fi.absolutePath());
+
+	if (!dir.exists())
+		return;
+
+	addImage(fi.baseName(), QImage(fi.absoluteFilePath()));
 }
 
 void ResourceManager::initUser(quint64 uid, bool remember, const QString& login, const QString& password)

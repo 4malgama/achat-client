@@ -55,6 +55,9 @@ SOURCES += \
 	network/packets/update_profile_packet.cpp \
 	network/stream_builder.cpp \
 	network/stream_parser.cpp \
+	network/web/gpt_service.cpp \
+	network/web/request_builder.cpp \
+	network/web/web_service.cpp \
 	resource_manager/resource_manager.cpp \
 	secure/certification/certification_manager.cpp \
 	secure/encryption/aes.cpp \
@@ -110,6 +113,9 @@ HEADERS += \
 	network/packets/update_profile_packet.h \
 	network/stream_builder.h \
 	network/stream_parser.h \
+	network/web/gpt_service.h \
+	network/web/request_builder.h \
+	network/web/web_service.h \
 	resource_manager/resource_manager.h \
 	secure/certification/certification_manager.h \
 	secure/encryption/aes.h \

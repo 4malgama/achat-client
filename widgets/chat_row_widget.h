@@ -41,6 +41,8 @@ public:
 	void setSelected(bool state);
 	bool getSelected();
 
+	void click();
+
 signals:
 	void clicked();
 

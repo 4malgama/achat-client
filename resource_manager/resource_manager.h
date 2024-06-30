@@ -48,6 +48,7 @@ signals:
 
 private:
 	void loadImages();
+	void loadImage(const QString& path);
 };
 
 #endif // RESOURCEMANAGER_H

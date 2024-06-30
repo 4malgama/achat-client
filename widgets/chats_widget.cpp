@@ -5,6 +5,8 @@
 #include "../types/classes.h"
 #include "../client.h"
 #include "../network/account.h"
+#include "../resource_manager/resource_manager.h"
+#include "../network/web/gpt_service.h"
 #include <QHBoxLayout>
 #include <QScrollBar>
 #include <QTimer>
@@ -40,6 +42,11 @@ namespace chatswidget
 	}
 }
 
+namespace settings
+{
+	extern QString GPTToken;
+}
+
 namespace client { extern Client* window; }
 
 ChatsWidget::ChatsWidget(QWidget *parent) :
@@ -69,6 +76,10 @@ ChatsWidget::ChatsWidget(QWidget *parent) :
 	ui->btnSend->hide();
 	ui->txtMessage->hide();
 	ui->frame->hide();
+
+	gpt = new GPTService(settings::GPTToken, client::window);
+	gpt->loadProxy();
+
 	hide();
 }
 
@@ -93,6 +104,7 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 				if (selectedRowChat != nullptr)
 					selectedRowChat->setSelected(false);
 				wgt->setSelected(true);
+				selectedAI = false;
 				selectedRowChat = wgt;
 				clearCurrentChat();
 				ui->btnAttach->show();
@@ -107,12 +119,13 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 				{
 					initMessages(selectedChat->data.id, selectedChat->messages);
 				}
-
 			});
 			this->chats.insert(chat.id, {
 								   .initialized = false,
+								   .isBot = false,
 								   .data = chat,
-								   .messages = QList<ChatMessage>()
+								   .messages = QList<ChatMessage>(),
+								   .wgt = wgt
 							   });
 			ui->verticalLayout_2->insertWidget(0, wgt);
 		}
@@ -141,10 +154,29 @@ void ChatsWidget::addMessageToCurrentChat(ChatMessageWidget *message)
 
 void ChatsWidget::initMessages(quint64 chatId, const QList<ChatMessage> &messages)
 {
-	if (chats.contains(chatId))
+	if (!selectedAI && chats.contains(chatId))
 	{
 		chats[chatId].messages = messages;
 		chats[chatId].initialized = true;
+
+		for (const ChatMessage& message : messages)
+		{
+			ChatMessageWidget* wgt = new ChatMessageWidget(this, message.user.uid == client::window->acc->getData()->uid);
+			wgt->setText(message.content);
+			wgt->setDateTime(QDateTime::fromSecsSinceEpoch(message.timestamp));
+			wgt->setAttachments(message.attachments);
+			addMessageToCurrentChat(wgt);
+		}
+
+		QTimer::singleShot(200, this, [this] {
+			QScrollBar* scrollBar = ui->scrollMessages->verticalScrollBar();
+			scrollBar->setValue(scrollBar->maximum());
+		});
+	}
+	else if (selectedAI && bots.contains(chatId))
+	{
+		bots[chatId].messages = messages;
+		bots[chatId].initialized = true;
 
 		for (const ChatMessage& message : messages)
 		{
@@ -197,6 +229,41 @@ void ChatsWidget::addMessageToChat(quint64 chatId, ChatMessage* message, bool is
 	}
 }
 
+void ChatsWidget::addMessageToBot(quint64 botId, ChatMessage *message, bool isMine)
+{
+	if (bots.contains(botId) && message != nullptr)
+	{
+		ChatData& chat = bots[botId];
+
+		if (message->replyId)
+		{
+			ChatMessage& reply = *std::find_if(chat.messages.begin(), chat.messages.end(), [message] (ChatMessage& m) -> bool {
+				return message->replyId == m.id;
+			});
+			message->replyMsg = &reply;
+		}
+
+		if (message->forwardId)
+		{
+			ChatMessage& fwd = *std::find_if(chat.messages.begin(), chat.messages.end(), [message] (ChatMessage& m) -> bool {
+				return message->forwardId == m.id;
+			});
+			message->forwardMsg = &fwd;
+		}
+
+		chat.messages.append(*message);
+
+		if (selectedChat->data.id == chat.data.id)
+		{
+			ChatMessageWidget* messageWgt = new ChatMessageWidget(this, isMine);
+			messageWgt->setText(message->content);
+			messageWgt->setDateTime(QDateTime::fromSecsSinceEpoch(message->timestamp));
+			messageWgt->setAttachments(message->attachments);
+			addMessageToCurrentChat(messageWgt);
+		}
+	}
+}
+
 const ChatData* ChatsWidget::getChatData(quint64 chatId) const
 {
 	if (!chats.contains(chatId))
@@ -209,6 +276,53 @@ void ChatsWidget::clearCurrentChat()
 {
 	clearLayout(ui->msgLayout);
 	ui->msgLayout->addItem(new QSpacerItem(0, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
+}
+
+void ChatsWidget::openChat(quint64 id)
+{
+	if (chats.contains(id) && chats[id].wgt != nullptr)
+	{
+		chats[id].wgt->click();
+	}
+}
+
+void ChatsWidget::addChatGPT()
+{
+	if (gptEnabled)
+		return;
+
+	QImage image = ResourceManager::instance().getImage("gpt");
+
+	ChatRowWidget* gptRowWgt = new ChatRowWidget(this, image, "ChatGPT", tr("AI"));
+	connect(gptRowWgt, &ChatRowWidget::clicked, this, [this, gptRowWgt] {
+		if (gptRowWgt == selectedRowChat)
+			return;
+		selectedAI = true;
+		if (selectedRowChat != nullptr)
+			selectedRowChat->setSelected(false);
+		if (!this->bots.contains(1ULL))
+			return;
+		this->selectedChat = &this->bots[1ULL];
+		gptRowWgt->setSelected(true);
+		selectedRowChat = gptRowWgt;
+		clearCurrentChat();
+		ui->btnAttach->hide();
+		ui->btnSend->show();
+		ui->txtMessage->show();
+		resetAttachments();
+		initMessages(selectedChat->data.id, selectedChat->messages);
+	});
+
+	ChatData d;
+	d.initialized = false;
+	d.isBot = true;
+	d.data = { .id = 1ULL };
+	d.messages = QList<ChatMessage>();
+	d.wgt = gptRowWgt;
+	this->bots.insert(1ULL, d);
+	ui->verticalLayout_2->insertWidget(0, gptRowWgt);
+
+	gptEnabled = true;
 }
 
 void ChatsWidget::closeEvent(QCloseEvent *)
@@ -242,43 +356,65 @@ void ChatsWidget::onSendClicked()
 
 	ui->txtMessage->clear();
 
-	if (selectedChat != nullptr && chats.contains(selectedChat->data.id))
+	if (selectedChat != nullptr)
 	{
-		QJsonObject json;
-		json.insert("content", text);
-
-		// start files
-		QJsonArray jsonAttachments;
-		for (const QString& path : qAsConst(attachments))
+		if (!selectedAI && chats.contains(selectedChat->data.id))
 		{
-			QFile file(path);
-			if (file.open(QIODevice::ReadOnly))
-			{
-				QString fileName = file.fileName();
-				fileName = fileName.mid(fileName.lastIndexOf('/') + 1);
-				QByteArray fileData = file.readAll();
-				if (fileData.isEmpty())
-					continue;
+			QJsonObject json;
+			json.insert("content", text);
 
-				QJsonObject jsonAttachment;
-				jsonAttachment.insert("name", fileName);
-				jsonAttachment.insert("data", QString(fileData.toBase64()));
-				jsonAttachments.append(jsonAttachment);
-				file.close();
-			}
-			else
+			// start files
+			QJsonArray jsonAttachments;
+			for (const QString& path : qAsConst(attachments))
 			{
-				client::window->showMessage(tr("Some file(s) can not be open."), 1);
-				return;
+				QFile file(path);
+				if (file.open(QIODevice::ReadOnly))
+				{
+					QString fileName = file.fileName();
+					fileName = fileName.mid(fileName.lastIndexOf('/') + 1);
+					QByteArray fileData = file.readAll();
+					if (fileData.isEmpty())
+						continue;
+
+					QJsonObject jsonAttachment;
+					jsonAttachment.insert("name", fileName);
+					jsonAttachment.insert("data", QString(fileData.toBase64()));
+					jsonAttachments.append(jsonAttachment);
+					file.close();
+				}
+				else
+				{
+					client::window->showMessage(tr("Some file(s) can not be open."), 1);
+					return;
+				}
+			}
+			json.insert("attachments", jsonAttachments);
+			// end files
+
+			QByteArray data = QJsonDocument(json).toJson(QJsonDocument::Compact);
+			client::window->acc->sendMessage(selectedChat->data.id, data);
+			attachments.clear();
+			resetAttachments();
+		}
+		else if (selectedAI && bots.contains(selectedChat->data.id))
+		{
+			//check for ChatGPT
+			if (selectedChat->data.id == 1)
+			{
+				ChatMessage myMessage;
+				myMessage.content = text;
+				myMessage.id = bots[1].messages.count();
+				myMessage.timestamp = QDateTime::currentSecsSinceEpoch();
+				myMessage.user.uid = client::window->acc->getData()->uid;
+				addMessageToBot(1, &myMessage, true);
+				QString answer = gpt->ask(text);
+				ChatMessage botMessage;
+				botMessage.content = answer;
+				botMessage.id = bots[1].messages.count();
+				botMessage.timestamp = QDateTime::currentSecsSinceEpoch();
+				addMessageToBot(1, &botMessage, false);
 			}
 		}
-		json.insert("attachments", jsonAttachments);
-		// end files
-
-		QByteArray data = QJsonDocument(json).toJson(QJsonDocument::Compact);
-		client::window->acc->sendMessage(selectedChat->data.id, data);
-		attachments.clear();
-		resetAttachments();
 	}
 }
 

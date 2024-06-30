@@ -4,6 +4,8 @@
 #include "types_variables.h"
 #include <QImage>
 
+class ChatRowWidget;
+
 struct ProfileData
 {
 	uint64 uid;
@@ -53,8 +55,10 @@ struct ChatMessage
 struct ChatData
 {
 	bool initialized = false;
+	bool isBot = false;
 	InitChatData data;
 	QList<ChatMessage> messages;
+	ChatRowWidget* wgt;
 };
 
 #endif // CLASSES_H
