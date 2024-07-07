@@ -4,34 +4,45 @@
 <context>
     <name>Account</name>
     <message>
-        <location filename="network/account.cpp" line="163"/>
+        <location filename="network/account.cpp" line="174"/>
         <source>Login already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="163"/>
+        <location filename="network/account.cpp" line="174"/>
         <source>Unsafe password.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="165"/>
+        <location filename="network/account.cpp" line="176"/>
         <source>Registration failed.
 Reason: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="399"/>
+        <location filename="network/account.cpp" line="402"/>
+        <source>Path to downloaded file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="network/account.cpp" line="414"/>
+        <source>Some error occurred when the program tried to open the file.
+Check your FILE PATH or WRITE permissions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="network/account.cpp" line="507"/>
         <source>An error occurred while trying to
 establish a secure connection.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="453"/>
+        <location filename="network/account.cpp" line="561"/>
         <source>No connection.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="465"/>
+        <location filename="network/account.cpp" line="573"/>
         <source>Connect timeout.
 Check your internet connection.
 Try again.</source>
@@ -115,22 +126,22 @@ Try again.</source>
 <context>
     <name>ChatMessageWidget</name>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="23"/>
+        <location filename="widgets/chat_message_widget.cpp" line="24"/>
         <source>Reply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="24"/>
+        <location filename="widgets/chat_message_widget.cpp" line="25"/>
         <source>Forward</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="25"/>
+        <location filename="widgets/chat_message_widget.cpp" line="26"/>
         <source>Copy text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chat_message_widget.cpp" line="26"/>
+        <location filename="widgets/chat_message_widget.cpp" line="27"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -143,29 +154,34 @@ Try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.ui" line="116"/>
-        <location filename="widgets/chats_widget.ui" line="148"/>
+        <location filename="widgets/chats_widget.ui" line="119"/>
+        <location filename="widgets/chats_widget.ui" line="154"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="265"/>
+        <location filename="widgets/chats_widget.cpp" line="296"/>
+        <source>AI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/chats_widget.cpp" line="387"/>
         <source>Some file(s) can not be open.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="281"/>
+        <location filename="widgets/chats_widget.cpp" line="423"/>
         <source>Select file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="291"/>
+        <location filename="widgets/chats_widget.cpp" line="433"/>
         <source>The file you selected is too large!
 Maximum file size: %1 Kb.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="297"/>
+        <location filename="widgets/chats_widget.cpp" line="439"/>
         <source>The maximum number of files should not exceed 10.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -181,47 +197,87 @@ Maximum file size: %1 Kb.</source>
         <location filename="client.ui" line="100"/>
         <location filename="client.ui" line="129"/>
         <location filename="client.ui" line="158"/>
-        <location filename="client.ui" line="232"/>
-        <location filename="client.ui" line="270"/>
-        <location filename="client.ui" line="308"/>
-        <location filename="client.ui" line="359"/>
-        <location filename="client.ui" line="397"/>
+        <location filename="client.ui" line="235"/>
+        <location filename="client.ui" line="276"/>
+        <location filename="client.ui" line="317"/>
+        <location filename="client.ui" line="371"/>
+        <location filename="client.ui" line="409"/>
+        <location filename="client.ui" line="450"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="65"/>
+        <location filename="client.ui" line="273"/>
+        <source>Chat list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.ui" line="314"/>
+        <source>Find people</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.ui" line="368"/>
+        <source>Opens console window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.ui" line="406"/>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.ui" line="447"/>
+        <source>Log out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="client.cpp" line="81"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="71"/>
+        <location filename="client.cpp" line="92"/>
         <source>Amalgama&apos;s Chat is available for free!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="72"/>
+        <location filename="client.cpp" line="93"/>
         <source>To get started, create an account or sign in.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="73"/>
+        <location filename="client.cpp" line="94"/>
         <source>Sign in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="111"/>
+        <location filename="client.ui" line="232"/>
+        <location filename="client.cpp" line="138"/>
         <source>Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="122"/>
+        <location filename="client.cpp" line="149"/>
         <source>Chats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="255"/>
+        <location filename="client.cpp" line="291"/>
         <source>The application continues to work in the background</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ConsoleWidget</name>
+    <message>
+        <location filename="widgets/console_widget.ui" line="14"/>
+        <source>Console</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/console_widget.ui" line="51"/>
+        <source>Type &apos;help&apos; for help.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -246,57 +302,57 @@ Maximum file size: %1 Kb.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="77"/>
+        <location filename="widgets/profile_widget.ui" line="80"/>
         <source>Copy link</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="106"/>
+        <location filename="widgets/profile_widget.ui" line="109"/>
         <source>Firstname</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="125"/>
+        <location filename="widgets/profile_widget.ui" line="128"/>
         <source>Patronymic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="147"/>
+        <location filename="widgets/profile_widget.ui" line="150"/>
         <source>Surname</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="166"/>
+        <location filename="widgets/profile_widget.ui" line="169"/>
         <source>Post</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="185"/>
+        <location filename="widgets/profile_widget.ui" line="188"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="207"/>
+        <location filename="widgets/profile_widget.ui" line="213"/>
         <source>Save and update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="210"/>
+        <location filename="widgets/profile_widget.ui" line="216"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="289"/>
+        <location filename="widgets/profile_widget.ui" line="295"/>
         <source>Comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="316"/>
+        <location filename="widgets/profile_widget.ui" line="325"/>
         <source>Send</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="344"/>
+        <location filename="widgets/profile_widget.ui" line="353"/>
         <source>No comments</source>
         <translation type="unfinished"></translation>
     </message>
@@ -400,6 +456,24 @@ Maximum file size: %1 Kb.</source>
     <message>
         <location filename="widgets/profile_widget.cpp" line="133"/>
         <source>Leave it empty if you want to keep the same name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SearchWidget</name>
+    <message>
+        <location filename="widgets/search_widget.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/search_widget.ui" line="28"/>
+        <source>nickname</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/search_widget.ui" line="47"/>
+        <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
