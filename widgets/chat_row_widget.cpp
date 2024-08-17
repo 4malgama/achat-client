@@ -12,9 +12,10 @@ ChatRowWidget::ChatRowWidget(QWidget *parent)
 	initialize();
 }
 
-ChatRowWidget::ChatRowWidget(QWidget *parent, const QImage &avatar, const QString &displayName, const QString &post)
+ChatRowWidget::ChatRowWidget(QWidget *parent, quint64 chatId, const QImage &avatar, const QString &displayName, const QString &post)
 	: QWidget{parent}
 {
+	this->chatId = chatId;
 	this->avatar = avatar;
 	this->displayName = displayName;
 	this->post = post;

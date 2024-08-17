@@ -41,6 +41,7 @@ public:
 	void addMessageToChat(quint64 chatId, ChatMessage* message, bool isMine);
 	void addMessageToBot(quint64 botId, ChatMessage* message, bool isMine);
 	const ChatData* getChatData(quint64 chatId) const;
+	void updateChatId(quint64 chatId, const QString &login);
 
 	void clearCurrentChat();
 

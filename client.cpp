@@ -217,6 +217,11 @@ void Client::addMessageToChat(quint64 chatId, ChatMessage* message)
 		QIcon icon = QIcon(QPixmap::fromImage(ImageUtils::CropImageToCircle(chatData->data.user.avatar)));
 		app::a->message(icon, message->user.sname + " " + message->user.fname, message->content);
 	}
+	else
+	{
+		qWarning() << "ChatData with id '" << chatId << "' is not exists.";
+		return;
+	}
 }
 
 void Client::initChats(const QList<InitChatData> &chats)
@@ -355,6 +360,14 @@ void Client::createChatGPT()
 	if (cw != nullptr)
 	{
 		cw->addChatGPT();
+	}
+}
+
+void Client::updateChatId(quint64 chatId, const QString &login)
+{
+	if (cw != nullptr)
+	{
+		cw->updateChatId(chatId, login);
 	}
 }
 

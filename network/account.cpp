@@ -316,6 +316,12 @@ void Account::readEvent(IPacket* packet)
 
 		quint64 chatId = json.value("chat_id").toVariant().toULongLong();
 
+		if (chatId == 0)
+		{
+			qWarning() << "Messege received for 0 chat id.";
+			return;
+		}
+
 		ChatMessage msg;
 		msg.id = json.value("id").toVariant().toULongLong();
 		msg.timestamp = json.value("time").toVariant().toULongLong();
@@ -361,7 +367,11 @@ void Account::readEvent(IPacket* packet)
 			QJsonObject obj = val.toObject();
 			QString _login = obj.value("login").toString();
 			QString _dName = obj.value("display_name").toString();
+			QString _fname = obj.value("fname").toString();
+			QString _sname = obj.value("sname").toString();
+			QString _mname = obj.value("mname").toString();
 			QString _avatar = obj.value("avatar_data").toString();
+			QString _post = obj.value("post").toString();
 			quint64 _userId = obj.value("user_id").toVariant().toULongLong();
 			quint64 _chatId = (obj.contains("chat_id") ? obj.value("chat_id").toVariant().toULongLong() : 0);
 
@@ -378,14 +388,17 @@ void Account::readEvent(IPacket* packet)
 			}
 
 			SearchResultWidget* result = new SearchResultWidget(client::window, pixmap, _login, _dName);
-			connect(result, &SearchResultWidget::clicked, this, [id = _chatId, _userId, this] {
+			connect(result, &SearchResultWidget::clicked, this, [id = _chatId, _userId, pixmap, _login, _fname, _sname, _mname, _post, this] {
 				if (id != 0)
 				{
 					client::window->openChat(id);
 				}
 				else
 				{
-					createChat(_userId);
+					if (_fname.isEmpty() && _sname.isEmpty())
+						createChat(_userId, pixmap.toImage(), "", _login, "", _post);
+					else
+						createChat(_userId, pixmap.toImage(), _fname, _sname, _mname, _post);
 				}
 			});
 			results.append(result);
@@ -413,6 +426,15 @@ void Account::readEvent(IPacket* packet)
 		{
 			client::window->showMessage(tr("Some error occurred when the program tried to open the file.\nCheck your FILE PATH or WRITE permissions."), 1);
 		}
+
+		return;
+	}
+	else if (UpdateChatIdPacket* P = dynamic_cast<UpdateChatIdPacket*>(packet))
+	{
+		if (P->chatId == 0)
+			return;
+
+		client::window->updateChatId(P->chatId, P->login);
 
 		return;
 	}
@@ -460,9 +482,31 @@ void Account::downloadFile(uint64 attachmentId)
 	send(&packet);
 }
 
-void Account::createChat(uint64 userId)
+void Account::createChat(uint64 userId, const QImage& avatar, const QString& fname, const QString& sname, const QString& mname, const QString& post)
 {
+	ProfileData profile;
+	profile.avatar = avatar;
+	profile.fname = fname;
+	profile.sname = sname;
+	profile.mname = mname;
+	profile.post = post;
+	profile.uid = userId;
 
+	InitChatData chat;
+	chat.id = 0;
+	chat.isGroup = false;
+	chat.user = profile;
+
+	client::window->initChats({ chat });
+	client::window->openChat(chat.id);
+}
+
+void Account::createChatAndSendMessage(uint64 userId, const QJsonObject &jsonMessage)
+{
+	CreateChatWithMessagePacket packet;
+	packet.userId = userId;
+	packet.message = QJsonDocument(jsonMessage).toJson(QJsonDocument::Compact);
+	send(&packet);
 }
 
 const ProfileData *Account::getData() const

@@ -23,5 +23,7 @@
 #include "search_packet.h"
 #include "download_file_packet.h"
 #include "send_file_packet.h"
+#include "create_chat_with_message_packet.h"
+#include "update_chat_id_packet.h"
 
 #endif // ALL_H

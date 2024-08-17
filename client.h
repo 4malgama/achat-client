@@ -58,6 +58,8 @@ public:
 	void openChat(quint64 id);
 	void createChatGPT();
 
+	void updateChatId(quint64 chatId, const QString& login);
+
 signals:
 	void event_close();
 	void event_resize(QSize size);

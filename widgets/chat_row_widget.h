@@ -27,8 +27,10 @@ class ChatRowWidget : public QWidget
 	} colors;
 
 public:
+	quint64 chatId;
+
 	explicit ChatRowWidget(QWidget *parent = nullptr);
-	ChatRowWidget(QWidget *parent, const QImage& avatar, const QString& displayName, const QString& post);
+	ChatRowWidget(QWidget *parent, quint64 chatId, const QImage& avatar, const QString& displayName, const QString& post);
 
 	void setAvatar(const QImage& avatar);
 	void setDisplayName(const QString& displayName);

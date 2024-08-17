@@ -36,6 +36,7 @@ SOURCES += \
 	network/packets/check_avatar_hash_packet.cpp \
 	network/packets/client_hello_packet.cpp \
 	network/packets/client_ready_packet.cpp \
+	network/packets/create_chat_with_message_packet.cpp \
 	network/packets/download_file_packet.cpp \
 	network/packets/get_init_messages_packet.cpp \
 	network/packets/init_chats_packet.cpp \
@@ -52,6 +53,7 @@ SOURCES += \
 	network/packets/server_hello_packet.cpp \
 	network/packets/server_ready_packet.cpp \
 	network/packets/update_avatar_packet.cpp \
+	network/packets/update_chat_id_packet.cpp \
 	network/packets/update_profile_packet.cpp \
 	network/stream_builder.cpp \
 	network/stream_parser.cpp \
@@ -94,6 +96,7 @@ HEADERS += \
 	network/packets/check_avatar_hash_packet.h \
 	network/packets/client_hello_packet.h \
 	network/packets/client_ready_packet.h \
+	network/packets/create_chat_with_message_packet.h \
 	network/packets/download_file_packet.h \
 	network/packets/get_init_messages_packet.h \
 	network/packets/init_chats_packet.h \
@@ -110,6 +113,7 @@ HEADERS += \
 	network/packets/server_hello_packet.h \
 	network/packets/server_ready_packet.h \
 	network/packets/update_avatar_packet.h \
+	network/packets/update_chat_id_packet.h \
 	network/packets/update_profile_packet.h \
 	network/stream_builder.h \
 	network/stream_parser.h \
