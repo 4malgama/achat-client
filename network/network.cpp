@@ -13,6 +13,11 @@ namespace crypto
 	QByteArray MD5(const QByteArray& data);
 }
 
+namespace console
+{
+	void writeLine(const QString& text);
+}
+
 const quint32 Network::TIMEOUT = 5000;
 
 Network::Network(QObject *parent)
@@ -87,7 +92,7 @@ void Network::send(const IPacket *packet)
 		}
 		catch (int e)
 		{
-			qInfo() << "Error of AES occured (" << e << ")";
+			console::writeLine(QString("Error of AES occured (%1)").arg(e));
 			return;
 		}
 	}
@@ -106,6 +111,11 @@ void Network::sendData(const QByteArray &data)
 {
 	socket.write(data);
 	socket.flush();
+}
+
+std::unique_ptr<IPacket> Network::getPacketByID(quint32 id)
+{
+	return PacketFactory::createPacket(id);
 }
 
 void Network::onStateChanged(QAbstractSocket::SocketState state)
@@ -193,6 +203,7 @@ void Network::onReadEvent()
 
 void Network::onTimeout()
 {
+	console::writeLine("Connection timeout.");
 	tryDisconnect();
 	failConnect();
 }
@@ -200,5 +211,5 @@ void Network::onTimeout()
 void Network::handleError(QAbstractSocket::SocketError socketError)
 {
 	Q_UNUSED(socketError)
-	qInfo() << socket.errorString();
+	console::writeLine(socket.errorString());
 }

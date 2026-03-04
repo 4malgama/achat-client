@@ -2,6 +2,7 @@
 #define ADVERTWIDGET_H
 
 #include <QWidget>
+#include <QPropertyAnimation>
 
 class AdvertWidget : public QWidget
 {
@@ -12,6 +13,9 @@ class AdvertWidget : public QWidget
 		QColor a;
 		QColor b;
 	} background;
+
+	qreal m_offset = 0.0;
+	QPropertyAnimation* anim;
 
 	QString title;
 	QString description;
@@ -30,13 +34,18 @@ public:
 	void setLinkText(const QString& linkText);
 	void setImage(const QImage& image);
 
+	qreal offset() const;
+	void setOffset(qreal newOffset);
+
 signals:
+
+	void offsetChanged();
 
 private:
 	void paintEvent(QPaintEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 
-	QLinearGradient gradient;
+	Q_PROPERTY(qreal offset READ offset WRITE setOffset NOTIFY offsetChanged FINAL)
 };
 
 #endif // ADVERTWIDGET_H

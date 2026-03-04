@@ -1,4 +1,4 @@
-QT += core gui network
+QT += core gui network multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -8,8 +8,8 @@ TARGET = AChatClient
 
 DESTDIR = build
 
-win32:VERSION = 1.0.0.0
-else:VERSION = 1.0.0
+win32:VERSION = 1.1.0.0
+else:VERSION = 1.1.0
 
 OBJECTS_DIR = obj
 MOC_DIR = moc
@@ -36,9 +36,11 @@ SOURCES += \
 	network/packets/check_avatar_hash_packet.cpp \
 	network/packets/client_hello_packet.cpp \
 	network/packets/client_ready_packet.cpp \
+	network/packets/create_chat_packet.cpp \
 	network/packets/create_chat_with_message_packet.cpp \
 	network/packets/download_file_packet.cpp \
 	network/packets/get_init_messages_packet.cpp \
+	network/packets/incoming_call_packet.cpp \
 	network/packets/init_chats_packet.cpp \
 	network/packets/init_location_packet.cpp \
 	network/packets/init_messages_packet.cpp \
@@ -57,6 +59,7 @@ SOURCES += \
 	network/packets/update_profile_packet.cpp \
 	network/stream_builder.cpp \
 	network/stream_parser.cpp \
+	network/voip/voip_service.cpp \
 	network/web/gpt_service.cpp \
 	network/web/request_builder.cpp \
 	network/web/web_service.cpp \
@@ -71,6 +74,7 @@ SOURCES += \
 	widgets/advert_widget.cpp \
 	widgets/attachment_button_widget.cpp \
 	widgets/authorization_widget.cpp \
+	widgets/call_notify_widget.cpp \
 	widgets/chat_message_widget.cpp \
 	widgets/chat_row_widget.cpp \
 	widgets/chats_widget.cpp \
@@ -96,9 +100,11 @@ HEADERS += \
 	network/packets/check_avatar_hash_packet.h \
 	network/packets/client_hello_packet.h \
 	network/packets/client_ready_packet.h \
+	network/packets/create_chat_packet.h \
 	network/packets/create_chat_with_message_packet.h \
 	network/packets/download_file_packet.h \
 	network/packets/get_init_messages_packet.h \
+	network/packets/incoming_call_packet.h \
 	network/packets/init_chats_packet.h \
 	network/packets/init_location_packet.h \
 	network/packets/init_messages_packet.h \
@@ -117,6 +123,7 @@ HEADERS += \
 	network/packets/update_profile_packet.h \
 	network/stream_builder.h \
 	network/stream_parser.h \
+	network/voip/voip_service.h \
 	network/web/gpt_service.h \
 	network/web/request_builder.h \
 	network/web/web_service.h \
@@ -132,6 +139,7 @@ HEADERS += \
 	widgets/advert_widget.h \
 	widgets/attachment_button_widget.h \
 	widgets/authorization_widget.h \
+	widgets/call_notify_widget.h \
 	widgets/chat_message_widget.h \
 	widgets/chat_row_widget.h \
 	widgets/chats_widget.h \

@@ -56,6 +56,11 @@ namespace searchwidget
 	SearchWidget* getInstance();
 }
 
+namespace console
+{
+	void writeLine(const QString& text);
+}
+
 Account::Account(QObject *parent)
 	: Network{parent}
 {
@@ -318,7 +323,7 @@ void Account::readEvent(IPacket* packet)
 
 		if (chatId == 0)
 		{
-			qWarning() << "Messege received for 0 chat id.";
+			console::writeLine("Messege received for 0 chat id.");
 			return;
 		}
 
@@ -438,6 +443,23 @@ void Account::readEvent(IPacket* packet)
 
 		return;
 	}
+	else if (IncomingCallPacket* P = dynamic_cast<IncomingCallPacket*>(packet))
+	{
+		if (P->targetId == 0)
+			return;
+
+		//TODO: Show call window and play sound
+
+		return;
+	}
+	else if (CreateChatPacket* P = dynamic_cast<CreateChatPacket*>(packet))
+	{
+		if (P->jsonData.isEmpty())
+			return;
+
+		onCreateChat(P->jsonData);
+		return;
+	}
 }
 
 void Account::updateProfile(const QHash<QString, QVariant>& profileInfo)
@@ -507,6 +529,48 @@ void Account::createChatAndSendMessage(uint64 userId, const QJsonObject &jsonMes
 	packet.userId = userId;
 	packet.message = QJsonDocument(jsonMessage).toJson(QJsonDocument::Compact);
 	send(&packet);
+}
+
+void Account::startCall(uint64 userId)
+{
+	service.setLocalPort(VoIPService::AutoPort);
+	uint16 port = service.getLocalPort();
+
+	IncomingCallPacket packet;
+	packet.targetId = userId;
+	packet.port = port;
+	send(&packet);
+}
+
+void Account::onCreateChat(const QString &jsonData)
+{
+	QJsonObject json = QJsonDocument::fromJson(jsonData.toUtf8()).object();
+
+	uint64 chatId = json.value("chat_id").toVariant().toULongLong();
+	QJsonObject jsonUserData = json.value("user_data").toObject();
+
+	ProfileData profile;
+	profile.fname = jsonUserData.value("fname").toString();
+	profile.sname = jsonUserData.value("sname").toString();
+	profile.mname = jsonUserData.value("mname").toString();
+	profile.post = jsonUserData.value("post").toString();
+	profile.uid = jsonUserData.value("user_id").toVariant().toULongLong();
+	QImage avatar = QImage::fromData(QByteArray::fromBase64(jsonUserData.value("avatar_data").toString().toUtf8()));
+	if (avatar.isNull())
+		avatar = ImageUtils::GetImageFromName(profile.fname);
+	profile.avatar = avatar;
+
+	InitChatData chat;
+	chat.id = chatId;
+	chat.isGroup = false;
+	chat.user = profile;
+
+	client::window->initChats({ chat });
+}
+
+void Account::forceReceivePacket(uint32 id)
+{
+	readEvent(getPacketByID(id).get());
 }
 
 const ProfileData *Account::getData() const
@@ -580,22 +644,6 @@ void Account::authorization()
 		login(token);
 		return;
 	}
-
-	// if (uid != 0)
-	// {
-	// 	ResourceManager::instance().initUser(uid);
-	// 	QPair<QString, QString> pair = ResourceManager::instance().getAutoLoginData();
-	// 	if (pair.first.isEmpty() || pair.second.isEmpty())
-	// 	{
-	// 		client::window->authWindow();
-	// 		return;
-	// 	}
-	// 	auth::remember = true;
-	// 	auth::login = pair.first;
-	// 	auth::password = pair.second;
-	// 	login(pair.first, pair.second);
-	// 	return;
-	// }
 
 	client::window->authWindow();
 }

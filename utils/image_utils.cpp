@@ -5,6 +5,11 @@
 #include <QPainterPath>
 
 
+namespace crypto
+{
+	QString MD5(const QString& data);
+}
+
 QImage ImageUtils::CropImageToCircle(const QImage &image, int size)
 {
 	int _size = (size != -1 ? size : qMin(image.width(), image.height()));
@@ -27,18 +32,20 @@ QImage ImageUtils::CropImageToCircle(const QImage &image, int size)
 QImage ImageUtils::GetImageFromName(const QString &name)
 {
 	int size = 512;
+	QString hash = crypto::MD5(name);
+	QRgb rgb_a = hash.midRef(0, 6).toUInt(nullptr, 16);
+	QRgb rgb_b = hash.midRef(6, 6).toUInt(nullptr, 16);
+
 	QImage image(size, size, QImage::Format_ARGB32);
 
 	QPainter painter(&image);
 	painter.setRenderHint(QPainter::TextAntialiasing);
 
 	QLinearGradient bgGradient(0, 0, 0, size);
-	bgGradient.setColorAt(0, QColor(255, 200, 255));
-	bgGradient.setColorAt(1, QColor(255, 100, 255));
+	bgGradient.setColorAt(0, QColor::fromRgb(rgb_a));
+	bgGradient.setColorAt(1, QColor::fromRgb(rgb_b));
 
-	painter.setBrush(QBrush(bgGradient));
-	painter.setPen(Qt::NoPen);
-	painter.drawRect(image.rect());
+	painter.fillRect(image.rect(), bgGradient);
 
 	painter.setPen(Qt::white);
 	painter.setFont(QFont("Calibri", 172, QFont::Bold));
@@ -46,7 +53,7 @@ QImage ImageUtils::GetImageFromName(const QString &name)
 	QString text;
 	if (name.isEmpty())
 	{
-		text = ":>";
+		text = "X";
 	}
 	else
 	{

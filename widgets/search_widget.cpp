@@ -30,6 +30,11 @@ namespace client
 	extern Client* window;
 }
 
+namespace console
+{
+	void writeLine(const QString& text);
+}
+
 SearchWidget::SearchWidget(QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::SearchWidget)
@@ -48,7 +53,7 @@ void SearchWidget::addResult(SearchResultWidget *result)
 	QVBoxLayout* layout = dynamic_cast<QVBoxLayout*>(ui->resultsContent->layout());
 	if (layout == nullptr)
 	{
-		qInfo("Error find layout on Search Widget. Required 'QVBoxLayout'.");
+		console::writeLine("Error find layout on Search Widget. Required 'QVBoxLayout'.");
 		return;
 	}
 	layout->insertWidget(0, result);

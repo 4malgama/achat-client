@@ -19,5 +19,7 @@
         <file>resources/icons/icon16.ico</file>
         <file>resources/logo/achat-client_tray.png</file>
         <file>resources/images/console.png</file>
+        <file>resources/images/call.png</file>
+        <file>resources/images/mic.png</file>
     </qresource>
 </RCC>

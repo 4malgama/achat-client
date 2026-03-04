@@ -7,6 +7,7 @@
 #include "../network/account.h"
 #include "../resource_manager/resource_manager.h"
 #include "../network/web/gpt_service.h"
+#include "../utils/image_utils.h"
 #include <QHBoxLayout>
 #include <QScrollBar>
 #include <QTimer>
@@ -49,6 +50,8 @@ namespace settings
 
 namespace client { extern Client* window; }
 
+namespace console { void writeLine(const QString& text); }
+
 ChatsWidget::ChatsWidget(QWidget *parent) :
 	QWidget(parent),
 	MAX_FILE_SIZE(MAX_ATTACH_FILE_SIZE),
@@ -70,12 +73,15 @@ ChatsWidget::ChatsWidget(QWidget *parent) :
 	connect(ui->txtMessage, &QPlainTextEdit::textChanged, this, &ChatsWidget::onTextMessageChanged);
 	connect(ui->btnSend, &QAbstractButton::clicked, this, &ChatsWidget::onSendClicked);
 	connect(ui->btnAttach, &QAbstractButton::clicked, this, &ChatsWidget::onAttachClicked);
+	connect(ui->btnStartCall, &QAbstractButton::clicked, this, &ChatsWidget::onStartCallClicked);
 
 	ui->txtMessage->setFocus();
 	ui->btnAttach->hide();
 	ui->btnSend->hide();
 	ui->txtMessage->hide();
+	ui->btnVoice->hide();
 	ui->frame->hide();
+	ui->headerFrame->hide();
 
 	gpt = new GPTService(settings::GPTToken, client::window);
 	gpt->loadProxy();
@@ -96,14 +102,13 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 		{
 			ChatData d = this->chats.take(0);
 			d.wgt->deleteLater();
-			qInfo() << "Чат 0 удален.";
+			console::writeLine("Chat ID=0 deleted.");
 		}
 
 		if (this->chats.contains(chat.id) == false)
 		{
 			ChatRowWidget* wgt = new ChatRowWidget(this, chat.id, chat.user.avatar, chat.user.sname + " " + chat.user.fname, chat.user.post);
 			connect(wgt, &ChatRowWidget::clicked, this, [this, wgt] {
-				qInfo() << "Выделяю" << wgt->chatId << "чат.";
 				if (wgt == selectedRowChat)
 					return;
 				if (!this->chats.contains(wgt->chatId))
@@ -119,6 +124,7 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 				ui->btnSend->show();
 				ui->txtMessage->show();
 				resetAttachments();
+				setHeader(QPixmap::fromImage(ImageUtils::CropImageToCircle(selectedChat->data.user.avatar, ui->avatar->width())), selectedChat->data.user.fname);
 				if (selectedChat->data.id != 0)
 				{
 					if (!selectedChat->initialized)
@@ -138,7 +144,6 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 								   .messages = QList<ChatMessage>(),
 								   .wgt = wgt
 							   });
-			qInfo() << "Чат" << chat.id << "добавлен.";
 			ui->verticalLayout_2->insertWidget(0, wgt);
 		}
 	}
@@ -148,6 +153,7 @@ void ChatsWidget::addMessageToCurrentChat(ChatMessageWidget *message)
 {
 	if (selectedChat == nullptr)
 		return;
+
 
 	message->setParent(this);
 	if (message->isMine())
@@ -208,6 +214,9 @@ void ChatsWidget::initMessages(quint64 chatId, const QList<ChatMessage> &message
 
 void ChatsWidget::addMessageToChat(quint64 chatId, ChatMessage* message, bool isMine)
 {
+	if (selectedChat == nullptr)
+		return;
+
 	if (chats.contains(chatId) && message != nullptr)
 	{
 		ChatData& chat = chats[chatId];
@@ -284,18 +293,23 @@ const ChatData* ChatsWidget::getChatData(quint64 chatId) const
 	return &chats.constFind(chatId).value();
 }
 
+const ChatData *ChatsWidget::currentChatData() const
+{
+	return const_cast<const ChatData*>(selectedChat);
+}
+
 void ChatsWidget::updateChatId(quint64 chatId, const QString &login)
 {
 	Q_UNUSED(login)
 
 	if (chats.contains(0))
 	{
-		qInfo() << "Обнаружен 0 чат.";
+		console::writeLine("New chat ID-0 detected: " + login);
 		ChatData chat = chats.take(0);
 		chat.data.id = chatId;
 		chat.wgt->chatId = chatId;
 		chats.insert(chatId, chat);
-		qInfo() << "Чат 0 обновлен до" << chatId;
+		console::writeLine("Chat ID-0 updated to ID-" + QString::number(chatId) + ": " + login);
 	}
 }
 
@@ -385,11 +399,8 @@ void ChatsWidget::onSendClicked()
 
 	if (selectedChat != nullptr)
 	{
-		qInfo() << 1;
-		qInfo() << selectedChat << selectedChat->data.id;
 		if (!selectedAI && chats.contains(selectedChat->data.id))
 		{
-			qInfo() << 2;
 			QJsonObject json;
 			json.insert("content", text);
 
@@ -421,21 +432,15 @@ void ChatsWidget::onSendClicked()
 			json.insert("attachments", jsonAttachments);
 			// end files
 
-			qInfo() << 3;
-
 			QByteArray data = QJsonDocument(json).toJson(QJsonDocument::Compact);
-
-			qInfo() << "Отправляю сообщение в" << selectedChat->data.id << "чат.";
 
 			if (selectedChat->data.id == 0)
 			{
 				client::window->acc->createChatAndSendMessage(selectedChat->data.user.uid, json);
-				qInfo() << 11;
 			}
 			else
 			{
 				client::window->acc->sendMessage(selectedChat->data.id, data);
-				qInfo() << 22;
 			}
 
 			attachments.clear();
@@ -490,6 +495,18 @@ void ChatsWidget::onAttachClicked()
 	}
 }
 
+void ChatsWidget::onStartCallClicked()
+{
+	if (selectedChat != nullptr)
+	{
+		if (!selectedAI && chats.contains(selectedChat->data.id))
+		{
+			//TODO: Show Call Window
+			client::window->acc->startCall(selectedChat->data.user.uid);
+		}
+	}
+}
+
 void ChatsWidget::clearLayout(QLayout* l)
 {
 	if (l == nullptr)
@@ -530,4 +547,18 @@ void ChatsWidget::resetAttachments()
 	ui->attach8->clear();
 	ui->attach9->clear();
 	ui->attach10->clear();
+}
+
+void ChatsWidget::resetHeader()
+{
+	ui->nickname->setText("");
+	ui->avatar->setPixmap(QPixmap());
+	ui->headerFrame->hide();
+}
+
+void ChatsWidget::setHeader(const QPixmap &pixmap, const QString &nickname)
+{
+	ui->avatar->setPixmap(pixmap);
+	ui->nickname->setText(nickname);
+	ui->headerFrame->show();
 }

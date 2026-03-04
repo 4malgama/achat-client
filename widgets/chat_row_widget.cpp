@@ -70,7 +70,7 @@ void ChatRowWidget::click()
 
 void ChatRowWidget::initialize()
 {
-	setFixedHeight(80);
+	setFixedHeight(60);
 	setCursor(Qt::PointingHandCursor);
 }
 
@@ -94,30 +94,32 @@ void ChatRowWidget::paintEvent(QPaintEvent *)
 	penGradient.setColorAt(0, QColor(249, 72, 134)); // #F94886
 	penGradient.setColorAt(1, QColor(72, 198, 249)); // #48C6F9
 
-	QPen pen = selected ? QPen(penGradient, 2) : Qt::NoPen;
+	//QPen pen = selected ? QPen(penGradient, 2) : Qt::NoPen;
+	QPen pen = Qt::NoPen;
 
 	painter.setBrush(bgColor);
 	painter.setPen(pen);
-	painter.drawRoundedRect(rect(), 10, 10);
+	painter.drawRect(rect());
+	//painter.drawRoundedRect(rect(), 10, 10);
 
 	//draw name
-	QFont font("Segoe UI", 14, QFont::Normal);
+	QFont font("Segoe UI", 12, QFont::Normal);
 	painter.setFont(font);
 	painter.setPen(Qt::white);
-	painter.drawText(rect().adjusted(80, 15, 0, 0), Qt::AlignLeft | Qt::AlignTop, displayName);
+	painter.drawText(rect().adjusted(height(), 10, 0, 0), Qt::AlignLeft | Qt::AlignTop, displayName);
 
 	//draw post
-	QFont fontPost("Segoe UI", 12, QFont::Normal);
+	QFont fontPost("Segoe UI", 11, QFont::Normal);
 	painter.setFont(fontPost);
 	painter.setPen(Qt::gray);
-	painter.drawText(rect().adjusted(80, 35, 0, 0), Qt::AlignLeft | Qt::AlignTop, post);
+	painter.drawText(rect().adjusted(height(), 30, 0, 0), Qt::AlignLeft | Qt::AlignTop, post);
 
 	//draw round avatar
-	QPixmap avatarPixmap = QPixmap::fromImage(avatar.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	QPixmap avatarPixmap = QPixmap::fromImage(avatar.scaled(height() * 0.75f, height() * 0.75f, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 	QPainterPath path;
-	path.addRoundedRect(avatarPixmap.rect().adjusted(10, 10, 10, 10), 30, 30);
+	path.addRoundedRect(avatarPixmap.rect().adjusted(8, 8, 8, 8), 22, 22);
 	painter.setClipPath(path);
-	painter.drawPixmap(QRect(10, 10, 60, 60), avatarPixmap);
+	painter.drawPixmap(QRect(8, 8, height() * 0.75f, height() * 0.75f), avatarPixmap);
 }
 
 void ChatRowWidget::enterEvent(QEvent *)

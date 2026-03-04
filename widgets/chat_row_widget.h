@@ -19,10 +19,10 @@ class ChatRowWidget : public QWidget
 	{
 		struct
 		{
-			QColor common = QColor(36, 64, 89);
-			QColor selected = QColor(59, 104, 145);
-			QColor hovered = QColor(60, 92, 121);
-			QColor pressed = QColor(44, 59, 72);
+			QColor common = QColor(35, 45, 65);
+			QColor selected = QColor(30, 50, 75);
+			QColor hovered = QColor(30, 50, 75);
+			QColor pressed = QColor(35, 45, 70);
 		} bg;
 	} colors;
 

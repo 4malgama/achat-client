@@ -11,6 +11,7 @@
 #include <QDesktopServices>
 
 
+
 AdvertWidget::AdvertWidget(QWidget *parent)
 	: QWidget{parent}
 {
@@ -23,15 +24,30 @@ AdvertWidget::AdvertWidget(QColor a, QColor b, QWidget *parent)
 {
 	background.a = a;
 	background.b = b;
-	gradient.setColorAt(0, background.a);
-	gradient.setColorAt(1, background.b);
 	setCursor(Qt::PointingHandCursor);
+
+	anim = new QPropertyAnimation(this, "offset");
+	anim->setStartValue(0.0);
+	anim->setKeyValueAt(0.5, 1.0);
+	anim->setEndValue(0.0);
+	anim->setDuration(4000);
+	anim->setLoopCount(-1);
+	anim->setEasingCurve(QEasingCurve::InOutSine);
+	anim->start();
 }
 
-void AdvertWidget::paintEvent(QPaintEvent *event)
+void AdvertWidget::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
+
+	QLinearGradient gradient(
+			rect().topLeft() + QPointF(rect().width() * m_offset, 0),
+			rect().bottomRight() + QPointF(rect().width() * m_offset, 0)
+	);
+
+	gradient.setColorAt(0.0, background.a);
+	gradient.setColorAt(1.0, background.b);
 
 	painter.fillRect(rect(), gradient);
 
@@ -106,4 +122,19 @@ void AdvertWidget::setLinkText(const QString& linkText)
 void AdvertWidget::setImage(const QImage& image)
 {
 	this->image = image;
+}
+
+
+qreal AdvertWidget::offset() const
+{
+	return m_offset;
+}
+
+void AdvertWidget::setOffset(qreal newOffset)
+{
+	if (qFuzzyCompare(m_offset, newOffset))
+		return;
+	m_offset = newOffset;
+	emit offsetChanged();
+	update();
 }

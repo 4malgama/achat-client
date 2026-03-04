@@ -25,5 +25,7 @@
 #include "send_file_packet.h"
 #include "create_chat_with_message_packet.h"
 #include "update_chat_id_packet.h"
+#include "incoming_call_packet.h"
+#include "create_chat_packet.h"
 
 #endif // ALL_H

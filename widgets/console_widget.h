@@ -16,6 +16,7 @@ public:
 	~ConsoleWidget();
 
 	void writeLine(const QString& text);
+	void writeBufferedLine(const QString& text);
 
 signals:
 	void event_close();
@@ -26,8 +27,9 @@ private slots:
 private:
 	Ui::ConsoleWidget *ui;
 	void closeEvent(QCloseEvent*) override;
+	void showEvent(QShowEvent*) override;
 
-	void processCommand(const QString& command);
+	void processCommand(const QString& command, const QStringList& args);
 	void printHelp();
 };
 

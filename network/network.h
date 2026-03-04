@@ -21,8 +21,8 @@ public:
 
 		InetAddress& operator= (InetAddress&& other) noexcept
 		{
-			ip = other.ip;
-			port = other.port;
+			ip = std::move(other.ip);
+			port = std::move(other.port);
 			return *this;
 		}
 
@@ -67,6 +67,8 @@ protected:
 	void send(const IPacket* packet);
 	void sendOpen(const IPacket* packet);
 	void sendData(const QByteArray& data);
+
+	std::unique_ptr<IPacket> getPacketByID(quint32 id);
 
 private:
 	void onStateChanged(QAbstractSocket::SocketState state);

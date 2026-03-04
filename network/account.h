@@ -3,12 +3,13 @@
 
 #include "network.h"
 #include "../types/classes.h"
+#include "voip/voip_service.h"
 
 class Account : public Network
 {
 	QString token;
 	ProfileData data;
-
+	VoIPService service;
 
 public:
 	explicit Account(QObject *parent = nullptr);
@@ -25,6 +26,10 @@ public:
 	void downloadFile(uint64 attachmentId);
 	void createChat(uint64 userId, const QImage& avatar, const QString& fname, const QString& sname, const QString& mname, const QString& post);
 	void createChatAndSendMessage(uint64 userId, const QJsonObject& jsonMessage);
+	void startCall(uint64 userId);
+	void onCreateChat(const QString& jsonData);
+
+	void forceReceivePacket(uint32 id);
 
 	const ProfileData* getData() const;
 

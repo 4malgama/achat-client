@@ -12,6 +12,7 @@
 #include "widgets/search_result_widget.h"
 #include "widgets/authorization_widget.h"
 #include "widgets/message_widget.h"
+#include "widgets/call_notify_widget.h"
 #include "resource_manager/resource_manager.h"
 #include "types/classes.h"
 #include "utils/image_utils.h"
@@ -19,6 +20,7 @@
 #include <QMouseEvent>
 #include <QHash>
 #include <QVariant>
+#include <QShortcut>
 
 #include <QDebug>
 
@@ -79,6 +81,10 @@ Client::Client(QWidget *parent)
 	ui->setupUi(this);
 	setWindowFlag(Qt::WindowType::FramelessWindowHint);
 	setWindowTitle(tr("Main"));
+
+	scOpenConsole = new QShortcut(QKeySequence("Ctrl+Shift+C"), this);
+	scOpenConsole->setContext(Qt::WindowShortcut);
+	connect(scOpenConsole, &QShortcut::activated, console::show);
 
 	if (!app::debugMode)
 		ui->btnConsole->hide();
@@ -201,10 +207,28 @@ void Client::showMessage(const QString& text, quint8 icon)
 	mw->show();
 }
 
+void Client::showCallNotify(const QString& caller, const QImage &avatar)
+{
+	if (callNotify == nullptr)
+		callNotify = new CallNotifyWidget(this);
+	callNotify->setCallerName(caller);
+	callNotify->setCallerImage(avatar);
+	callNotify->setCallState(CallNotifyWidget::INCOMING);
+	callNotify->move(width() / 2 - callNotify->width() / 2, callNotify->height() + 40);
+	callNotify->show();
+}
+
+void Client::hideCallNotify()
+{
+	if (callNotify != nullptr)
+		callNotify->hide();
+}
+
 void Client::addMessageToChat(quint64 chatId, ChatMessage* message)
 {
 	if (cw == nullptr)
 		return;
+
 
 	bool isMine = message->user.uid == acc->getData()->uid;
 	cw->addMessageToChat(chatId, message, isMine);
@@ -344,6 +368,17 @@ void Client::setProfileData(const QHash<QString, QVariant>& profileInfo)
 			pw->setAvatar(avatar);
 		}
 	}
+}
+
+quint64 Client::getCurrentChatId()
+{
+	if (cw == nullptr)
+		return -1;
+
+	if (cw->currentChatData() == nullptr)
+		return -1;
+
+	return cw->currentChatData()->data.id;
 }
 
 void Client::openChat(quint64 id)

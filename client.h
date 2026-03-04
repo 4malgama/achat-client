@@ -12,6 +12,8 @@ class ProfileWidget;
 class AuthorizationWidget;
 class ChatsWidget;
 class SearchWidget;
+class CallNotifyWidget;
+class QShortcut;
 struct InitChatData;
 struct ChatMessage;
 
@@ -20,6 +22,8 @@ class Client : public QMainWindow
 	Q_OBJECT
 
 	QWidget* currentPage = nullptr;
+	CallNotifyWidget* callNotify = nullptr;
+	QShortcut* scOpenConsole;
 
 	ProfileWidget* pw = nullptr;
 	AuthorizationWidget* authWidget = nullptr;
@@ -44,6 +48,8 @@ public:
 	void closeAuthWindow();
 	void closePages();
 	void showMessage(const QString& text, quint8 icon = 0);
+	void showCallNotify(const QString& caller, const QImage& avatar);
+	void hideCallNotify();
 
 	void addMessageToChat(quint64 chatId, ChatMessage* message);
 	void initChats(const QList<InitChatData>& chats);
@@ -55,6 +61,7 @@ public:
 	void addAdvertPage(QWidget* page);
 	void setProfileData(const QHash<QString, QVariant>& profileInfo);
 
+	quint64 getCurrentChatId();
 	void openChat(quint64 id);
 	void createChatGPT();
 

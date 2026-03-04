@@ -41,6 +41,7 @@ public:
 	void addMessageToChat(quint64 chatId, ChatMessage* message, bool isMine);
 	void addMessageToBot(quint64 botId, ChatMessage* message, bool isMine);
 	const ChatData* getChatData(quint64 chatId) const;
+	const ChatData* currentChatData() const;
 	void updateChatId(quint64 chatId, const QString &login);
 
 	void clearCurrentChat();
@@ -59,10 +60,13 @@ private:
 	void onTextMessageChanged();
 	void onSendClicked();
 	void onAttachClicked();
+	void onStartCallClicked();
 
 	void clearLayout(QLayout* l);
 	void addAttachment(const QFileInfo& info);
 	void resetAttachments();
+	void resetHeader();
+	void setHeader(const QPixmap& pixmap, const QString& nickname);
 };
 
 #endif // CHATS_WIDGET_H

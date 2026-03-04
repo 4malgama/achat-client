@@ -31,6 +31,8 @@ std::unique_ptr<IPacket> PacketFactory::createPacket(uint32_t id)
 		case SEND_FILE_PACKET			: return std::make_unique<SendFilePacket>();
 		case CREATE_CHAT_MESSAGE_PACKET	: return std::make_unique<CreateChatWithMessagePacket>();
 		case UPDATE_CHAT_ID_PACKET		: return std::make_unique<UpdateChatIdPacket>();
+		case INCOMING_CALL_PACKET		: return std::make_unique<IncomingCallPacket>();
+		case CREATE_CHAT_PACKET			: return std::make_unique<CreateChatPacket>();
 		default							: return nullptr;
 	}
 }
