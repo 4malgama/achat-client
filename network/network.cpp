@@ -10,7 +10,7 @@
 
 namespace crypto
 {
-	QByteArray MD5(const QByteArray& data);
+	QByteArray md5(const QByteArray& data);
 }
 
 namespace console
@@ -54,6 +54,7 @@ bool Network::isConnected() const
 
 void Network::tryConnect()
 {
+	console::writeLine("Trying connect to " + inetAddress.ip + ":" + QString::number(inetAddress.port));
 	socket.connectToHost(inetAddress.ip, inetAddress.port);
 	timeoutTimer->start();
 }

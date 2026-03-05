@@ -7,7 +7,7 @@
 
 namespace crypto
 {
-	QString MD5(const QString& data);
+	QString md5(const QString& data);
 }
 
 QImage ImageUtils::CropImageToCircle(const QImage &image, int size)
@@ -32,7 +32,7 @@ QImage ImageUtils::CropImageToCircle(const QImage &image, int size)
 QImage ImageUtils::GetImageFromName(const QString &name)
 {
 	int size = 512;
-	QString hash = crypto::MD5(name);
+	QString hash = crypto::md5(name);
 	QRgb rgb_a = hash.midRef(0, 6).toUInt(nullptr, 16);
 	QRgb rgb_b = hash.midRef(6, 6).toUInt(nullptr, 16);
 

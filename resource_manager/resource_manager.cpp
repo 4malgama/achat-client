@@ -1,11 +1,11 @@
 #include "resource_manager.h"
 
 #include <QApplication>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QDir>
+#include <QStandardPaths>
 
-#include <QDebug>
 
 namespace resourcemanager
 {
@@ -17,6 +17,8 @@ namespace resourcemanager
 
 QByteArray HashPassword(const QString& password);
 
+
+
 ResourceManager& ResourceManager::instance()
 {
 	static ResourceManager instance;
@@ -24,109 +26,121 @@ ResourceManager& ResourceManager::instance()
 }
 
 ResourceManager::ResourceManager(QObject *parent)
-	: QObject{parent}
-{ }
-
-bool ResourceManager::isLoaded()
+	: QObject(parent)
 {
-	return loaded;
+}
+
+bool ResourceManager::isLoaded() const
+{
+	return m_loaded;
 }
 
 void ResourceManager::load()
 {
-	loaded = false;
-	m_Path = QString(qApp->applicationDirPath() + "\\cache\\");
-	QDir dir(m_Path);
+	m_cachePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/cache/";
 
+	QDir dir(m_cachePath);
 	if (!dir.exists())
-	{
 		dir.mkpath(".");
-		return;
-	}
 
-	loadImages();
+	scanImages();
 
+	m_loaded = true;
 	emit event_finish();
-	loaded = true;
 }
 
-QImage ResourceManager::getImage(const QString& name)
+QImage ResourceManager::image(const QString& name)
 {
-	return images[name];
+	if (m_imageCache.contains(name))
+		return m_imageCache[name];
+
+	if (!m_imagePaths.contains(name))
+		return QImage();
+
+	QString path = m_imagePaths[name];
+
+	QImage img(path);
+
+	if (img.isNull())
+		return QImage();
+
+	m_imageCache.insert(name, img);
+	return img;
 }
 
-QImage ResourceManager::getAvatar()
+void ResourceManager::registerImage(const QString &name, const QString &path)
 {
-	return QImage(m_UserPath + "\\avatar.jpg");
+	m_imagePaths.insert(name, path);
+}
+
+QImage ResourceManager::avatar() const
+{
+	return QImage(avatarPath());
 }
 
 void ResourceManager::setAvatar(const QImage& image)
 {
-	QImage avatar = image;
-	avatar.save(m_UserPath + "\\avatar.jpg", "JPG");
+	image.save(avatarPath(), "JPG");
 }
 
 void ResourceManager::setAvatarData(const QByteArray& imageData)
 {
-	QFile file(m_UserPath + "\\avatar.jpg");
-	file.open(QIODevice::WriteOnly);
-	file.write(imageData);
-	file.close();
+	QFile file(avatarPath());
+
+	if (file.open(QIODevice::WriteOnly))
+	{
+		file.write(imageData);
+		file.close();
+	}
 }
 
-QString ResourceManager::getAvatarPath()
+QString ResourceManager::avatarPath() const
 {
-	return m_UserPath + "\\avatar.jpg";
+	return m_userPath + "/avatar.jpg";
 }
 
 void ResourceManager::addImage(const QString& name, const QImage& image)
 {
-	if (images.contains(name))
-		return;
-	images.insert(name, image);
+	m_imageCache.insert(name, image);
 }
 
 void ResourceManager::removeImage(const QString& name)
 {
-	if (!images.contains(name))
-		return;
-	images.remove(name);
+	m_imagePaths.remove(name);
+	m_imageCache.remove(name);
 }
-
-void ResourceManager::replaceImage(const QString& name, const QImage& image)
-{
-	removeImage(name);
-	addImage(name, image);
-}
-
 
 void ResourceManager::cacheImage(const QString& path, const QByteArray& imageData)
 {
-	QFileInfo fi(m_Path + "images\\" + path);
+	QString fullPath = m_cachePath + "/images/" + path;
 
+	QFileInfo fi(fullPath);
 	QDir dir(fi.absolutePath());
 
 	if (!dir.exists())
 		dir.mkpath(".");
 
-	QFile file(dir.path() + "\\" + fi.fileName());
-	file.open(QIODevice::WriteOnly);
-	file.write(imageData);
-	file.close();
+	QFile file(fullPath);
+
+	if (file.open(QIODevice::WriteOnly))
+	{
+		file.write(imageData);
+		file.close();
+	}
+
+	QString name = fi.baseName();
+	m_imagePaths.insert(name, fullPath);
 }
 
 void ResourceManager::freeImage(const QString& path)
 {
-	QFileInfo fi(m_Path + "images\\" + path);
+	QString fullPath = m_cachePath + "/images/" + path;
+	QFile::remove(fullPath);
 
-	QDir dir(fi.absolutePath());
-
-	if (!dir.exists())
-		return;
-
-	QFile file(dir.path() + "\\" + fi.fileName());
-	file.remove();
-	file.close();
+	QFileInfo fi(fullPath);
+	QString name = fi.baseName();
+	m_imagePaths.remove(name);
+	m_imageCache.remove(name);
 }
 
 
@@ -137,59 +151,53 @@ void ResourceManager::loadImages()
 
 void ResourceManager::loadImage(const QString &path)
 {
-	QFileInfo fi(m_Path + "images\\" + path);
+	QString fullPath = m_cachePath + "/images/" + path;
 
-	QDir dir(fi.absolutePath());
+	if (!QFile::exists(fullPath))
+			return;
 
-	if (!dir.exists())
-		return;
+	QFileInfo fi(fullPath);
 
-	addImage(fi.baseName(), QImage(fi.absoluteFilePath()));
+	QImage img(fullPath);
+	if (!img.isNull())
+		m_imageCache.insert(fi.baseName(), img);
 }
 
-void ResourceManager::initUser(quint64 uid, bool remember, const QString& login, const QString& password)
+void ResourceManager::scanImages()
 {
-	if (uid == 0 || uid == current_uid)
+	QDir imgDir(m_cachePath + "/images");
+	if (!imgDir.exists())
 		return;
 
-	current_uid = uid;
-	m_UserPath = m_Path + "users\\user_" + QString::number(current_uid) + "\\";
+	QStringList filters;
+	filters << "*.png" << "*.jpg" << "*.jpeg";
 
-	QDir dir(m_UserPath);
+	QFileInfoList files = imgDir.entryInfoList(filters, QDir::Files);
 
-	if (!dir.exists())
-		dir.mkpath(".");
-
-	if (remember && !login.isEmpty() && !password.isEmpty())
+	for (const QFileInfo& fi : files)
 	{
-		QByteArray token = (login + ":" + HashPassword(password)).toUtf8();
+		QString name = fi.baseName();
+		QString path = fi.absoluteFilePath();
 
-		QFile file(m_UserPath + "\\auto_login.bin");
-		if (file.open(QIODevice::WriteOnly))
-		{
-			file.write(token);
-			file.close();
-		}
+		m_imagePaths.insert(name, path);
 	}
 }
 
 void ResourceManager::initUser(quint64 uid, const QString &token)
 {
-	if (uid == 0 || uid == current_uid)
+	if (uid == 0 || uid == m_uid)
 		return;
 
-	current_uid = uid;
+	m_uid = uid;
+	m_userPath = m_cachePath + "users/user_" + QString::number(m_uid);
 
-	m_UserPath = m_Path + "users\\user_" + QString::number(current_uid) + "\\";
-
-	QDir dir(m_UserPath);
-
+	QDir dir(m_userPath);
 	if (!dir.exists())
 		dir.mkpath(".");
 
 	if (!token.isEmpty())
 	{
-		QFile file(m_UserPath + "\\login.cfg");
+		QFile file(m_userPath + "/login.cfg");
 		if (file.open(QIODevice::WriteOnly))
 		{
 			file.write(token.toUtf8());
@@ -198,25 +206,9 @@ void ResourceManager::initUser(quint64 uid, const QString &token)
 	}
 }
 
-QPair<QString, QString> ResourceManager::getAutoLoginData()
-{
-	QFile file(m_UserPath + "\\auto_login.bin");
-	if (!file.exists() || !file.open(QIODevice::ReadOnly))
-		return QPair<QString, QString>();
-
-	QByteArray token = file.read(1024);
-	file.close();
-
-	int i = token.indexOf(':');
-	if (i == -1)
-		return QPair<QString, QString>();
-
-	return QPair<QString, QString>(token.left(i), token.mid(i + 1));
-}
-
 QString ResourceManager::getToken()
 {
-	QFile file(m_UserPath + "\\login.cfg");
+	QFile file(m_userPath + "/login.cfg");
 	if (!file.exists() || !file.open(QIODevice::ReadOnly))
 		return QString();
 

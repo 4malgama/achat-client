@@ -332,7 +332,7 @@ void ChatsWidget::addChatGPT()
 	if (gptEnabled)
 		return;
 
-	QImage image = ResourceManager::instance().getImage("gpt");
+	QImage image = ResourceManager::instance().image("gpt");
 
 	ChatRowWidget* gptRowWgt = new ChatRowWidget(this, 1, image, "ChatGPT", tr("AI"));
 	connect(gptRowWgt, &ChatRowWidget::clicked, this, [this, gptRowWgt] {

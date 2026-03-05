@@ -134,6 +134,7 @@ HEADERS += \
 	test/widgets/ripple_button_widget.h \
 	types/classes.h \
 	types/types_variables.h \
+	utils/CryptoUtils.h \
 	utils/image_utils.h \
 	utils/json_utils.h \
 	widgets/advert_widget.h \

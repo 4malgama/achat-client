@@ -40,8 +40,8 @@ namespace client
 
 namespace crypto
 {
-	QString MD5(const QString& password);
-	QString FileHash(const QString& filePath);
+	QString md5(const QString& password);
+	QString fileMD5(const QString& filePath);
 }
 
 namespace auth
@@ -593,13 +593,12 @@ void Account::onLoginSuccess(const QString& token)
 	}
 
 	ResourceManager& rm = ResourceManager::instance();
-	//rm.initUser(data.uid, auth::remember, auth::login, auth::password);
 	rm.initUser(data.uid, token);
 
-	data.avatar = rm.getAvatar();
+	data.avatar = rm.avatar();
 
 	CheckAvatarHashPacket packet;
-	packet.hash = crypto::FileHash(rm.getAvatarPath());
+	packet.hash = crypto::fileMD5(rm.avatarPath());
 	send(&packet);
 }
 

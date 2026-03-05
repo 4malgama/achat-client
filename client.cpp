@@ -72,6 +72,7 @@ namespace searchwidget
 namespace console
 {
 	void show();
+	void writeLine(const QString& text);
 }
 
 Client::Client(QWidget *parent)
@@ -82,7 +83,7 @@ Client::Client(QWidget *parent)
 	setWindowFlag(Qt::WindowType::FramelessWindowHint);
 	setWindowTitle(tr("Main"));
 
-	scOpenConsole = new QShortcut(QKeySequence("Ctrl+Shift+C"), this);
+	scOpenConsole = new QShortcut(QKeySequence("F1"), this);
 	scOpenConsole->setContext(Qt::WindowShortcut);
 	connect(scOpenConsole, &QShortcut::activated, console::show);
 
@@ -98,10 +99,12 @@ Client::Client(QWidget *parent)
 	advert->setTitle(tr("Amalgama's Chat is available for free!"));
 	advert->setDescription(tr("To get started, create an account or sign in."));
 	advert->setLinkText(tr("Sign in"));
-	advert->setLink("https://infotecs.ru/");
+	advert->setLink("https://localhost:8080/");
 	addAdvertPage(advert);
 
-	if (ResourceManager& rm = ResourceManager::instance(); rm.isLoaded() == false)
+	ResourceManager& rm = ResourceManager::instance();
+
+	if (rm.isLoaded() == false)
 	{
 		connect(&rm, &ResourceManager::event_finish, this, [this] {
 			acc->start();
@@ -137,7 +140,7 @@ void Client::openMyProfilePage()
 	pw->show();
 	currentPage = pw;
 
-	QImage avatar = ResourceManager::instance().getAvatar();
+	QImage avatar = ResourceManager::instance().avatar();
 	if (avatar.isNull())
 		avatar = ImageUtils::GetImageFromName(acc->getData()->fname);
 	pw->setAvatar(avatar);
@@ -362,7 +365,7 @@ void Client::setProfileData(const QHash<QString, QVariant>& profileInfo)
 
 		// For generate new colored avatar
 		{
-			QImage avatar = ResourceManager::instance().getAvatar();
+			QImage avatar = ResourceManager::instance().avatar();
 			if (avatar.isNull())
 				avatar = ImageUtils::GetImageFromName(acc->getData()->fname);
 			pw->setAvatar(avatar);
