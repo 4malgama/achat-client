@@ -28,6 +28,7 @@ public:
 	void createChatAndSendMessage(uint64 userId, const QJsonObject& jsonMessage);
 	void startCall(uint64 userId);
 	void onCreateChat(const QString& jsonData);
+	void sendNewAvatar(const QByteArray& imangeBytes);
 
 	void forceReceivePacket(uint32 id);
 

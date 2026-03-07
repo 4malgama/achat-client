@@ -9,6 +9,7 @@ class UpdateAvatarPacket : public IPacket
 {
 public:
 	QByteArray avatarData;
+	QString avatarBase64;
 	QImage image;
 
 	UpdateAvatarPacket();

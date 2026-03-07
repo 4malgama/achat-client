@@ -568,6 +568,13 @@ void Account::onCreateChat(const QString &jsonData)
 	client::window->initChats({ chat });
 }
 
+void Account::sendNewAvatar(const QByteArray &imageBytes)
+{
+	UpdateAvatarPacket packet;
+	packet.avatarBase64 = QString(imageBytes.toBase64());
+	send(&packet);
+}
+
 void Account::forceReceivePacket(uint32 id)
 {
 	readEvent(getPacketByID(id).get());
@@ -649,7 +656,7 @@ void Account::authorization()
 
 void Account::disconnectEvent()
 {
-	ServerMessageWidget::open(client::window, tr("No connection."));
+	ServerMessageWidget::open(client::window, tr("Disconnected."));
 	client::window->closeAuthWindow();
 	client::window->disableSideButtons();
 }
@@ -661,6 +668,6 @@ void Account::connectedEvent()
 
 void Account::failConnect()
 {
-	ServerMessageWidget::open(client::window, tr("Connect timeout.\nCheck your internet connection.\nTry again."));
+	ServerMessageWidget::open(client::window, tr("Connection timeout."));
 	client::window->disableSideButtons();
 }

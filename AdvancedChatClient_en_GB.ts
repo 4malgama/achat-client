@@ -4,48 +4,47 @@
 <context>
     <name>Account</name>
     <message>
-        <location filename="network/account.cpp" line="174"/>
+        <location filename="network/account.cpp" line="179"/>
         <source>Login already exists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="174"/>
+        <location filename="network/account.cpp" line="179"/>
         <source>Unsafe password.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="176"/>
+        <location filename="network/account.cpp" line="181"/>
         <source>Registration failed.
 Reason: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="402"/>
+        <location filename="network/account.cpp" line="420"/>
         <source>Path to downloaded file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="414"/>
+        <location filename="network/account.cpp" line="432"/>
         <source>Some error occurred when the program tried to open the file.
 Check your FILE PATH or WRITE permissions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="507"/>
+        <location filename="network/account.cpp" line="614"/>
         <source>An error occurred while trying to
 establish a secure connection.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="561"/>
-        <source>No connection.</source>
+        <location filename="network/account.cpp" line="652"/>
+        <source>Disconnected.</source>
+        <oldsource>No connection.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="573"/>
-        <source>Connect timeout.
-Check your internet connection.
-Try again.</source>
+        <location filename="network/account.cpp" line="664"/>
+        <source>Connection timeout.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -124,6 +123,24 @@ Try again.</source>
     </message>
 </context>
 <context>
+    <name>CallNotifyWidget</name>
+    <message>
+        <location filename="widgets/call_notify_widget.cpp" line="63"/>
+        <source>Incoming</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/call_notify_widget.cpp" line="66"/>
+        <source>Outgoing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/call_notify_widget.cpp" line="69"/>
+        <source>Reset</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ChatMessageWidget</name>
     <message>
         <location filename="widgets/chat_message_widget.cpp" line="24"/>
@@ -149,39 +166,42 @@ Try again.</source>
 <context>
     <name>ChatsWidget</name>
     <message>
-        <location filename="widgets/chats_widget.ui" line="94"/>
+        <location filename="widgets/chats_widget.ui" line="156"/>
         <source>Message...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.ui" line="119"/>
-        <location filename="widgets/chats_widget.ui" line="154"/>
+        <location filename="widgets/chats_widget.ui" line="102"/>
+        <location filename="widgets/chats_widget.ui" line="127"/>
+        <location filename="widgets/chats_widget.ui" line="181"/>
+        <location filename="widgets/chats_widget.ui" line="358"/>
+        <location filename="widgets/chats_widget.ui" line="390"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="296"/>
+        <location filename="widgets/chats_widget.cpp" line="337"/>
         <source>AI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="387"/>
+        <location filename="widgets/chats_widget.cpp" line="428"/>
         <source>Some file(s) can not be open.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="423"/>
+        <location filename="widgets/chats_widget.cpp" line="473"/>
         <source>Select file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="433"/>
+        <location filename="widgets/chats_widget.cpp" line="483"/>
         <source>The file you selected is too large!
 Maximum file size: %1 Kb.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="439"/>
+        <location filename="widgets/chats_widget.cpp" line="489"/>
         <source>The maximum number of files should not exceed 10.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -232,38 +252,38 @@ Maximum file size: %1 Kb.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="81"/>
+        <location filename="client.cpp" line="84"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="92"/>
+        <location filename="client.cpp" line="99"/>
         <source>Amalgama&apos;s Chat is available for free!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="93"/>
+        <location filename="client.cpp" line="100"/>
         <source>To get started, create an account or sign in.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="94"/>
+        <location filename="client.cpp" line="101"/>
         <source>Sign in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="client.ui" line="232"/>
-        <location filename="client.cpp" line="138"/>
+        <location filename="client.cpp" line="147"/>
         <source>Profile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="149"/>
+        <location filename="client.cpp" line="158"/>
         <source>Chats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="client.cpp" line="291"/>
+        <location filename="client.cpp" line="323"/>
         <source>The application continues to work in the background</source>
         <translation type="unfinished"></translation>
     </message>

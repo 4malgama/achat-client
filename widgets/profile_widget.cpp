@@ -1,7 +1,10 @@
 #include "profile_widget.h"
 #include "ui_profile_widget.h"
+#include "profile_avatar_widget.h"
 #include "../network/account.h"
 #include "../client.h"
+#include "../utils/image_utils.h"
+#include "../resource_manager/resource_manager.h"
 
 #include <QLabel>
 #include <QCheckBox>
@@ -12,6 +15,10 @@
 #include <QStyledItemDelegate>
 #include <QAbstractItemView>
 #include <QPainter>
+#include <QStandardPaths>
+#include <QFileDialog>
+#include <QBuffer>
+
 
 namespace profilewidget
 {
@@ -50,6 +57,8 @@ static QImage circleImage(const QImage& image, QSize size)
 	return output;
 }
 
+namespace console { void writeLine(const QString&); }
+
 
 namespace
 {
@@ -82,6 +91,11 @@ ProfileWidget::ProfileWidget(QWidget *parent) :
 	ui(new Ui::ProfileWidget)
 {
 	ui->setupUi(this);
+
+
+	avatarWgt = new ProfileAvatarWidget(this);
+	ui->verticalLayout->insertWidget(0, avatarWgt);
+
 	hide();
 
 	QComboBox* cb_see_profile_photo = (QComboBox*) addOption(OPTION_COMBOBOX, "see_profile_photo", tr("Who can see profile photo"), QVariant(0)).wgt;
@@ -140,6 +154,8 @@ ProfileWidget::ProfileWidget(QWidget *parent) :
 		if (changes.isEmpty()) return;
 		client::window->acc->updateProfile(changes);
 	});
+
+	connect(avatarWgt, &ProfileAvatarWidget::clicked, this, &ProfileWidget::avatarClicked);
 }
 
 ProfileWidget::~ProfileWidget()
@@ -151,6 +167,35 @@ void ProfileWidget::closeEvent(QCloseEvent *)
 {
 	emit event_close();
 	delete this;
+}
+
+void ProfileWidget::avatarClicked()
+{
+	QString imagePath = QFileDialog::getOpenFileName(this, tr("Select new image"), QStandardPaths::writableLocation(QStandardPaths::PicturesLocation), "Images (*.jpg; *.jpeg)");
+
+	if (imagePath.isEmpty())
+		return;
+
+	QImage newImage(imagePath);
+
+	if (newImage.isNull())
+		return;
+
+	ResourceManager& rm = ResourceManager::instance();
+	rm.setAvatar(newImage);
+
+	avatarWgt->setImage(ImageUtils::CropImageToCircle(newImage));
+
+	console::writeLine("New image: " + imagePath);
+
+	QByteArray imageData;
+	QBuffer buffer(&imageData);
+	buffer.open(QIODevice::WriteOnly);
+	newImage.save(&buffer, "JPG");
+
+	client::window->acc->sendNewAvatar(imageData);
+
+	console::writeLine("Avatar updated.");
 }
 
 ProfileWidget::Option& ProfileWidget::addOption(ProfileWidget::OptionView option, const QString& id, const QString& name, const QVariant& value)
@@ -207,8 +252,14 @@ ProfileWidget::Option& ProfileWidget::addOption(ProfileWidget::OptionView option
 
 void ProfileWidget::setAvatar(const QImage& image)
 {
-	QPixmap pixmap = QPixmap::fromImage(circleImage(image, ui->avatar->size()));
-	ui->avatar->setPixmap(pixmap);
+	//QPixmap pixmap = QPixmap::fromImage(circleImage(image, ui->avatar->size()));
+	//ui->avatar->setPixmap(pixmap);
+	if (avatarWgt == nullptr)
+	{
+		console::writeLine("Widget of avatar == nullptr");
+		return;
+	}
+	avatarWgt->setImage(ImageUtils::CropImageToCircle(image));
 }
 
 void ProfileWidget::updateData()

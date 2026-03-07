@@ -16,6 +16,7 @@ namespace crypto
 namespace console
 {
 	void writeLine(const QString& text);
+	extern bool isViewPackets;
 }
 
 const quint32 Network::TIMEOUT = 5000;
@@ -84,6 +85,12 @@ void Network::send(const IPacket *packet)
 		return;
 
 	QByteArray data = packet->prepareToSend();
+
+	if (console::isViewPackets)
+	{
+		console::writeLine("[SEND ID=" + QString::number(packet->getId()) + "]: " + QString(data).toUtf8());
+	}
+
 	if (encryption == true && aes != nullptr)
 	{
 		try {
@@ -183,8 +190,13 @@ void Network::onReadEvent()
 
 		std::unique_ptr<IPacket> packet = PacketFactory::createPacket(id);
 
+
 		if (packet != nullptr)
 		{
+			if (console::isViewPackets)
+			{
+				console::writeLine("[RECV ID=" + QString::number(id) + "]");
+			}
 			packet->prepareToRead(data.mid(6, packetSize - 6));
 			readEvent(packet.get());
 		}

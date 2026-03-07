@@ -82,6 +82,7 @@ ChatsWidget::ChatsWidget(QWidget *parent) :
 	ui->btnVoice->hide();
 	ui->frame->hide();
 	ui->headerFrame->hide();
+	ui->typingLabel->hide();
 
 	gpt = new GPTService(settings::GPTToken, client::window);
 	gpt->loadProxy();

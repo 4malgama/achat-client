@@ -10,6 +10,8 @@ namespace Ui {
 	class ProfileWidget;
 }
 
+class ProfileAvatarWidget;
+
 class ProfileWidget : public QWidget
 {
 	Q_OBJECT
@@ -34,7 +36,7 @@ public:
 	explicit ProfileWidget(QWidget *parent = nullptr);
 	~ProfileWidget();
 
-	QPixmap pixmap;
+	ProfileAvatarWidget* avatarWgt;
 	QString accountLink;
 	QString name1; //firstname
 	QString name2; //surname
@@ -59,6 +61,7 @@ signals:
 private:
 	Ui::ProfileWidget *ui;
 	void closeEvent(QCloseEvent *event);
+	void avatarClicked();
 };
 
 #endif // PROFILE_WIDGET_H

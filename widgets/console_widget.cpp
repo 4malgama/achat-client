@@ -9,6 +9,7 @@ namespace console
 {
 	ConsoleWidget* console = nullptr;
 	QStringList buffer;
+	bool isViewPackets = false;
 
 	void free()
 	{
@@ -153,6 +154,11 @@ void ConsoleWidget::processCommand(const QString &command, const QStringList& ar
 	{
 		ui->plainTextEdit->clear();
 		console::buffer.clear();
+	}
+	else if (command == "view_packets")
+	{
+		console::isViewPackets = !console::isViewPackets;
+		writeBufferedLine("View packets: " + QString(console::isViewPackets ? "enabled" : "disabled"));
 	}
 	else
 	{

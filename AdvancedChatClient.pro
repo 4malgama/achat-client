@@ -81,6 +81,7 @@ SOURCES += \
 	widgets/console_widget.cpp \
 	widgets/dropdown_menu.cpp \
 	widgets/message_widget.cpp \
+	widgets/profile_avatar_widget.cpp \
 	widgets/profile_widget.cpp \
 	widgets/search_result_widget.cpp \
 	widgets/search_widget.cpp \
@@ -147,6 +148,7 @@ HEADERS += \
 	widgets/console_widget.h \
 	widgets/dropdown_menu.h \
 	widgets/message_widget.h \
+	widgets/profile_avatar_widget.h \
 	widgets/profile_widget.h \
 	widgets/search_result_widget.h \
 	widgets/search_widget.h \
