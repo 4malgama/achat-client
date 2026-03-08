@@ -495,10 +495,17 @@ ChatsWidget #frame QLabel {
 	color: white;
 }
 
+ChatsWidget #typingLabel {
+	color: #cfcfcf;
+	font-family: Verdana, Tahoma, sans-serif;
+	font-size: 12px;
+	font-style: italic;
+}
+
 SearchWidget QLineEdit {
-	background-color: transparent;
+	background-color: rgba(255, 255, 255, 0.2);
 	border: 0px solid transparent;
-	border-radius: 10px;
+	border-radius: 5px;
 	font-family: Verdana, Tahoma, sans-serif;
 	font-size: 13px;
 	padding: 3px;

@@ -26,8 +26,10 @@ class ChatsWidget : public QWidget
 	ChatData* selectedChat = nullptr;
 	ChatRowWidget* selectedRowChat = nullptr;
 	QList<QString> attachments;
+	QTimer* typingTimer;
 	bool gptEnabled = false;
 	bool selectedAI = false;
+	bool isTyping = false;
 
 	GPTService* gpt;
 
@@ -43,6 +45,7 @@ public:
 	const ChatData* getChatData(quint64 chatId) const;
 	const ChatData* currentChatData() const;
 	void updateChatId(quint64 chatId, const QString &login);
+	void updateChatTyping(quint64 chatId, bool isTyping);
 
 	void clearCurrentChat();
 
@@ -61,6 +64,9 @@ private:
 	void onSendClicked();
 	void onAttachClicked();
 	void onStartCallClicked();
+
+	void sendStopTyping();
+	void sendStartTyping();
 
 	void clearLayout(QLayout* l);
 	void addAttachment(const QFileInfo& info);

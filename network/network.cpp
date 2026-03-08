@@ -88,7 +88,7 @@ void Network::send(const IPacket *packet)
 
 	if (console::isViewPackets)
 	{
-		console::writeLine("[SEND ID=" + QString::number(packet->getId()) + "]: " + QString(data).toUtf8());
+		console::writeLine("[SEND ID=" + QString::number(packet->getId()) + "]: " + data.toHex(' ').mid(0, 50));
 	}
 
 	if (encryption == true && aes != nullptr)
@@ -193,11 +193,13 @@ void Network::onReadEvent()
 
 		if (packet != nullptr)
 		{
+			packet->prepareToRead(data.mid(6, packetSize - 6));
+
 			if (console::isViewPackets)
 			{
-				console::writeLine("[RECV ID=" + QString::number(id) + "]");
+				console::writeLine("[RECV ID=" + QString::number(id) + " SIZE=" + QString::number(packetSize) + "]: " + data.mid(4).toHex(' ').mid(0, 50));
 			}
-			packet->prepareToRead(data.mid(6, packetSize - 6));
+
 			readEvent(packet.get());
 		}
 

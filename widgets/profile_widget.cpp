@@ -42,21 +42,6 @@ namespace profilewidget
 
 namespace client { extern Client* window; }
 
-static QImage circleImage(const QImage& image, QSize size)
-{
-	QImage output(size, QImage::Format_ARGB32);
-	output.fill(Qt::transparent);
-
-	QBrush brush(image.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-
-	QPainter p(&output);
-	p.setRenderHint(QPainter::Antialiasing);
-	p.setPen(Qt::NoPen);
-	p.setBrush(brush);
-	p.drawEllipse(output.rect());
-	return output;
-}
-
 namespace console { void writeLine(const QString&); }
 
 
@@ -99,49 +84,49 @@ ProfileWidget::ProfileWidget(QWidget *parent) :
 	hide();
 
 	QComboBox* cb_see_profile_photo = (QComboBox*) addOption(OPTION_COMBOBOX, "see_profile_photo", tr("Who can see profile photo"), QVariant(0)).wgt;
-	cb_see_profile_photo->addItem(tr("Everyone"));
-	cb_see_profile_photo->addItem(tr("Friends"));
-	cb_see_profile_photo->addItem(tr("Only me"));
+	cb_see_profile_photo->addItem(tr("Everyone"), "everyone");
+	cb_see_profile_photo->addItem(tr("Friends"), "friends");
+	cb_see_profile_photo->addItem(tr("Only me"), "onlyme");
 
 	QComboBox* cb_see_profile_description = (QComboBox*) addOption(OPTION_COMBOBOX, "see_profile_description", tr("Who can see profile description"), QVariant(0)).wgt;
-	cb_see_profile_description->addItem(tr("Everyone"));
-	cb_see_profile_description->addItem(tr("Friends"));
-	cb_see_profile_description->addItem(tr("Only me"));
+	cb_see_profile_description->addItem(tr("Everyone"), "everyone");
+	cb_see_profile_description->addItem(tr("Friends"), "friends");
+	cb_see_profile_description->addItem(tr("Only me"), "onlyme");
 
 	QComboBox* cb_see_profile_comments = (QComboBox*) addOption(OPTION_COMBOBOX, "see_profile_comments", tr("Who can see my profile comments"), QVariant(0)).wgt;
-	cb_see_profile_comments->addItem(tr("Everyone"));
-	cb_see_profile_comments->addItem(tr("Friends"));
-	cb_see_profile_comments->addItem(tr("Only me"));
+	cb_see_profile_comments->addItem(tr("Everyone"), "everyone");
+	cb_see_profile_comments->addItem(tr("Friends"), "friends");
+	cb_see_profile_comments->addItem(tr("Only me"), "onlyme");
 
 	QComboBox* cb_leave_comments = (QComboBox*) addOption(OPTION_COMBOBOX, "leave_comments", tr("Who can leave comments"), QVariant(0)).wgt;
-	cb_leave_comments->addItem(tr("Everyone"));
-	cb_leave_comments->addItem(tr("Friends"));
-	cb_leave_comments->addItem(tr("Only me"));
+	cb_leave_comments->addItem(tr("Everyone"), "everyone");
+	cb_leave_comments->addItem(tr("Friends"), "friends");
+	cb_leave_comments->addItem(tr("Only me"), "onlyme");
 
 	QComboBox* cb_see_profile_post = (QComboBox*) addOption(OPTION_COMBOBOX, "see_profile_post", tr("Who can see my post"), QVariant(0)).wgt;
-	cb_see_profile_post->addItem(tr("Everyone"));
-	cb_see_profile_post->addItem(tr("Friends"));
-	cb_see_profile_post->addItem(tr("Only me"));
+	cb_see_profile_post->addItem(tr("Everyone"), "everyone");
+	cb_see_profile_post->addItem(tr("Friends"), "friends");
+	cb_see_profile_post->addItem(tr("Only me"), "onlyme");
 
 	QComboBox* cb_send_friend_request = (QComboBox*) addOption(OPTION_COMBOBOX, "send_friend_request", tr("Who can send friend request"), QVariant(0)).wgt;
-	cb_send_friend_request->addItem(tr("Everyone"));
+	cb_send_friend_request->addItem(tr("Everyone"), "everyone");
 	cb_send_friend_request->addItem(tr("Friends of friends"));
-	cb_send_friend_request->addItem(tr("Nobody"));
+	cb_send_friend_request->addItem(tr("Nobody"), "nobody");
 
 	QComboBox* cb_see_online_status = (QComboBox*) addOption(OPTION_COMBOBOX, "see_online_status", tr("Who can see my online status"), QVariant(0)).wgt;
-	cb_see_online_status->addItem(tr("Everyone"));
-	cb_see_online_status->addItem(tr("Friends"));
-	cb_see_online_status->addItem(tr("Only me"));
+	cb_see_online_status->addItem(tr("Everyone"), "everyone");
+	cb_see_online_status->addItem(tr("Friends"), "friends");
+	cb_see_online_status->addItem(tr("Only me"), "onlyme");
 
 	QComboBox* cb_send_message = (QComboBox*) addOption(OPTION_COMBOBOX, "send_message", tr("Who can send message to me"), QVariant(0)).wgt;
-	cb_send_message->addItem(tr("Everyone"));
-	cb_send_message->addItem(tr("Friends"));
-	cb_send_message->addItem(tr("Nobody"));
+	cb_send_message->addItem(tr("Everyone"), "everyone");
+	cb_send_message->addItem(tr("Friends"), "friends");
+	cb_send_message->addItem(tr("Nobody"), "nobody");
 
 	QComboBox* cb_invite_to_groups = (QComboBox*) addOption(OPTION_COMBOBOX, "invite_to_groups", tr("Who can invite me to groups"), QVariant(0)).wgt;
-	cb_invite_to_groups->addItem(tr("Everyone"));
-	cb_invite_to_groups->addItem(tr("Friends"));
-	cb_invite_to_groups->addItem(tr("Nobody"));
+	cb_invite_to_groups->addItem(tr("Everyone"), "everyone");
+	cb_invite_to_groups->addItem(tr("Friends"), "friends");
+	cb_invite_to_groups->addItem(tr("Nobody"), "nobody");
 
 	QLineEdit* le_display_name = (QLineEdit*) addOption(OPTION_TEXTBOX, "display_name", tr("Display name"), QVariant("")).wgt;
 	le_display_name->setPlaceholderText(tr("Leave it empty if you want to keep the same name"));
@@ -198,6 +183,35 @@ void ProfileWidget::avatarClicked()
 	console::writeLine("Avatar updated.");
 }
 
+void ProfileWidget::updateOption(Option &opt, const QVariant &value)
+{
+	opt.value = value;
+	switch (opt.option)
+	{
+		case OPTION_CHECKBOX:
+		{
+			static_cast<QCheckBox*>(opt.wgt)->setChecked(value.toBool());
+			break;
+		}
+		case OPTION_COMBOBOX:
+		{
+			QComboBox* cb = static_cast<QComboBox*>(opt.wgt);
+			cb->setCurrentIndex(cb->findData(value.toString()));
+			break;
+		}
+		case OPTION_SLIDER:
+		{
+			static_cast<QSlider*>(opt.wgt)->setValue(value.toInt());
+			break;
+		}
+		case OPTION_TEXTBOX:
+		{
+			static_cast<QLineEdit*>(opt.wgt)->setText(value.toString());
+			break;
+		}
+	}
+}
+
 ProfileWidget::Option& ProfileWidget::addOption(ProfileWidget::OptionView option, const QString& id, const QString& name, const QVariant& value)
 {
 	Option o;
@@ -238,7 +252,7 @@ ProfileWidget::Option& ProfileWidget::addOption(ProfileWidget::OptionView option
 			break;
 		}
 	}
-	w->setObjectName("option_" + name);
+	w->setObjectName("option_" + id);
 	w->setToolTip(description);
 
 	o.wgt = w;
@@ -252,8 +266,6 @@ ProfileWidget::Option& ProfileWidget::addOption(ProfileWidget::OptionView option
 
 void ProfileWidget::setAvatar(const QImage& image)
 {
-	//QPixmap pixmap = QPixmap::fromImage(circleImage(image, ui->avatar->size()));
-	//ui->avatar->setPixmap(pixmap);
 	if (avatarWgt == nullptr)
 	{
 		console::writeLine("Widget of avatar == nullptr");
@@ -272,6 +284,18 @@ void ProfileWidget::updateData()
 	ui->textAboutMe->setPlainText(description);
 }
 
+void ProfileWidget::updatePrivacySettings(const QHash<QString, QVariant> &privacySettings)
+{
+	for (auto it = privacySettings.cbegin(); it != privacySettings.cend(); ++it)
+	{
+		if (options.contains(it.key()))
+		{
+			Option& opt = options[it.key()];
+			updateOption(opt, it.value());
+		}
+	}
+}
+
 QHash<QString, QVariant> ProfileWidget::getChanges()
 {
 	QHash<QString, QVariant> changes;
@@ -281,6 +305,29 @@ QHash<QString, QVariant> ProfileWidget::getChanges()
 	if (ui->lePatronymic->text() != name3) changes.insert("patronymic", ui->lePatronymic->text());
 	if (ui->lePost->text() != post) changes.insert("post", ui->lePost->text());
 	if (ui->textAboutMe->toPlainText() != description) changes.insert("description", ui->textAboutMe->toPlainText());
+
+	QHash<QString, QVariant> privacySettings;
+
+	for (auto it = options.cbegin(); it != options.cend(); ++it)
+	{
+		switch (it->option)
+		{
+			case OPTION_TEXTBOX:
+				privacySettings.insert(it.key(), static_cast<QLineEdit*>(it->wgt)->text());
+				break;
+			case OPTION_CHECKBOX:
+				privacySettings.insert(it.key(), static_cast<QCheckBox*>(it->wgt)->isChecked());
+				break;
+			case OPTION_COMBOBOX:
+				privacySettings.insert(it.key(), static_cast<QComboBox*>(it->wgt)->currentData());
+				break;
+			case OPTION_SLIDER:
+				privacySettings.insert(it.key(), static_cast<QSlider*>(it->wgt)->value());
+				break;
+		}
+	}
+
+	changes.insert("privacy", privacySettings);
 
 	return changes;
 }

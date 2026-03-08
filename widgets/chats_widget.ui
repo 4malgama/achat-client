@@ -238,11 +238,8 @@
       <property name="bottomMargin">
        <number>6</number>
       </property>
-      <property name="horizontalSpacing">
+      <property name="spacing">
        <number>3</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>0</number>
       </property>
       <item row="1" column="0" colspan="4">
        <widget class="QFrame" name="frame">
@@ -377,7 +374,7 @@
            <x>0</x>
            <y>0</y>
            <width>870</width>
-           <height>362</height>
+           <height>353</height>
           </rect>
          </property>
          <property name="sizePolicy">

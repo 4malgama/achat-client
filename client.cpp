@@ -361,6 +361,9 @@ void Client::setProfileData(const QHash<QString, QVariant>& profileInfo)
 		pw->name3 = profileInfo.value("patronymic").toString();
 		pw->post = profileInfo.value("post").toString();
 		pw->description = profileInfo.value("description").toString();
+
+		pw->updatePrivacySettings(profileInfo.value("privacy_settings").toHash());
+
 		pw->updateData();
 
 		// For generate new colored avatar
@@ -406,6 +409,14 @@ void Client::updateChatId(quint64 chatId, const QString &login)
 	if (cw != nullptr)
 	{
 		cw->updateChatId(chatId, login);
+	}
+}
+
+void Client::setChatTyping(quint64 chatId, bool isTyping)
+{
+	if (cw != nullptr)
+	{
+		cw->updateChatTyping(chatId, isTyping);
 	}
 }
 

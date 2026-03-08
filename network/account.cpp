@@ -460,6 +460,14 @@ void Account::readEvent(IPacket* packet)
 		onCreateChat(P->jsonData);
 		return;
 	}
+	else if (SendTypingPacket* P = dynamic_cast<SendTypingPacket*>(packet))
+	{
+		if (P->typingChatId == 0)
+			return;
+
+		onReceiveTyping(P->typingChatId, P->isTyping);
+		return;
+	}
 }
 
 void Account::updateProfile(const QHash<QString, QVariant>& profileInfo)
@@ -575,6 +583,22 @@ void Account::sendNewAvatar(const QByteArray &imageBytes)
 	send(&packet);
 }
 
+void Account::sendStartTyping(quint64 chatId)
+{
+	SendTypingPacket packet;
+	packet.typingChatId = chatId;
+	packet.isTyping = true;
+	send(&packet);
+}
+
+void Account::sendStopTyping(quint64 chatId)
+{
+	SendTypingPacket packet;
+	packet.typingChatId = chatId;
+	packet.isTyping = false;
+	send(&packet);
+}
+
 void Account::forceReceivePacket(uint32 id)
 {
 	readEvent(getPacketByID(id).get());
@@ -652,6 +676,11 @@ void Account::authorization()
 	}
 
 	client::window->authWindow();
+}
+
+void Account::onReceiveTyping(quint64 chatId, bool isTyping)
+{
+	client::window->setChatTyping(chatId, isTyping);
 }
 
 void Account::disconnectEvent()

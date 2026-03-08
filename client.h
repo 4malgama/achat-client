@@ -66,6 +66,7 @@ public:
 	void createChatGPT();
 
 	void updateChatId(quint64 chatId, const QString& login);
+	void setChatTyping(quint64 chatId, bool isTyping);
 
 signals:
 	void event_close();

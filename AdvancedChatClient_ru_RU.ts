@@ -33,20 +33,20 @@ Check your FILE PATH or WRITE permissions.</source>
 Проверьте ваш ПУТЬ СОХРАНЕНИЯ или права на ЗАПИСЬ.</translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="614"/>
+        <location filename="network/account.cpp" line="645"/>
         <source>An error occurred while trying to
 establish a secure connection.</source>
         <translation>Возникла ошибка при попытке
 установить безопасное соединение.</translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="652"/>
+        <location filename="network/account.cpp" line="688"/>
         <source>Disconnected.</source>
         <oldsource>No connection.</oldsource>
         <translation>Отключено.</translation>
     </message>
     <message>
-        <location filename="network/account.cpp" line="664"/>
+        <location filename="network/account.cpp" line="700"/>
         <source>Connection timeout.</source>
         <translation>Нет соединения.</translation>
     </message>
@@ -177,36 +177,41 @@ Try again.</source>
 <context>
     <name>ChatsWidget</name>
     <message>
-        <location filename="widgets/chats_widget.ui" line="156"/>
+        <location filename="widgets/chats_widget.ui" line="456"/>
         <source>Message...</source>
         <translation>Сообщение...</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.ui" line="102"/>
-        <location filename="widgets/chats_widget.ui" line="127"/>
-        <location filename="widgets/chats_widget.ui" line="181"/>
-        <location filename="widgets/chats_widget.ui" line="358"/>
-        <location filename="widgets/chats_widget.ui" line="390"/>
+        <location filename="widgets/chats_widget.ui" line="498"/>
+        <source>Typing...</source>
+        <translation>Печатает...</translation>
+    </message>
+    <message>
+        <location filename="widgets/chats_widget.ui" line="110"/>
+        <location filename="widgets/chats_widget.ui" line="142"/>
+        <location filename="widgets/chats_widget.ui" line="359"/>
+        <location filename="widgets/chats_widget.ui" line="427"/>
+        <location filename="widgets/chats_widget.ui" line="481"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="337"/>
+        <location filename="widgets/chats_widget.cpp" line="361"/>
         <source>AI</source>
         <translation>Бот</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="428"/>
+        <location filename="widgets/chats_widget.cpp" line="470"/>
         <source>Some file(s) can not be open.</source>
         <translation>Один или несколько файлов не могут быть открыты.</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="473"/>
+        <location filename="widgets/chats_widget.cpp" line="515"/>
         <source>Select file</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="483"/>
+        <location filename="widgets/chats_widget.cpp" line="525"/>
         <source>The file you selected is too large!
 Maximum file size: %1 Kb.</source>
         <translation>Выбранный файл слишком велик!
@@ -219,7 +224,7 @@ Maximum file size: 50 Mb.</source>
 Максимальный размер файла: 50Мб.</translation>
     </message>
     <message>
-        <location filename="widgets/chats_widget.cpp" line="489"/>
+        <location filename="widgets/chats_widget.cpp" line="531"/>
         <source>The maximum number of files should not exceed 10.</source>
         <translation>Максимальное число файлов 10.</translation>
     </message>
@@ -335,166 +340,170 @@ Maximum file size: 50 Mb.</source>
 <context>
     <name>ProfileWidget</name>
     <message>
-        <location filename="widgets/profile_widget.ui" line="52"/>
         <source>No image</source>
-        <translation>Нет фото</translation>
+        <translation type="vanished">Нет фото</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="80"/>
+        <location filename="widgets/profile_widget.ui" line="58"/>
         <source>Copy link</source>
         <translation>Скопировать ссылку</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="109"/>
+        <location filename="widgets/profile_widget.ui" line="87"/>
         <source>Firstname</source>
         <translation>Имя</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="128"/>
+        <location filename="widgets/profile_widget.ui" line="106"/>
         <source>Patronymic</source>
         <translation>Отчество</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="150"/>
+        <location filename="widgets/profile_widget.ui" line="128"/>
         <source>Surname</source>
         <translation>Фамилия</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="169"/>
+        <location filename="widgets/profile_widget.ui" line="147"/>
         <source>Post</source>
         <translation>Должность</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="188"/>
+        <location filename="widgets/profile_widget.ui" line="166"/>
         <source>Description</source>
         <translation>Описание</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="213"/>
+        <location filename="widgets/profile_widget.ui" line="191"/>
         <source>Save and update</source>
         <translation>Сохранить и обновить</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="216"/>
+        <location filename="widgets/profile_widget.ui" line="194"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="295"/>
+        <location filename="widgets/profile_widget.ui" line="273"/>
         <source>Comment</source>
         <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="325"/>
+        <location filename="widgets/profile_widget.ui" line="303"/>
         <source>Send</source>
         <translation>Отправить</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.ui" line="353"/>
+        <location filename="widgets/profile_widget.ui" line="331"/>
         <source>No comments</source>
         <translation>Нет комментариев</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="87"/>
+        <location filename="widgets/profile_widget.cpp" line="101"/>
         <source>Who can see profile photo</source>
         <translation>Кто может видеть фото профиля</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="88"/>
-        <location filename="widgets/profile_widget.cpp" line="93"/>
-        <location filename="widgets/profile_widget.cpp" line="98"/>
+        <location filename="widgets/profile_widget.cpp" line="102"/>
+        <location filename="widgets/profile_widget.cpp" line="107"/>
+        <location filename="widgets/profile_widget.cpp" line="112"/>
+        <location filename="widgets/profile_widget.cpp" line="117"/>
+        <location filename="widgets/profile_widget.cpp" line="122"/>
+        <location filename="widgets/profile_widget.cpp" line="127"/>
+        <location filename="widgets/profile_widget.cpp" line="132"/>
+        <location filename="widgets/profile_widget.cpp" line="137"/>
+        <location filename="widgets/profile_widget.cpp" line="142"/>
+        <source>Everyone</source>
+        <translation>Все</translation>
+    </message>
+    <message>
         <location filename="widgets/profile_widget.cpp" line="103"/>
         <location filename="widgets/profile_widget.cpp" line="108"/>
         <location filename="widgets/profile_widget.cpp" line="113"/>
         <location filename="widgets/profile_widget.cpp" line="118"/>
         <location filename="widgets/profile_widget.cpp" line="123"/>
-        <location filename="widgets/profile_widget.cpp" line="128"/>
-        <source>Everyone</source>
-        <translation>Все</translation>
-    </message>
-    <message>
-        <location filename="widgets/profile_widget.cpp" line="89"/>
-        <location filename="widgets/profile_widget.cpp" line="94"/>
-        <location filename="widgets/profile_widget.cpp" line="99"/>
-        <location filename="widgets/profile_widget.cpp" line="104"/>
-        <location filename="widgets/profile_widget.cpp" line="109"/>
-        <location filename="widgets/profile_widget.cpp" line="119"/>
-        <location filename="widgets/profile_widget.cpp" line="124"/>
-        <location filename="widgets/profile_widget.cpp" line="129"/>
+        <location filename="widgets/profile_widget.cpp" line="133"/>
+        <location filename="widgets/profile_widget.cpp" line="138"/>
+        <location filename="widgets/profile_widget.cpp" line="143"/>
         <source>Friends</source>
         <translation>Друзья</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="90"/>
-        <location filename="widgets/profile_widget.cpp" line="95"/>
-        <location filename="widgets/profile_widget.cpp" line="100"/>
-        <location filename="widgets/profile_widget.cpp" line="105"/>
-        <location filename="widgets/profile_widget.cpp" line="110"/>
-        <location filename="widgets/profile_widget.cpp" line="120"/>
+        <location filename="widgets/profile_widget.cpp" line="104"/>
+        <location filename="widgets/profile_widget.cpp" line="109"/>
+        <location filename="widgets/profile_widget.cpp" line="114"/>
+        <location filename="widgets/profile_widget.cpp" line="119"/>
+        <location filename="widgets/profile_widget.cpp" line="124"/>
+        <location filename="widgets/profile_widget.cpp" line="134"/>
         <source>Only me</source>
         <translation>Только я</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="92"/>
+        <location filename="widgets/profile_widget.cpp" line="106"/>
         <source>Who can see profile description</source>
         <translation>Кто может видеть описание профиля</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="97"/>
+        <location filename="widgets/profile_widget.cpp" line="111"/>
         <source>Who can see my profile comments</source>
         <translation>Кто может видеть комментарии профиля</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="102"/>
+        <location filename="widgets/profile_widget.cpp" line="116"/>
         <source>Who can leave comments</source>
         <translation>Кто может оставлять комментарии</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="107"/>
+        <location filename="widgets/profile_widget.cpp" line="121"/>
         <source>Who can see my post</source>
         <translation>Кто может видеть мою должность</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="112"/>
+        <location filename="widgets/profile_widget.cpp" line="126"/>
         <source>Who can send friend request</source>
         <translation>Кто может отправлять мне заявки в друзья</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="114"/>
+        <location filename="widgets/profile_widget.cpp" line="128"/>
         <source>Friends of friends</source>
         <translation>Друзья друзей</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="115"/>
-        <location filename="widgets/profile_widget.cpp" line="125"/>
-        <location filename="widgets/profile_widget.cpp" line="130"/>
+        <location filename="widgets/profile_widget.cpp" line="129"/>
+        <location filename="widgets/profile_widget.cpp" line="139"/>
+        <location filename="widgets/profile_widget.cpp" line="144"/>
         <source>Nobody</source>
         <translation>Никто</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="117"/>
+        <location filename="widgets/profile_widget.cpp" line="131"/>
         <source>Who can see my online status</source>
         <translation>Кто может видеть мой онлайн статус</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="122"/>
+        <location filename="widgets/profile_widget.cpp" line="136"/>
         <source>Who can send message to me</source>
         <translation>Кто может мне писать</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="127"/>
+        <location filename="widgets/profile_widget.cpp" line="141"/>
         <source>Who can invite me to groups</source>
         <translation>Кто может приглашать меня в группы</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="132"/>
+        <location filename="widgets/profile_widget.cpp" line="146"/>
         <source>Display name</source>
         <translation>Отображаемое имя</translation>
     </message>
     <message>
-        <location filename="widgets/profile_widget.cpp" line="133"/>
+        <location filename="widgets/profile_widget.cpp" line="147"/>
         <source>Leave it empty if you want to keep the same name</source>
         <translation>Оставьте пустым, если вы желаете оставить ваше имя</translation>
+    </message>
+    <message>
+        <location filename="widgets/profile_widget.cpp" line="174"/>
+        <source>Select new image</source>
+        <translation>Выбрать новое изображение</translation>
     </message>
 </context>
 <context>

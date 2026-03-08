@@ -26,7 +26,7 @@ void InitProfilePacket::prepareToRead(const QByteArray& data)
     quint16 length = sp.parseUInt16();
     if (length == 0)
         return;
-    
+
     bool ok = false;
     QString json = sp.parseString(length, &ok);
 
@@ -52,18 +52,23 @@ void InitProfilePacket::prepareToRead(const QByteArray& data)
         profileData.insert("registration_date", profileInfo.value("registration_date").toInt());
     }
 
-    if (obj.contains("private_settings"))
+    if (obj.contains("privacy_settings"))
     {
-        QJsonObject privateSettings = obj.value("private_settings").toObject();
+        QJsonObject privateSettings = obj.value("privacy_settings").toObject();
+        QHash<QString, QVariant> hashPrivacyData;
 
-        profileData.insert("hide_forwards", privateSettings.value("hide_forwards").toBool());
-        profileData.insert("see_avatar", privateSettings.value("see_avatar").toString());
-        profileData.insert("send_messages", privateSettings.value("send_messages").toString());
-        profileData.insert("see_description", privateSettings.value("see_description").toString());
-        profileData.insert("can_invite_groups", privateSettings.value("can_invite_groups").toString());
-        profileData.insert("send_friend_request", privateSettings.value("send_friend_request").toString());
-        profileData.insert("see_online_status", privateSettings.value("see_online_status").toString());
-        profileData.insert("see_post", privateSettings.value("see_post").toString());
+        hashPrivacyData.insert("see_profile_photo", privateSettings.value("see_profile_photo").toString());
+        hashPrivacyData.insert("see_profile_description", privateSettings.value("see_profile_description").toString());
+        hashPrivacyData.insert("see_profile_comments", privateSettings.value("see_profile_comments").toString());
+        hashPrivacyData.insert("leave_comments", privateSettings.value("leave_comments").toString());
+        hashPrivacyData.insert("see_profile_post", privateSettings.value("see_profile_post").toString());
+        hashPrivacyData.insert("send_friend_request", privateSettings.value("send_friend_request").toString());
+        hashPrivacyData.insert("see_online_status", privateSettings.value("see_online_status").toString());
+        hashPrivacyData.insert("send_message", privateSettings.value("send_message").toString());
+        hashPrivacyData.insert("invite_to_groups", privateSettings.value("invite_to_groups").toString());
+        hashPrivacyData.insert("display_name", privateSettings.value("display_name").toString());
+
+        profileData.insert("privacy_settings", hashPrivacyData);
     }
 
     if (obj.contains("permissions"))

@@ -30,6 +30,9 @@ public:
 	void onCreateChat(const QString& jsonData);
 	void sendNewAvatar(const QByteArray& imangeBytes);
 
+	void sendStartTyping(quint64 chatId);
+	void sendStopTyping(quint64 chatId);
+
 	void forceReceivePacket(uint32 id);
 
 	const ProfileData* getData() const;
@@ -46,6 +49,7 @@ private:
 	void handShakeFailed();
 	void handShakeSuccessful();
 	void authorization();
+	void onReceiveTyping(quint64 chatId, bool isTyping);
 };
 
 #endif // ACCOUNT_H

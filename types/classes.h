@@ -56,6 +56,7 @@ struct ChatData
 {
 	bool initialized = false;
 	bool isBot = false;
+	bool isTyping = false;
 	InitChatData data;
 	QList<ChatMessage> messages;
 	ChatRowWidget* wgt;

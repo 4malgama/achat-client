@@ -87,6 +87,15 @@ ChatsWidget::ChatsWidget(QWidget *parent) :
 	gpt = new GPTService(settings::GPTToken, client::window);
 	gpt->loadProxy();
 
+	typingTimer = new QTimer(this);
+	connect(typingTimer, &QTimer::timeout, this, [this] {
+		if (isTyping)
+		{
+			sendStopTyping();
+			isTyping = false;
+		}
+	});
+
 	hide();
 }
 
@@ -137,10 +146,12 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 						initMessages(selectedChat->data.id, selectedChat->messages);
 					}
 				}
+				ui->typingLabel->setVisible(selectedChat->isTyping);
 			});
 			this->chats.insert(chat.id, {
 								   .initialized = false,
 								   .isBot = false,
+								   .isTyping = false,
 								   .data = chat,
 								   .messages = QList<ChatMessage>(),
 								   .wgt = wgt
@@ -314,6 +325,18 @@ void ChatsWidget::updateChatId(quint64 chatId, const QString &login)
 	}
 }
 
+void ChatsWidget::updateChatTyping(quint64 chatId, bool isTyping)
+{
+	if (chats.contains(chatId))
+	{
+		chats[chatId].isTyping = isTyping;
+		if (chatId == selectedChat->data.id)
+		{
+			ui->typingLabel->setVisible(selectedChat->isTyping);
+		}
+	}
+}
+
 void ChatsWidget::clearCurrentChat()
 {
 	clearLayout(ui->msgLayout);
@@ -388,6 +411,24 @@ void ChatsWidget::onTextMessageChanged()
 
 	int height = qMax(30, qMin(120, 30 + countLines * 20));
 	ui->txtMessage->setFixedHeight(height);
+
+	if (newText.isEmpty())
+	{
+		if (isTyping)
+		{
+			sendStopTyping();
+			isTyping = false;
+		}
+		return;
+	}
+
+	if (!isTyping)
+	{
+		sendStartTyping();
+		isTyping = true;
+	}
+
+	typingTimer->start(5000);
 }
 
 void ChatsWidget::onSendClicked()
@@ -506,6 +547,16 @@ void ChatsWidget::onStartCallClicked()
 			client::window->acc->startCall(selectedChat->data.user.uid);
 		}
 	}
+}
+
+void ChatsWidget::sendStopTyping()
+{
+	client::window->acc->sendStopTyping(selectedChat->data.id);
+}
+
+void ChatsWidget::sendStartTyping()
+{
+	client::window->acc->sendStartTyping(selectedChat->data.id);
 }
 
 void ChatsWidget::clearLayout(QLayout* l)

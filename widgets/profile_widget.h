@@ -52,6 +52,7 @@ public:
 	void setAvatar(const QImage& image);
 
 	void updateData();
+	void updatePrivacySettings(const QHash<QString, QVariant>& privacySettings);
 
 	QHash<QString, QVariant> getChanges();
 
@@ -62,6 +63,7 @@ private:
 	Ui::ProfileWidget *ui;
 	void closeEvent(QCloseEvent *event);
 	void avatarClicked();
+	void updateOption(Option& opt, const QVariant& value);
 };
 
 #endif // PROFILE_WIDGET_H
