@@ -7,7 +7,10 @@
 #include <QAudioOutput>
 #include <QAudioFormat>
 #include <QAudioDeviceInfo>
-
+#include <QHostAddress>
+#include <QIODevice>
+#include <QTimer>
+#include <QByteArray>
 #include <memory>
 
 
@@ -15,14 +18,14 @@ class VoIPService : public QObject
 {
 	Q_OBJECT
 
-	void startAudioInput();
-	void startAudioOutput();
-
 public:
 	static const quint16 AutoPort;
 
 	explicit VoIPService(QObject *parent = nullptr);
+	~VoIPService() override = default;
+
 	void startAudio();
+	void stopAudio();
 
 	quint16 getLocalPort() const;
 	void setLocalPort(quint16 newLocalPort);
@@ -32,15 +35,24 @@ public:
 
 	QHostAddress getTargetAddress() const;
 	void setTargetAddress(const QHostAddress &newTargetAddress);
-	void setTargetAddress(const QString& newTargetAddress);
+	void setTargetAddress(const QString &newTargetAddress);
+
+	bool isStarted() const;
 
 private:
-	QUdpSocket* socket;
-	QHostAddress targetAddress;
-	quint16 targetPort;
-	quint16 localPort;
+	void startAudioInput();
+	void startAudioOutput();
+	bool validateSettings() const;
+	void resetAudioBufferIfNeeded();
 
-	bool portIsset = false;
+private:
+	QUdpSocket* socket = nullptr;
+	QHostAddress targetAddress;
+	quint16 targetPort = 0;
+	quint16 localPort = 0;
+
+	bool portIsSet = false;
+	bool started = false;
 
 	std::unique_ptr<QAudioInput> audioInput;
 	std::unique_ptr<QAudioOutput> audioOutput;
@@ -48,10 +60,15 @@ private:
 	QAudioDeviceInfo inDevice;
 	QAudioDeviceInfo outDevice;
 
-	QIODevice* mic;
-	QIODevice* speaker;
+	QIODevice* mic = nullptr;
+	QIODevice* speaker = nullptr;
+	QTimer* playTimer = nullptr;
 
 	QByteArray audioBuffer;
+
+	static constexpr int PlaybackChunkSize = 2048;
+	static constexpr int PlaybackIntervalMs = 20;
+	static constexpr int MaxBufferedAudio = PlaybackChunkSize * 50;
 };
 
 #endif // VOIPSERVICE_H
