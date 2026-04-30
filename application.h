@@ -12,12 +12,14 @@ public:
 	void message(const QString& title, const QString& text);
 	void message(const QIcon& icon, const QString& title, const QString& text);
 
+	bool isOk() const;
+
 private slots:
 	void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
 
 private:
-	QSystemTrayIcon* trayIcon;
-	bool ok;
+	QSystemTrayIcon* trayIcon = nullptr;
+	bool ok = false;
 };
 
 #endif // APPLICATION_H

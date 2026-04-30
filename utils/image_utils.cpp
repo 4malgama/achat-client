@@ -10,26 +10,45 @@ namespace crypto
 	QString md5(const QString& data);
 }
 
-QImage ImageUtils::CropImageToCircle(const QImage &image, int size)
+QImage ImageUtils::makeCircularAvatar(const QImage& image, int size)
 {
-	int _size = (size != -1 ? size : qMin(image.width(), image.height()));
-	QImage squareImage = image.scaled(_size, _size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	if (image.isNull())
+		return {};
 
-	QImage circularImage(_size, _size, QImage::Format_ARGB32);
+	const int side = qMin(image.width(), image.height());
+	const int targetSize = size > 0 ? size : side;
+
+	const QRect cropRect(
+		(image.width() - side) / 2,
+		(image.height() - side) / 2,
+		side,
+		side
+	);
+
+	QImage squareImage = image.copy(cropRect).scaled(
+		targetSize,
+		targetSize,
+		Qt::KeepAspectRatioByExpanding,
+		Qt::SmoothTransformation
+	);
+
+	QImage circularImage(targetSize, targetSize, QImage::Format_ARGB32_Premultiplied);
 	circularImage.fill(Qt::transparent);
 
 	QPainter painter(&circularImage);
-	painter.setRenderHint(QPainter::Antialiasing);
+	painter.setRenderHint(QPainter::Antialiasing, true);
+	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
 	QPainterPath path;
-	path.addEllipse(0, 0, _size, _size);
+	path.addEllipse(QRectF(0, 0, targetSize, targetSize));
+
 	painter.setClipPath(path);
 	painter.drawImage(0, 0, squareImage);
 
 	return circularImage;
 }
 
-QImage ImageUtils::GetImageFromName(const QString &name)
+QImage ImageUtils::makeImageFromName(const QString &name)
 {
 	int size = 512;
 	QString hash = crypto::md5(name);

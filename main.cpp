@@ -142,6 +142,13 @@ int main(int argc, char *argv[])
 {
 	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 	Application a(argc, argv);
+
+	if (!a.isOk())
+	{
+		QMessageBox::critical(nullptr, "Error", "System tray is not available.");
+		return 1;
+	}
+
 	app::a = &a;
 	QSettings::setDefaultFormat(QSettings::IniFormat);
 
@@ -194,11 +201,6 @@ int main(int argc, char *argv[])
 	int retCode = a.exec();
 
 	_main_end();
-
-	if (retCode != 0)
-	{
-		QMessageBox::critical(nullptr, "Error", "The program exited with error.\nError code: " + QString::number(retCode));
-	}
 
 	return retCode;
 }

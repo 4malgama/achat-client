@@ -59,7 +59,7 @@ void SearchResultWidget::paintEvent(QPaintEvent *)
 	//avatar
 	QRect avatarRect(0, 0, offset, offset);
 	avatarRect.adjust(10, 10, -10, -10);
-	painter.drawImage(avatarRect, ImageUtils::CropImageToCircle(pixmap.toImage(), avatarRect.width()));
+	painter.drawImage(avatarRect, ImageUtils::makeCircularAvatar(pixmap.toImage(), avatarRect.width()));
 }
 
 void SearchResultWidget::enterEvent(QEvent *)

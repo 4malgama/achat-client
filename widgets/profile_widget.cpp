@@ -169,7 +169,7 @@ void ProfileWidget::avatarClicked()
 	ResourceManager& rm = ResourceManager::instance();
 	rm.setAvatar(newImage);
 
-	avatarWgt->setImage(ImageUtils::CropImageToCircle(newImage));
+	avatarWgt->setImage(ImageUtils::makeCircularAvatar(newImage));
 
 	console::writeLine("New image: " + imagePath);
 
@@ -271,7 +271,7 @@ void ProfileWidget::setAvatar(const QImage& image)
 		console::writeLine("Widget of avatar == nullptr");
 		return;
 	}
-	avatarWgt->setImage(ImageUtils::CropImageToCircle(image));
+	avatarWgt->setImage(ImageUtils::makeCircularAvatar(image));
 }
 
 void ProfileWidget::updateData()

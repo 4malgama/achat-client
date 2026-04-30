@@ -134,7 +134,7 @@ void ChatsWidget::addChats(const QList<InitChatData> &chats)
 				ui->btnSend->show();
 				ui->txtMessage->show();
 				resetAttachments();
-				setHeader(QPixmap::fromImage(ImageUtils::CropImageToCircle(selectedChat->data.user.avatar, ui->avatar->width())), selectedChat->data.user.fname);
+				setHeader(QPixmap::fromImage(ImageUtils::makeCircularAvatar(selectedChat->data.user.avatar, ui->avatar->width())), selectedChat->data.user.fname);
 				if (selectedChat->data.id != 0)
 				{
 					if (!selectedChat->initialized)

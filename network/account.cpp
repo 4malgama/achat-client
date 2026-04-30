@@ -234,7 +234,7 @@ void Account::readEvent(IPacket* packet)
 				if (u.contains("avatar_data") && u.value("avatar_data").isNull() == false)
 					chatData.user.avatar = QImage::fromData(QByteArray::fromBase64(u.value("avatar_data").toString().toUtf8()));
 				else
-					chatData.user.avatar = ImageUtils::GetImageFromName(chatData.user.fname);
+					chatData.user.avatar = ImageUtils::makeImageFromName(chatData.user.fname);
 			}
 
 			data.append(chatData);
@@ -389,7 +389,7 @@ void Account::readEvent(IPacket* packet)
 			}
 			else
 			{
-				pixmap = QPixmap::fromImage(ImageUtils::GetImageFromName(_dName));
+				pixmap = QPixmap::fromImage(ImageUtils::makeImageFromName(_dName));
 			}
 
 			SearchResultWidget* result = new SearchResultWidget(client::window, pixmap, _login, _dName);
@@ -565,7 +565,7 @@ void Account::onCreateChat(const QString &jsonData)
 	profile.uid = jsonUserData.value("user_id").toVariant().toULongLong();
 	QImage avatar = QImage::fromData(QByteArray::fromBase64(jsonUserData.value("avatar_data").toString().toUtf8()));
 	if (avatar.isNull())
-		avatar = ImageUtils::GetImageFromName(profile.fname);
+		avatar = ImageUtils::makeImageFromName(profile.fname);
 	profile.avatar = avatar;
 
 	InitChatData chat;

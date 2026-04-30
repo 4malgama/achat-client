@@ -78,8 +78,8 @@ void CallNotifyWidget::paintEvent(QPaintEvent *)
 	//draw image
 	QImage image;
 	if (m_callerImage.isNull())
-		setCallerImage(ImageUtils::GetImageFromName(m_callerName));
-	image = ImageUtils::CropImageToCircle(m_callerImage, 40);
+		setCallerImage(ImageUtils::makeImageFromName(m_callerName));
+	image = ImageUtils::makeCircularAvatar(m_callerImage, 40);
 	painter.drawImage(QRect(10, height() / 2 - 20, 40, 40), image);
 
 	//draw name

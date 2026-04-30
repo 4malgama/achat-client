@@ -11,10 +11,7 @@ Application::Application(int &argc, char **argv)
 	: QApplication(argc, argv)
 {
 	if (QSystemTrayIcon::isSystemTrayAvailable() == false)
-	{
-		ok = false;
 		return;
-	}
 
 	trayIcon = new QSystemTrayIcon(QIcon(":/r/resources/logo/achat-client_tray.png"), this);
 
@@ -49,6 +46,11 @@ void Application::message(const QIcon &icon, const QString &title, const QString
 	if (!ok) return;
 
 	trayIcon->showMessage(title, text, icon);
+}
+
+bool Application::isOk() const
+{
+	return ok;
 }
 
 void Application::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)

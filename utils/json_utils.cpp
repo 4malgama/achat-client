@@ -7,25 +7,16 @@
 
 QJsonDocument JsonUtils::hashmapToJson(const QHash<QString, QVariant>& hashmap)
 {
-    return QJsonDocument(QJsonObject::fromVariantHash(hashmap));
+    return QJsonDocument::fromVariant(hashmap);
 }
 
 
 QHash<QString, QVariant> JsonUtils::jsonToHashmap(const QJsonDocument& doc)
 {
-    QHash<QString, QVariant> hashmap;
+    if (!doc.isObject())
+        return {};
 
-    if (doc.isNull() || doc.isEmpty())
-        return hashmap;
-
-    QJsonObject obj = doc.object();
-
-    for (QJsonObject::const_iterator it = obj.constBegin(); it != obj.constEnd(); ++it)
-    {
-        hashmap.insert(it.key(), it.value());
-    }
-
-    return hashmap;
+    return doc.object().toVariantHash();
 }
 
 

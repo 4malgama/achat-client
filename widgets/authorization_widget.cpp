@@ -117,7 +117,7 @@ void AuthorizationWidget::onLoginClicked()
 	}
 	else
 	{
-		client::window->acc->login(auth::login, HashPassword(auth::password));
+		client::window->acc->login(auth::login, auth::password);
 	}
 
 	ui->le_password->clear();

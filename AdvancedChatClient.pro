@@ -19,8 +19,28 @@ UI_SOURCES_DIR = ui_s
 
 RC_ICONS = resources/icons/icon64.ico
 
-LIBS += -L"C:\Program Files (x86)\OpenSSL-Win32\lib\MinGW" -llibssl -llibcrypto
-LIBS += -L"C:\Program Files\OpenSSL-Win64\lib\MinGW" -llibssl -llibcrypto
+win32 {
+	contains(QT_ARCH, x86_64) {
+		OPENSSL_DIR = $$PWD/third_party/openssl/windows/OpenSSL-Win64
+	} else {
+		OPENSSL_DIR = $$PWD/third_party/openssl/windows/OpenSSL-Win32
+	}
+
+	INCLUDEPATH += "$$OPENSSL_DIR/include"
+
+	mingw {
+		LIBS += -L"$$OPENSSL_DIR/lib/MinGW" -lssl -lcrypto
+	}
+
+	msvc {
+		LIBS += -L"$$OPENSSL_DIR/lib/VC/x64/MD" libssl.lib libcrypto.lib
+	}
+}
+
+unix:!macx {
+	CONFIG += link_pkgconfig
+	PKGCONFIG += openssl
+}
 
 SOURCES += \
 	application.cpp \
@@ -179,4 +199,4 @@ RESOURCES += \
 	resources.qrc
 
 DISTFILES += \
-	AdvancedChatClient_ru_RU.ts
+	AdvancedChatClient_ru_RU.ts \

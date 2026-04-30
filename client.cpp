@@ -142,7 +142,7 @@ void Client::openMyProfilePage()
 
 	QImage avatar = ResourceManager::instance().avatar();
 	if (avatar.isNull())
-		avatar = ImageUtils::GetImageFromName(acc->getData()->fname);
+		avatar = ImageUtils::makeImageFromName(acc->getData()->fname);
 	pw->setAvatar(avatar);
 	setWindowTitle(tr("Profile"));
 }
@@ -241,7 +241,7 @@ void Client::addMessageToChat(quint64 chatId, ChatMessage* message)
 	const ChatData* chatData = cw->getChatData(chatId);
 	if (chatData != nullptr)
 	{
-		QIcon icon = QIcon(QPixmap::fromImage(ImageUtils::CropImageToCircle(chatData->data.user.avatar)));
+		QIcon icon = QIcon(QPixmap::fromImage(ImageUtils::makeCircularAvatar(chatData->data.user.avatar)));
 		app::a->message(icon, message->user.sname + " " + message->user.fname, message->content);
 	}
 	else
@@ -370,7 +370,7 @@ void Client::setProfileData(const QHash<QString, QVariant>& profileInfo)
 		{
 			QImage avatar = ResourceManager::instance().avatar();
 			if (avatar.isNull())
-				avatar = ImageUtils::GetImageFromName(acc->getData()->fname);
+				avatar = ImageUtils::makeImageFromName(acc->getData()->fname);
 			pw->setAvatar(avatar);
 		}
 	}
