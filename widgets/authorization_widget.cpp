@@ -2,7 +2,6 @@
 #include "ui_authorization_widget.h"
 #include "../client.h"
 #include "../network/account.h"
-#include "server_message_widget.h"
 
 #include <QPainter>
 #include <QCryptographicHash>
@@ -21,14 +20,15 @@ QByteArray HashPassword(const QString& password)
 }
 
 AuthorizationWidget::AuthorizationWidget(QWidget *parent, bool registerState) :
-	QWidget(parent),
-	ui(new Ui::AuthorizationWidget),
-	registerState(registerState)
+	ThemedWidget(parent),
+	registerState(registerState),
+	ui(new Ui::AuthorizationWidget)
 {
 	ui->setupUi(this);
+
 	setWindowFlags(Qt::WindowType::FramelessWindowHint | Qt::WindowType::WindowStaysOnTopHint);
 	setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground);
-	setWindowTitle("Authorization");
+	setWindowTitle(tr("Authorization"));
 
 	connect(ui->le_login, &QLineEdit::textChanged, this, &AuthorizationWidget::onInputChanged);
 	connect(ui->le_password, &QLineEdit::textChanged, this, &AuthorizationWidget::onInputChanged);
@@ -37,6 +37,7 @@ AuthorizationWidget::AuthorizationWidget(QWidget *parent, bool registerState) :
 	connect(ui->btnSwitchForm, &QAbstractButton::clicked, this, &AuthorizationWidget::onSwitchFormClicked);
 
 	updateForm();
+	onThemeChanged(theme());
 }
 
 AuthorizationWidget::~AuthorizationWidget()
@@ -52,17 +53,26 @@ void AuthorizationWidget::closeEvent(QCloseEvent *event)
 
 void AuthorizationWidget::paintEvent(QPaintEvent *event)
 {
-	QColor backgroundColor(18, 70, 108);
+	Q_UNUSED(event);
+
+	const ThemeData& t = theme();
 
 	QPainter painter(this);
-	painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing | QPainter::Antialiasing);
+	painter.setRenderHint(QPainter::Antialiasing, true);
+	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-	QBrush brush(backgroundColor);
-	QPen pen(Qt::white);
-	pen.setWidth(2);
-	painter.setPen(pen);
-	painter.setBrush(brush);
-	painter.drawRoundedRect(rect(), 10, 10);
+	QRectF r = rect();
+	r.adjust(
+		t.metrics.borderWidth / 2.0,
+		t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0
+	);
+
+	painter.setPen(QPen(t.colors.borderStrong, t.metrics.borderWidth));
+	painter.setBrush(t.colors.panelBackground);
+
+	painter.drawRoundedRect(r, t.radii.large, t.radii.large);
 }
 
 void AuthorizationWidget::updateForm()
@@ -129,4 +139,15 @@ void AuthorizationWidget::onSwitchFormClicked()
 {
 	registerState = !registerState;
 	updateForm();
+}
+
+void AuthorizationWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+
+	if (ui->title)
+		ui->title->setFont(theme.fonts.title);
+
+	updateGeometry();
+	update();
 }

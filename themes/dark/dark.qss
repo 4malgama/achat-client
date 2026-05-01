@@ -1,0 +1,636 @@
+/*
+	AChat Client — Modern Dark Theme
+	Qt Style Sheet (QSS)
+
+	Palette:
+	- Background:      #090E17 / #101827 / #172235
+	- Surface:         rgba(17, 24, 39, 0.78)
+	- Surface hover:   rgba(31, 41, 55, 0.90)
+	- Accent:          #38BDF8
+	- Accent strong:   #0EA5E9
+	- Text:            #F8FAFC
+	- Muted text:      #94A3B8
+	- Border:          rgba(148, 163, 184, 0.18)
+*/
+
+* {
+	font-family: "Segoe UI", "Inter", "Roboto", "Arial", sans-serif;
+	color: #F8FAFC;
+	outline: none;
+}
+
+QWidget {
+	selection-background-color: #38BDF8;
+	selection-color: #06111F;
+}
+
+/* =========================
+   Main window
+   ========================= */
+
+#Client {
+	background: qlineargradient(
+		x1: 0, y1: 0, x2: 1, y2: 1,
+		stop: 0   #090E17,
+		stop: 0.45 #101827,
+		stop: 1   #172235
+	);
+}
+
+Client #frame,
+#frame,
+#frameAdvert,
+ChatsWidget,
+SearchWidget,
+ChatsWidget #chatsContent,
+ChatsWidget #messagesContent,
+SearchWidget #resultsContent,
+#ProfileWidget #areaComments,
+#ProfileWidget #areaSettings {
+	background: transparent;
+	border: none;
+}
+
+/* =========================
+   Custom title bar
+   ========================= */
+
+#frameBorder {
+	background: qlineargradient(
+		x1: 0, y1: 0, x2: 1, y2: 0,
+		stop: 0 #111827,
+		stop: 1 #1E293B
+	);
+	border: none;
+	border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+#frameBorder #btnClose,
+#frameBorder #btnSize,
+#frameBorder #btnHide {
+	background-color: transparent;
+	color: #CBD5E1;
+	border: none;
+	border-radius: 8px;
+}
+
+#frameBorder #btnClose:hover {
+	background-color: #EF4444;
+	color: white;
+}
+
+#frameBorder #btnSize:hover,
+#frameBorder #btnHide:hover {
+	background-color: rgba(148, 163, 184, 0.16);
+	color: white;
+}
+
+#frameBorder #btnClose:pressed,
+#frameBorder #btnSize:pressed,
+#frameBorder #btnHide:pressed {
+	background-color: rgba(15, 23, 42, 0.7);
+}
+
+/* =========================
+   Side navigation
+   ========================= */
+
+#frameSide {
+	background: qlineargradient(
+		x1: 0, y1: 0, x2: 0, y2: 1,
+		stop: 0 #111827,
+		stop: 1 #0F172A
+	);
+	border: none;
+	border-right: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+#frameSide QToolButton {
+	background-color: rgba(15, 23, 42, 0.60);
+	color: #CBD5E1;
+	border: 1px solid transparent;
+	border-radius: 14px;
+	padding: 8px;
+}
+
+#frameSide QToolButton:hover {
+	background-color: rgba(56, 189, 248, 0.13);
+	color: #F8FAFC;
+	border: 1px solid rgba(56, 189, 248, 0.28);
+}
+
+#frameSide QToolButton:pressed {
+	background-color: rgba(14, 165, 233, 0.22);
+	border: 1px solid rgba(56, 189, 248, 0.45);
+}
+
+#frameSide QToolButton:disabled {
+	background-color: rgba(51, 65, 85, 0.28);
+	color: #64748B;
+	border: 1px solid rgba(100, 116, 139, 0.16);
+}
+
+/* =========================
+   Common controls
+   ========================= */
+
+QLineEdit,
+QTextEdit,
+QPlainTextEdit,
+QComboBox {
+	background-color: rgba(15, 23, 42, 0.78);
+	color: #F8FAFC;
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 12px;
+	padding: 7px 10px;
+	font-size: 13px;
+}
+
+QLineEdit:hover,
+QTextEdit:hover,
+QPlainTextEdit:hover,
+QComboBox:hover {
+	background-color: rgba(30, 41, 59, 0.86);
+	border: 1px solid rgba(56, 189, 248, 0.26);
+}
+
+QLineEdit:focus,
+QTextEdit:focus,
+QPlainTextEdit:focus,
+QComboBox:focus {
+	background-color: rgba(15, 23, 42, 0.95);
+	border: 1px solid #38BDF8;
+}
+
+QLineEdit:disabled,
+QTextEdit:disabled,
+QPlainTextEdit:disabled,
+QComboBox:disabled {
+	background-color: rgba(51, 65, 85, 0.25);
+	color: #64748B;
+	border: 1px solid rgba(100, 116, 139, 0.14);
+}
+
+QPushButton,
+QToolButton[role="call"] {
+	background-color: rgba(15, 23, 42, 0.72);
+	color: #F8FAFC;
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 12px;
+	padding: 7px 12px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+QPushButton:hover,
+QToolButton[role="call"]:hover {
+	background-color: rgba(56, 189, 248, 0.15);
+	border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+QPushButton:pressed,
+QToolButton[role="call"]:pressed {
+	background-color: rgba(14, 165, 233, 0.25);
+	border: 1px solid rgba(56, 189, 248, 0.45);
+}
+
+QPushButton:disabled {
+	background-color: rgba(51, 65, 85, 0.25);
+	color: #64748B;
+	border: 1px solid rgba(100, 116, 139, 0.14);
+}
+
+QComboBox::drop-down {
+	background-color: transparent;
+	border: none;
+	width: 30px;
+}
+
+QComboBox::down-arrow {
+	image: url(":/r/resources/images/expand_arrow.png");
+	width: 10px;
+	height: 10px;
+}
+
+QComboBox:on {
+	border: 1px solid #38BDF8;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+QComboBox QAbstractItemView {
+	background-color: #0F172A;
+	color: #F8FAFC;
+	border: 1px solid rgba(56, 189, 248, 0.45);
+	selection-color: #F8FAFC;
+	selection-background-color: rgba(56, 189, 248, 0.22);
+	padding: 4px;
+}
+
+QComboBox QAbstractItemView::item {
+	min-height: 28px;
+	padding: 6px 10px;
+	border-radius: 7px;
+}
+
+QComboBox QAbstractItemView::item:hover,
+QComboBox QAbstractItemView::item:selected {
+	background-color: rgba(56, 189, 248, 0.18);
+}
+
+QCheckBox {
+	color: #CBD5E1;
+	spacing: 8px;
+}
+
+QCheckBox::indicator {
+	width: 18px;
+	height: 18px;
+	border: 1px solid rgba(148, 163, 184, 0.28);
+	border-radius: 6px;
+	background-color: rgba(15, 23, 42, 0.85);
+}
+
+QCheckBox::indicator:hover {
+	border: 1px solid rgba(56, 189, 248, 0.45);
+	background-color: rgba(30, 41, 59, 0.95);
+}
+
+QCheckBox::indicator:checked {
+	background-color: #0EA5E9;
+	border: 1px solid #38BDF8;
+	image: url(":/r/resources/images/check.png");
+}
+
+/* Modern thin scrollbars instead of fully hidden scrollbars */
+QScrollArea {
+	background: transparent;
+	border: none;
+}
+
+QScrollBar:vertical {
+	background: transparent;
+	width: 8px;
+	margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+	background: rgba(148, 163, 184, 0.24);
+	border-radius: 4px;
+	min-height: 28px;
+}
+
+QScrollBar::handle:vertical:hover {
+	background: rgba(56, 189, 248, 0.42);
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical,
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+	background: transparent;
+	border: none;
+	height: 0px;
+}
+
+QScrollBar:horizontal {
+	background: transparent;
+	height: 8px;
+	margin: 2px;
+}
+
+QScrollBar::handle:horizontal {
+	background: rgba(148, 163, 184, 0.24);
+	border-radius: 4px;
+	min-width: 28px;
+}
+
+QScrollBar::handle:horizontal:hover {
+	background: rgba(56, 189, 248, 0.42);
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal,
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+	background: transparent;
+	border: none;
+	width: 0px;
+}
+
+/* =========================
+   Profile widget
+   ========================= */
+
+#ProfileWidget {
+	background: transparent;
+}
+
+#ProfileWidget #avatar {
+	color: #F8FAFC;
+}
+
+#ProfileWidget #btnProfileLink,
+#ProfileWidget #btnSendComment {
+	background-color: rgba(14, 165, 233, 0.22);
+	color: #F8FAFC;
+	font-size: 14px;
+	font-weight: 700;
+	border: 1px solid rgba(56, 189, 248, 0.28);
+	border-radius: 12px;
+	padding: 7px 12px;
+}
+
+#ProfileWidget #btnProfileLink:hover,
+#ProfileWidget #btnSendComment:hover {
+	background-color: rgba(56, 189, 248, 0.30);
+	border: 1px solid rgba(125, 211, 252, 0.50);
+}
+
+#ProfileWidget #btnProfileLink:pressed,
+#ProfileWidget #btnSendComment:pressed {
+	background-color: rgba(2, 132, 199, 0.35);
+}
+
+#ProfileWidget #leFirstname,
+#ProfileWidget #lePatronymic,
+#ProfileWidget #leSurname {
+	background-color: rgba(15, 23, 42, 0.72);
+	color: #F8FAFC;
+	font-size: 16px;
+	font-weight: 700;
+	padding: 8px 11px;
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 13px;
+}
+
+#ProfileWidget #lePost,
+#ProfileWidget #textAboutMe,
+#ProfileWidget #textComment {
+	background-color: rgba(15, 23, 42, 0.66);
+	color: #E2E8F0;
+	font-size: 15px;
+	padding: 8px 11px;
+	border: 1px solid rgba(148, 163, 184, 0.16);
+	border-radius: 13px;
+}
+
+#ProfileWidget #leFirstname:focus,
+#ProfileWidget #lePatronymic:focus,
+#ProfileWidget #leSurname:focus,
+#ProfileWidget #lePost:focus,
+#ProfileWidget #textAboutMe:focus,
+#ProfileWidget #textComment:focus {
+	background-color: rgba(15, 23, 42, 0.92);
+	border: 1px solid #38BDF8;
+}
+
+#ProfileWidget #settingsContent,
+#ProfileWidget #commentsContent {
+	background-color: rgba(15, 23, 42, 0.28);
+	color: #E2E8F0;
+	font-size: 13px;
+	padding: 12px;
+	border: 1px solid rgba(148, 163, 184, 0.10);
+	border-radius: 16px;
+}
+
+#ProfileWidget #settingsContent QLabel,
+#ProfileWidget #lblNoComments {
+	color: #CBD5E1;
+	font-size: 13px;
+}
+
+#ProfileWidget #settingsContent QComboBox,
+#ProfileWidget #settingsContent QLineEdit {
+	font-size: 12px;
+	padding: 6px 10px;
+}
+
+ProfileWidget #btnUpdate {
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 15px;
+}
+
+ProfileWidget #btnUpdate:hover {
+	background: rgba(56, 189, 248, 0.14);
+	border: 1px solid rgba(56, 189, 248, 0.28);
+}
+
+ProfileWidget #btnUpdate:pressed {
+	background: rgba(14, 165, 233, 0.22);
+}
+
+/* =========================
+   Authorization widget
+   ========================= */
+
+AuthorizationWidget QWidget {
+	color: #F8FAFC;
+}
+
+AuthorizationWidget #title {
+	color: #F8FAFC;
+	font-size: 19px;
+	font-weight: 800;
+}
+
+AuthorizationWidget QLineEdit {
+	background-color: rgba(15, 23, 42, 0.78);
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 13px;
+	padding: 8px 10px;
+	font-size: 13px;
+	color: #F8FAFC;
+}
+
+AuthorizationWidget QLineEdit:hover {
+	background-color: rgba(30, 41, 59, 0.84);
+	border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+AuthorizationWidget QLineEdit:focus {
+	background-color: rgba(15, 23, 42, 0.95);
+	border: 1px solid #38BDF8;
+}
+
+AuthorizationWidget QPushButton {
+	background-color: rgba(14, 165, 233, 0.22);
+	border: 1px solid rgba(56, 189, 248, 0.35);
+	border-radius: 13px;
+	padding: 8px 12px;
+	font-size: 13px;
+	font-weight: 700;
+	min-height: 22px;
+}
+
+AuthorizationWidget QPushButton:hover {
+	background-color: rgba(56, 189, 248, 0.30);
+	border: 1px solid rgba(125, 211, 252, 0.55);
+}
+
+AuthorizationWidget QPushButton:pressed {
+	background-color: rgba(2, 132, 199, 0.36);
+}
+
+AuthorizationWidget QPushButton:disabled {
+	background-color: rgba(51, 65, 85, 0.25);
+	border: 1px solid rgba(100, 116, 139, 0.18);
+	color: #64748B;
+}
+
+/* =========================
+   Chats
+   ========================= */
+
+ChatsWidget #headerFrame {
+	background: rgba(15, 23, 42, 0.72);
+	border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+ChatsWidget #scrollMessages,
+SearchWidget QScrollArea {
+	background: transparent;
+	color: #F8FAFC;
+	padding: 10px;
+	border: none;
+}
+
+ChatsWidget #scrollChats {
+	background: rgba(15, 23, 42, 0.44);
+	color: #F8FAFC;
+	border: none;
+	border-right: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+ChatsWidget #txtMessage {
+	background-color: rgba(15, 23, 42, 0.78);
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 16px;
+	font-size: 13px;
+	padding: 8px 11px;
+	color: #F8FAFC;
+	selection-color: #06111F;
+	selection-background-color: #38BDF8;
+}
+
+ChatsWidget #txtMessage:hover {
+	background-color: rgba(30, 41, 59, 0.84);
+	border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+ChatsWidget #txtMessage:focus {
+	background-color: rgba(15, 23, 42, 0.95);
+	border: 1px solid #38BDF8;
+}
+
+ChatsWidget #btnAttach,
+ChatsWidget #btnSend,
+ChatsWidget #btnVoice,
+ChatsWidget #btnStartCall,
+ChatsWidget #btnMenu,
+SearchWidget #btnSearch {
+	background-color: transparent;
+	border: 1px solid transparent;
+	border-radius: 14px;
+	color: #CBD5E1;
+	padding: 6px;
+}
+
+ChatsWidget #btnAttach:hover,
+ChatsWidget #btnSend:hover,
+ChatsWidget #btnVoice:hover,
+ChatsWidget #btnStartCall:hover,
+ChatsWidget #btnMenu:hover,
+SearchWidget #btnSearch:hover {
+	background-color: rgba(56, 189, 248, 0.13);
+	border: 1px solid rgba(56, 189, 248, 0.28);
+	color: #F8FAFC;
+}
+
+ChatsWidget #btnAttach:pressed,
+ChatsWidget #btnSend:pressed,
+ChatsWidget #btnVoice:pressed,
+ChatsWidget #btnStartCall:pressed,
+ChatsWidget #btnMenu:pressed,
+SearchWidget #btnSearch:pressed {
+	background-color: rgba(14, 165, 233, 0.22);
+}
+
+ChatsWidget #nickname {
+	color: #F8FAFC;
+	font-weight: 700;
+}
+
+ChatsWidget #frame {
+	background: rgba(15, 23, 42, 0.48);
+	border: 1px solid rgba(148, 163, 184, 0.16);
+	border-radius: 14px;
+}
+
+ChatsWidget #frame QLabel {
+	color: #E2E8F0;
+}
+
+ChatsWidget #typingLabel {
+	color: #94A3B8;
+	font-size: 12px;
+	font-style: italic;
+}
+
+SearchWidget QLineEdit {
+	background-color: rgba(15, 23, 42, 0.78);
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 13px;
+	font-size: 13px;
+	padding: 8px 10px;
+	color: #F8FAFC;
+	selection-color: #06111F;
+	selection-background-color: #38BDF8;
+}
+
+SearchWidget QLineEdit:hover {
+	background-color: rgba(30, 41, 59, 0.84);
+	border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+SearchWidget QLineEdit:focus {
+	background-color: rgba(15, 23, 42, 0.95);
+	border: 1px solid #38BDF8;
+}
+
+/* =========================
+   Messages
+   ========================= */
+
+ServerMessageWidget QWidget {
+	color: #111827;
+}
+
+ServerMessageWidget QPushButton {
+	background-color: rgba(226, 232, 240, 0.95);
+	color: #0F172A;
+	border: 1px solid rgba(255, 255, 255, 0.45);
+	border-radius: 8px;
+	padding: 6px 10px;
+	font-size: 13px;
+}
+
+MessageWidget QPushButton {
+	background-color: rgba(15, 23, 42, 0.72);
+	color: #F8FAFC;
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	border-radius: 9px;
+	padding: 6px 10px;
+	font-size: 13px;
+}
+
+MessageWidget QPushButton:hover {
+	background-color: rgba(56, 189, 248, 0.14);
+	border: 1px solid rgba(56, 189, 248, 0.32);
+}
+
+MessageWidget QPushButton:pressed {
+	background-color: rgba(14, 165, 233, 0.22);
+}

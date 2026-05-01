@@ -1,0 +1,77 @@
+{
+  "name": "dark",
+
+  "colors": {
+	"windowBackground": "#090E17",
+	"panelBackground": "#101827",
+	"cardBackground": "#172235",
+
+	"textPrimary": "#F8FAFC",
+	"textSecondary": "#CBD5E1",
+	"textMuted": "#94A3B8",
+
+	"accent": "#38BDF8",
+	"accentHover": "#0EA5E9",
+	"accentPressed": "#0284C7",
+
+	"border": [255, 255, 255, 30],
+	"borderStrong": [255, 255, 255, 55],
+
+	"inputBackground": "#0F172A",
+	"inputBorder": [255, 255, 255, 35],
+	"inputFocusBorder": "#38BDF8",
+
+	"avatarBorder": [255, 255, 255, 45],
+	"avatarHoverOverlay": [56, 189, 248, 40]
+  },
+
+  "metrics": {
+	"controlHeight": 38,
+	"smallControlHeight": 30,
+	"largeControlHeight": 46,
+
+	"borderWidth": 1,
+
+	"spacingXs": 4,
+	"spacingSm": 8,
+	"spacingMd": 12,
+	"spacingLg": 16,
+	"spacingXl": 24,
+
+	"avatarSize": 200,
+	"avatarBorderWidth": 2
+  },
+
+  "radii": {
+	"small": 6,
+	"medium": 10,
+	"large": 16,
+	"round": 999
+  },
+
+  "fonts": {
+	"base": {
+	  "family": "Segoe UI",
+	  "pointSize": 10,
+	  "weight": 400
+	},
+
+	"small": {
+	  "family": "Segoe UI",
+	  "pointSize": 9,
+	  "weight": 400
+	},
+
+	"button": {
+	  "family": "Segoe UI",
+	  "pointSize": 10,
+	  "weight": 500
+	},
+
+	"title": {
+	  "family": "Segoe UI",
+	  "pointSize": 16,
+	  "weight": 600
+	}
+  }
+}

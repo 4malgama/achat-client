@@ -1,7 +1,9 @@
 #include "application.h"
+#include "settings/settings_manager.h"
+#include "theme_manager/theme_manager.h"
+
 #include <QLocale>
 #include <QTranslator>
-#include <settings/settings_manager.h>
 #include <QFile>
 #include <QMessageBox>
 #include <QCommandLineParser>
@@ -18,21 +20,6 @@ namespace client
 namespace unload { void free(); }
 namespace resourcemanager { void load(); }
 namespace aes { void init(); }
-
-static void setDarkTheme()
-{
-	QFile styleSheetFile(":/r/themes/dark.qss");
-	if (styleSheetFile.open(QFile::ReadOnly))
-	{
-		QString styleSheet = QLatin1String(styleSheetFile.readAll());
-		qApp->setStyleSheet(styleSheet);
-		styleSheetFile.close();
-	}
-	else
-	{
-		qApp->setStyleSheet("");
-	}
-}
 
 static void _main_end()
 {
@@ -192,7 +179,15 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	setDarkTheme();
+	if (!ThemeManager::instance().applyTheme("dark"))
+	{
+		QMessageBox::critical(
+			nullptr,
+			QObject::tr("Error"),
+			QObject::tr("Failed to load application theme.")
+		);
+		return 1;
+	}
 
 	aes::init();
 

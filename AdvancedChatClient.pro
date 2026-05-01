@@ -89,6 +89,8 @@ SOURCES += \
 	secure/encryption/aes.cpp \
 	settings/settings_manager.cpp \
 	test/widgets/ripple_button_widget.cpp \
+	theme_manager/theme_loader.cpp \
+	theme_manager/theme_manager.cpp \
 	utils/CryptoUtils.cpp \
 	utils/image_utils.cpp \
 	utils/json_utils.cpp \
@@ -106,7 +108,8 @@ SOURCES += \
 	widgets/profile_widget.cpp \
 	widgets/search_result_widget.cpp \
 	widgets/search_widget.cpp \
-	widgets/server_message_widget.cpp
+	widgets/server_message_widget.cpp \
+	widgets/themed_widget.cpp
 
 HEADERS += \
 	application.h \
@@ -155,6 +158,9 @@ HEADERS += \
 	secure/encryption/aes.h \
 	settings/settings_manager.h \
 	test/widgets/ripple_button_widget.h \
+	theme_manager/theme_data.h \
+	theme_manager/theme_loader.h \
+	theme_manager/theme_manager.h \
 	types/classes.h \
 	types/types_variables.h \
 	utils/CryptoUtils.h \
@@ -174,7 +180,8 @@ HEADERS += \
 	widgets/profile_widget.h \
 	widgets/search_result_widget.h \
 	widgets/search_widget.h \
-	widgets/server_message_widget.h
+	widgets/server_message_widget.h \
+	widgets/themed_widget.h
 
 FORMS += \
 	client.ui \
@@ -200,3 +207,6 @@ RESOURCES += \
 
 DISTFILES += \
 	AdvancedChatClient_ru_RU.ts \
+	themes/dark.qss \
+	themes/dark/dark.qss \
+	themes/dark/dark.json

@@ -78,9 +78,11 @@ void ProfileAvatarWidget::mousePressEvent(QMouseEvent *e)
 void ProfileAvatarWidget::enterEvent(QEvent *)
 {
 	m_isHovered = true;
+	update();
 }
 
 void ProfileAvatarWidget::leaveEvent(QEvent *)
 {
 	m_isHovered = false;
+	update();
 }
