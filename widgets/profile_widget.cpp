@@ -271,7 +271,7 @@ void ProfileWidget::setAvatar(const QImage& image)
 		console::writeLine("Widget of avatar == nullptr");
 		return;
 	}
-	avatarWgt->setImage(ImageUtils::makeCircularAvatar(image));
+	avatarWgt->setImage(image);
 }
 
 void ProfileWidget::updateData()
