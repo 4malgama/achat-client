@@ -4,7 +4,7 @@
 #include "../network/account.h"
 
 #include <QPainter>
-#include <QCryptographicHash>
+
 
 namespace client { extern Client* window; }
 namespace auth
@@ -12,11 +12,6 @@ namespace auth
 	bool remember = false;
 	QString login;
 	QString password;
-}
-
-QByteArray HashPassword(const QString& password)
-{
-	return QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Algorithm::Md5).toHex();
 }
 
 AuthorizationWidget::AuthorizationWidget(QWidget *parent, bool registerState) :
@@ -47,6 +42,8 @@ AuthorizationWidget::~AuthorizationWidget()
 
 void AuthorizationWidget::closeEvent(QCloseEvent *event)
 {
+	Q_UNUSED(event)
+
 	emit event_close();
 	delete this;
 }
@@ -147,6 +144,23 @@ void AuthorizationWidget::onThemeChanged(const ThemeData &theme)
 
 	if (ui->title)
 		ui->title->setFont(theme.fonts.title);
+
+	ui->label->setFont(theme.fonts.base);
+	ui->label_2->setFont(theme.fonts.base);
+	ui->label_3->setFont(theme.fonts.base);
+	ui->label_4->setFont(theme.fonts.base);
+
+	ui->le_login->setFont(theme.fonts.base);
+	ui->le_login->setFixedHeight(theme.metrics.controlHeight);
+
+	ui->le_password->setFont(theme.fonts.base);
+	ui->le_password->setFixedHeight(theme.metrics.controlHeight);
+
+	ui->le_confirm->setFont(theme.fonts.base);
+	ui->le_confirm->setFixedHeight(theme.metrics.controlHeight);
+
+	layout()->setSpacing(theme.metrics.spacingSm);
+	ui->formLayout->setSpacing(theme.metrics.spacingSm);
 
 	updateGeometry();
 	update();

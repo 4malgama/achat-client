@@ -14,7 +14,7 @@
 */
 
 * {
-	font-family: "Segoe UI", "Inter", "Roboto", "Arial", sans-serif;
+	font-family: "Segoe UI";
 	color: #F8FAFC;
 	outline: none;
 }
@@ -144,6 +144,7 @@ QComboBox {
 	border-radius: 12px;
 	padding: 7px 10px;
 	font-size: 13px;
+	font-weight: 500;
 }
 
 QLineEdit:hover,
@@ -430,11 +431,13 @@ AuthorizationWidget QWidget {
 	color: #F8FAFC;
 }
 
+/*
 AuthorizationWidget #title {
 	color: #F8FAFC;
 	font-size: 19px;
 	font-weight: 800;
 }
+*/
 
 AuthorizationWidget QLineEdit {
 	background-color: rgba(15, 23, 42, 0.78);

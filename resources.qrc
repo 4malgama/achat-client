@@ -23,5 +23,6 @@
         <file>resources/images/mic.png</file>
         <file>themes/dark/dark.json</file>
         <file>themes/dark/dark.qss</file>
+        <file>resources/fonts/Inter-VariableFont.ttf</file>
     </qresource>
 </RCC>

@@ -46,6 +46,17 @@ struct ThemeMetrics
 
 	int avatarSize = 200;
 	int avatarBorderWidth = 2;
+
+	int chatBubbleMaxWidthPercent = 40;
+
+	int chatBubblePaddingX = 12;
+	int chatBubblePaddingY = 8;
+	int chatBubbleSpacing = 6;
+
+	int chatBubbleDateHeight = 18;
+	int chatBubbleMinWidth = 100;
+
+	int attachmentButtonHeight = 34;
 };
 
 struct ThemeRadii
@@ -62,6 +73,9 @@ struct ThemeFonts
 	QFont small;
 	QFont button;
 	QFont title;
+
+	QFont message;
+	QFont messageDate;
 };
 
 struct ThemeData

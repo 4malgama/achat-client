@@ -1,10 +1,32 @@
 #include "theme_loader.h"
 
+#include <QtGlobal>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonParseError>
 
+static QFont::Weight cssWeightToQtWeight(int cssWeight)
+{
+	if (cssWeight <= 100)
+		return QFont::Thin;
+	if (cssWeight <= 200)
+		return QFont::ExtraLight;
+	if (cssWeight <= 300)
+		return QFont::Light;
+	if (cssWeight <= 400)
+		return QFont::Normal;
+	if (cssWeight <= 500)
+		return QFont::Medium;
+	if (cssWeight <= 600)
+		return QFont::DemiBold;
+	if (cssWeight <= 700)
+		return QFont::Bold;
+	if (cssWeight <= 800)
+		return QFont::ExtraBold;
+
+	return QFont::Black;
+}
 
 bool ThemeLoader::loadTheme(const QString& themeName, ThemeData& outTheme, QString* errorString)
 {
@@ -84,6 +106,14 @@ bool ThemeLoader::loadTheme(const QString& themeName, ThemeData& outTheme, QStri
 	theme.metrics.avatarSize = readInt(metrics, "avatarSize", 200);
 	theme.metrics.avatarBorderWidth = readInt(metrics, "avatarBorderWidth", 2);
 
+	theme.metrics.chatBubbleMaxWidthPercent = readInt(metrics, "chatBubbleMaxWidthPercent", 40);
+	theme.metrics.chatBubblePaddingX = readInt(metrics, "chatBubblePaddingX", 12);
+	theme.metrics.chatBubblePaddingY = readInt(metrics, "chatBubblePaddingY", 8);
+	theme.metrics.chatBubbleSpacing = readInt(metrics, "chatBubbleSpacing", 8);
+	theme.metrics.chatBubbleDateHeight = readInt(metrics, "chatBubbleDateHeight", 18);
+	theme.metrics.chatBubbleMinWidth = readInt(metrics, "chatBubbleMinWidth", 120);
+	theme.metrics.attachmentButtonHeight = readInt(metrics, "attachmentButtonHeight", 34);
+
 	const QJsonObject radii = root.value("radii").toObject();
 
 	theme.radii.small = readInt(radii, "small", 6);
@@ -97,6 +127,8 @@ bool ThemeLoader::loadTheme(const QString& themeName, ThemeData& outTheme, QStri
 	theme.fonts.small = readFont(fonts, "small", QFont("Segoe UI", 9));
 	theme.fonts.button = readFont(fonts, "button", QFont("Segoe UI", 10, QFont::Medium));
 	theme.fonts.title = readFont(fonts, "title", QFont("Segoe UI", 16, QFont::DemiBold));
+	theme.fonts.message = readFont(fonts, "message", theme.fonts.base);
+	theme.fonts.messageDate = readFont(fonts, "messageDate", theme.fonts.small);
 
 	outTheme = theme;
 	return true;
@@ -126,10 +158,10 @@ QFont ThemeLoader::readFont(const QJsonObject& object, const QString& key, const
 
 	const QString family = fontObject.value("family").toString(fallback.family());
 	const int pointSize = fontObject.value("pointSize").toInt(fallback.pointSize());
-	const int weight = fontObject.value("weight").toInt(fallback.weight());
+	const int cssWeight = fontObject.value("weight").toInt(400);
 
 	QFont font(family, pointSize);
-	font.setWeight(weight);
+	font.setWeight(cssWeightToQtWeight(cssWeight));
 
 	return font;
 }

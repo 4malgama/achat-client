@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QCommandLineParser>
+#include <QFontDatabase>
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -26,6 +27,20 @@ static void _main_end()
 	unload::free();
 
 	SettingsManager::getInstance().saveAll();
+}
+
+static void loadAppFonts()
+{
+	const int fontId = QFontDatabase::addApplicationFont(":/r/resources/fonts/Inter-VariableFont.ttf");
+
+	if (fontId == -1)
+	{
+		qWarning() << "Failed to load application fonts";
+		return;
+	}
+
+	const QStringList families = QFontDatabase::applicationFontFamilies(fontId);
+	qDebug() << "Loaded Inter font families:" << families;
 }
 
 #ifndef WIN32
@@ -162,6 +177,8 @@ int main(int argc, char *argv[])
 #else
 	SetUnhandledExceptionFilter(_UnhandledExceptionFilter);
 #endif
+
+	loadAppFonts();
 
 	resourcemanager::load();
 

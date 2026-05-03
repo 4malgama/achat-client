@@ -39,7 +39,15 @@
 	"spacingXl": 24,
 
 	"avatarSize": 200,
-	"avatarBorderWidth": 2
+	"avatarBorderWidth": 2,
+
+	"chatBubbleMaxWidthPercent": 40,
+	"chatBubblePaddingX": 12,
+	"chatBubblePaddingY": 8,
+	"chatBubbleSpacing": 1,
+	"chatBubbleDateHeight": 18,
+	"chatBubbleMinWidth": 120,
+	"attachmentButtonHeight": 34
   },
 
   "radii": {
@@ -51,27 +59,39 @@
 
   "fonts": {
 	"base": {
-	  "family": "Segoe UI",
+	  "family": "Inter",
 	  "pointSize": 10,
 	  "weight": 400
 	},
 
 	"small": {
-	  "family": "Segoe UI",
+	  "family": "Inter",
 	  "pointSize": 9,
 	  "weight": 400
 	},
 
 	"button": {
-	  "family": "Segoe UI",
+	  "family": "Inter",
 	  "pointSize": 10,
 	  "weight": 500
 	},
 
 	"title": {
-	  "family": "Segoe UI",
+	  "family": "Inter",
 	  "pointSize": 16,
 	  "weight": 600
+	},
+
+	"message": {
+	  "family": "Inter",
+	  "pointSize": 10,
+	  "weight": 500
+	},
+
+	"messageDate": {
+	  "family": "Inter",
+	  "pointSize": 8,
+	  "weight": 400
 	}
   }
 }

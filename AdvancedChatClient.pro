@@ -158,6 +158,7 @@ HEADERS += \
 	secure/encryption/aes.h \
 	settings/settings_manager.h \
 	test/widgets/ripple_button_widget.h \
+	theme_manager/theme_binding.h \
 	theme_manager/theme_data.h \
 	theme_manager/theme_loader.h \
 	theme_manager/theme_manager.h \

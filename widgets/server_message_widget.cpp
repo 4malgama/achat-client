@@ -27,31 +27,10 @@ ServerMessageWidget::~ServerMessageWidget()
 	delete ui;
 }
 
-/*
-*  This function unsafe to use.
-*  Because it doesn't check parent widget.
-*  
-*  More info: https://doc.qt.io/qt-5/qdialog.html#exec
-*/
-
-// int ServerMessageWidget::exec()
-// {
-// 	return QDialog::exec();
-// }
-
 void ServerMessageWidget::open()
 {
 	QDialog::open();
 }
-
-// int ServerMessageWidget::exec(QWidget* parent, const QString& text)
-// {
-// 	if (parent == nullptr)
-// 		return -1;
-
-// 	ServerMessageWidget* widget = new ServerMessageWidget(parent, text);
-// 	return widget->exec();
-// }
 
 void ServerMessageWidget::open(QWidget* parent, const QString& text)
 {
@@ -64,6 +43,8 @@ void ServerMessageWidget::open(QWidget* parent, const QString& text)
 
 void ServerMessageWidget::paintEvent(QPaintEvent *event)
 {
+	Q_UNUSED(event)
+
 	QColor backgroundColor(130, 130, 130);
 
 	QPainter painter(this);

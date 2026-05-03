@@ -1,16 +1,16 @@
 #ifndef CHATMESSAGEWIDGET_H
 #define CHATMESSAGEWIDGET_H
 
-#include <QWidget>
-#include <QDateTime>
 #include "../types/classes.h"
 #include "dropdown_menu.h"
+#include "themed_widget.h"
+#include <QDateTime>
 
-class ChatMessageWidget : public QWidget
+class AttachmentButtonWidget;
+
+class ChatMessageWidget : public ThemedWidget
 {
 	Q_OBJECT
-
-	const int ATTACHMENT_HEIGHT;
 
 public:
 	explicit ChatMessageWidget(QWidget *parent = nullptr, bool isMine = true);
@@ -40,23 +40,25 @@ private slots:
 	void onCopyText();
 	void onDelete();
 
-private:
-	struct
-	{
-		QColor text;
-		QColor background;
-		QColor date;
-	} m_Colors;
+protected:
+	void paintEvent(QPaintEvent *event) override;
+	void onThemeChanged(const ThemeData& theme) override;
 
+private:
 	DropdownMenu m_Menu;
 
 	QString m_Text;
 	QDateTime m_DateTime;
 	bool m_Mine;
 	QList<ChatMessageAttachment> m_Attachments;
+	QList<AttachmentButtonWidget*> m_AttachmentButtons;
 
-	void paintEvent(QPaintEvent *event);
+private:
 	void onDownloadClicked(uint64 id);
+
+	int maxBubbleWidth();
+	void rebuildAttachmentButtons();
+	void rebuildLayout();
 };
 
 #endif // CHATMESSAGEWIDGET_H

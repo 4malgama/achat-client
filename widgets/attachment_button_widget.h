@@ -3,6 +3,8 @@
 
 #include <QPushButton>
 
+class ThemeData;
+
 class AttachmentButtonWidget : public QPushButton
 {
 	Q_OBJECT
@@ -36,9 +38,17 @@ private:
 
 	bool hovered = false;
 
+	QColor textColor;
+	QColor textSecondary;
+	QColor hoverColor;
+
+protected:
 	void paintEvent(QPaintEvent*) override;
 	void enterEvent(QEvent*) override;
 	void leaveEvent(QEvent*) override;
+
+private:
+	void applyTheme(const ThemeData& theme);
 };
 
 #endif // ATTACHMENTBUTTONWIDGET_H
