@@ -92,8 +92,8 @@ void AttachmentButtonWidget::applyTheme(const ThemeData &theme)
 
 	textSecondary = theme.colors.textSecondary;
 
-	hoverColor = theme.colors.accentHover;
-	hoverColor.setAlphaF(0.3f);
+	hoverColor = theme.colors.textPrimary;
+	hoverColor.setAlphaF(0.35f);
 
 	update();
 }

@@ -510,9 +510,9 @@ ChatsWidget #scrollChats {
 ChatsWidget #txtMessage {
 	background-color: rgba(15, 23, 42, 0.78);
 	border: 1px solid rgba(148, 163, 184, 0.18);
-	border-radius: 16px;
-	font-size: 13px;
-	padding: 8px 11px;
+	border-radius: 14px;
+	font-size: 15px;
+	padding: 2px 2px;
 	color: #F8FAFC;
 	selection-color: #06111F;
 	selection-background-color: #38BDF8;
@@ -586,7 +586,7 @@ SearchWidget QLineEdit {
 	background-color: rgba(15, 23, 42, 0.78);
 	border: 1px solid rgba(148, 163, 184, 0.18);
 	border-radius: 13px;
-	font-size: 13px;
+	font-size: 18px;
 	padding: 8px 10px;
 	color: #F8FAFC;
 	selection-color: #06111F;

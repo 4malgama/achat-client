@@ -7,13 +7,13 @@
 
 
 ChatRowWidget::ChatRowWidget(QWidget *parent)
-	: QWidget{parent}
+	: ThemedWidget{parent}
 {
 	initialize();
 }
 
 ChatRowWidget::ChatRowWidget(QWidget *parent, quint64 chatId, const QImage &avatar, const QString &displayName, const QString &post)
-	: QWidget{parent}
+	: ThemedWidget{parent}
 {
 	this->chatId = chatId;
 	this->avatar = avatar;
@@ -68,6 +68,14 @@ void ChatRowWidget::click()
 	emit clicked();
 }
 
+void ChatRowWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+
+	updateGeometry();
+	update();
+}
+
 void ChatRowWidget::initialize()
 {
 	setFixedHeight(60);
@@ -76,6 +84,8 @@ void ChatRowWidget::initialize()
 
 void ChatRowWidget::paintEvent(QPaintEvent *)
 {
+	const ThemeData& t = theme();
+
 	QPainter painter(this);
 	painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
 
@@ -90,28 +100,20 @@ void ChatRowWidget::paintEvent(QPaintEvent *)
 		bgColor = colors.bg.hovered;
 	}
 
-	QLinearGradient penGradient(0, 0, width(), height());
-	penGradient.setColorAt(0, QColor(249, 72, 134)); // #F94886
-	penGradient.setColorAt(1, QColor(72, 198, 249)); // #48C6F9
-
-	//QPen pen = selected ? QPen(penGradient, 2) : Qt::NoPen;
 	QPen pen = Qt::NoPen;
 
 	painter.setBrush(bgColor);
 	painter.setPen(pen);
 	painter.drawRect(rect());
-	//painter.drawRoundedRect(rect(), 10, 10);
 
 	//draw name
-	QFont font("Segoe UI", 12, QFont::Normal);
-	painter.setFont(font);
-	painter.setPen(Qt::white);
+	painter.setFont(t.fonts.base);
+	painter.setPen(t.colors.textPrimary);
 	painter.drawText(rect().adjusted(height(), 10, 0, 0), Qt::AlignLeft | Qt::AlignTop, displayName);
 
 	//draw post
-	QFont fontPost("Segoe UI", 11, QFont::Normal);
-	painter.setFont(fontPost);
-	painter.setPen(Qt::gray);
+	painter.setFont(t.fonts.base);
+	painter.setPen(t.colors.textSecondary);
 	painter.drawText(rect().adjusted(height(), 30, 0, 0), Qt::AlignLeft | Qt::AlignTop, post);
 
 	//draw round avatar

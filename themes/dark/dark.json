@@ -4,13 +4,13 @@
   "colors": {
 	"windowBackground": "#090E17",
 	"panelBackground": "#101827",
-	"cardBackground": "#172235",
+	"cardBackground": "#004a80",
 
 	"textPrimary": "#F8FAFC",
 	"textSecondary": "#CBD5E1",
 	"textMuted": "#94A3B8",
 
-	"accent": "#38BDF8",
+	"accent": "#0072bc",
 	"accentHover": "#0EA5E9",
 	"accentPressed": "#0284C7",
 

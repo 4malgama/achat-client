@@ -409,7 +409,7 @@ void ChatsWidget::onTextMessageChanged()
 	for (int i = 0; i < newText.length(); i++)
 		countLines += newText[i] == '\n';
 
-	int height = qMax(30, qMin(120, 30 + countLines * 20));
+	int height = qMax(40, qMin(120, 40 + countLines * 20));
 	ui->txtMessage->setFixedHeight(height);
 
 	if (newText.isEmpty())

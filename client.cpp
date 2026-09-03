@@ -323,6 +323,12 @@ void Client::on_btnProfile_clicked()
 
 void Client::on_btnClose_clicked()
 {
+	if (!acc->isConnected())
+	{
+		app::a->quit();
+		return;
+	}
+
 	//close();
 	hide();
 	app::a->message(tr("The application continues to work in the background"));

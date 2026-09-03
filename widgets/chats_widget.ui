@@ -336,14 +336,14 @@
        <widget class="QToolButton" name="btnAttach">
         <property name="minimumSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>40</width>
+          <height>40</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>40</width>
+          <height>40</height>
          </size>
         </property>
         <property name="cursor">
@@ -374,7 +374,7 @@
            <x>0</x>
            <y>0</y>
            <width>870</width>
-           <height>353</height>
+           <height>343</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -407,14 +407,14 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>40</width>
+          <height>40</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>40</width>
+          <height>40</height>
          </size>
         </property>
         <property name="cursor">
@@ -446,8 +446,13 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>30</height>
+          <height>40</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
         </property>
         <property name="placeholderText">
          <string>Message...</string>
@@ -458,14 +463,14 @@
        <widget class="QToolButton" name="btnSend">
         <property name="minimumSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>40</width>
+          <height>40</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>40</width>
+          <height>40</height>
          </size>
         </property>
         <property name="cursor">

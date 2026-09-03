@@ -1,10 +1,10 @@
 #ifndef CHATROWWIDGET_H
 #define CHATROWWIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
 #include <QPixmap>
 
-class ChatRowWidget : public QWidget
+class ChatRowWidget : public ThemedWidget
 {
 	Q_OBJECT
 
@@ -44,6 +44,9 @@ public:
 	bool getSelected();
 
 	void click();
+
+protected:
+	void onThemeChanged(const ThemeData& theme) override;
 
 signals:
 	void clicked();
