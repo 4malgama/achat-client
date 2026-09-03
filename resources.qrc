@@ -21,5 +21,8 @@
         <file>resources/images/console.png</file>
         <file>resources/images/call.png</file>
         <file>resources/images/mic.png</file>
+        <file>themes/dark/dark.json</file>
+        <file>themes/dark/dark.qss</file>
+        <file>resources/fonts/Inter-VariableFont.ttf</file>
     </qresource>
 </RCC>

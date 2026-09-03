@@ -1,13 +1,13 @@
 #ifndef AUTHORIZATION_WIDGET_H
 #define AUTHORIZATION_WIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
 
 namespace Ui {
 	class AuthorizationWidget;
 }
 
-class AuthorizationWidget : public QWidget
+class AuthorizationWidget : public ThemedWidget
 {
 	Q_OBJECT
 
@@ -27,10 +27,13 @@ private slots:
 	void onLoginClicked();
 	void onSwitchFormClicked();
 
+protected:
+	void onThemeChanged(const ThemeData& theme) override;
+
 private:
 	Ui::AuthorizationWidget *ui;
-	void closeEvent(QCloseEvent *event);
-	void paintEvent(QPaintEvent *event);
+	void closeEvent(QCloseEvent *event) override;
+	void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // AUTHORIZATION_WIDGET_H

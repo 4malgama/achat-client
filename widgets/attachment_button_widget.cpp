@@ -1,13 +1,14 @@
 #include "attachment_button_widget.h"
+#include "../theme_manager/theme_binding.h"
 #include <QPainter>
 
-#include <QDebug>
 
 AttachmentButtonWidget::AttachmentButtonWidget(QWidget *parent)
 	: QPushButton(parent)
 {
-	setText(QString());
 	setCursor(Qt::PointingHandCursor);
+
+	theme::bind(this, [this] (const ThemeData& theme) { applyTheme(theme); });
 }
 
 QString AttachmentButtonWidget::getFileName() const
@@ -49,27 +50,27 @@ void AttachmentButtonWidget::setPixmap(const QPixmap &newPixmap)
 	emit pixmapChanged();
 }
 
-void AttachmentButtonWidget::paintEvent(QPaintEvent *)
+void AttachmentButtonWidget::paintEvent(QPaintEvent *e)
 {
+	Q_UNUSED(e)
+
 	QPainter painter(this);
 
 	//background
 	painter.setPen(Qt::NoPen);
-	painter.setBrush(hovered ? QColor(255, 255, 255, 120) : Qt::transparent);
+	painter.setBrush(hovered ? hoverColor : Qt::transparent);
 	painter.drawRoundedRect(rect(), 5, 5);
 
 	//pixmap
 	painter.drawPixmap(0, 0, 30, 30, pixmap);
 
 	//text
-	QFont font("Segoe UI", 9);
+	painter.setFont(font());
 
-	painter.setFont(font);
-
-	painter.setPen(Qt::white);
+	painter.setPen(textColor);
 	painter.drawText(40, 13, fileName);
 
-	painter.setPen(Qt::gray);
+	painter.setPen(textSecondary);
 	painter.drawText(40, 27, QString::number(fileSize, 'f', 2) + tr(" Kb"));
 }
 
@@ -81,4 +82,18 @@ void AttachmentButtonWidget::enterEvent(QEvent *)
 void AttachmentButtonWidget::leaveEvent(QEvent *)
 {
 	hovered = false;
+}
+
+void AttachmentButtonWidget::applyTheme(const ThemeData &theme)
+{
+	setFont(theme.fonts.button);
+
+	textColor = theme.colors.textPrimary;
+
+	textSecondary = theme.colors.textSecondary;
+
+	hoverColor = theme.colors.textPrimary;
+	hoverColor.setAlphaF(0.35f);
+
+	update();
 }

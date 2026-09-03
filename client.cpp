@@ -124,6 +124,9 @@ Client::Client(QWidget *parent)
 	sw = searchwidget::getInstance();
 	ui->frame->layout()->addWidget(sw);
 
+	ui->frameSide->hide();
+	ui->frameAdvert->hide();
+
 	show();
 }
 
@@ -273,6 +276,8 @@ void Client::enableSideButtons()
 	ui->btnLogout->setEnabled(true);
 	ui->btnSearch->setEnabled(true);
 	ui->btnChats->setEnabled(true);
+
+	ui->frameSide->show();
 }
 
 void Client::disableSideButtons()
@@ -318,6 +323,12 @@ void Client::on_btnProfile_clicked()
 
 void Client::on_btnClose_clicked()
 {
+	if (!acc->isConnected())
+	{
+		app::a->quit();
+		return;
+	}
+
 	//close();
 	hide();
 	app::a->message(tr("The application continues to work in the background"));

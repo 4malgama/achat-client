@@ -1,10 +1,13 @@
 #include "application.h"
+#include "settings/settings_manager.h"
+#include "theme_manager/theme_manager.h"
+
 #include <QLocale>
 #include <QTranslator>
-#include <settings/settings_manager.h>
 #include <QFile>
 #include <QMessageBox>
 #include <QCommandLineParser>
+#include <QFontDatabase>
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -19,26 +22,25 @@ namespace unload { void free(); }
 namespace resourcemanager { void load(); }
 namespace aes { void init(); }
 
-static void setDarkTheme()
-{
-	QFile styleSheetFile(":/r/themes/dark.qss");
-	if (styleSheetFile.open(QFile::ReadOnly))
-	{
-		QString styleSheet = QLatin1String(styleSheetFile.readAll());
-		qApp->setStyleSheet(styleSheet);
-		styleSheetFile.close();
-	}
-	else
-	{
-		qApp->setStyleSheet("");
-	}
-}
-
 static void _main_end()
 {
 	unload::free();
 
 	SettingsManager::getInstance().saveAll();
+}
+
+static void loadAppFonts()
+{
+	const int fontId = QFontDatabase::addApplicationFont(":/r/resources/fonts/Inter-VariableFont.ttf");
+
+	if (fontId == -1)
+	{
+		qWarning() << "Failed to load application fonts";
+		return;
+	}
+
+	const QStringList families = QFontDatabase::applicationFontFamilies(fontId);
+	qDebug() << "Loaded Inter font families:" << families;
 }
 
 #ifndef WIN32
@@ -176,6 +178,8 @@ int main(int argc, char *argv[])
 	SetUnhandledExceptionFilter(_UnhandledExceptionFilter);
 #endif
 
+	loadAppFonts();
+
 	resourcemanager::load();
 
 	a.setOrganizationName("Amalgama");
@@ -192,7 +196,15 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	setDarkTheme();
+	if (!ThemeManager::instance().applyTheme("dark"))
+	{
+		QMessageBox::critical(
+			nullptr,
+			QObject::tr("Error"),
+			QObject::tr("Failed to load application theme.")
+		);
+		return 1;
+	}
 
 	aes::init();
 

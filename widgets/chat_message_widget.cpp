@@ -2,6 +2,8 @@
 #include "attachment_button_widget.h"
 #include "../client.h"
 #include "../network/account.h"
+#include <algorithm>
+#include <initializer_list>
 #include <QPainter>
 
 
@@ -11,14 +13,9 @@ namespace client
 }
 
 ChatMessageWidget::ChatMessageWidget(QWidget *parent, bool isMine)
-	: QWidget{parent}
-	, ATTACHMENT_HEIGHT(30)
+	: ThemedWidget{parent}
+	, m_Mine(isMine)
 {
-	m_Colors.text = QColor(255, 255, 255);
-	m_Colors.background = isMine ? QColor(59, 104, 145) : QColor(29, 52, 73);
-	m_Colors.date = QColor(255, 255, 255, 130);
-	m_Mine = isMine;
-
 	setContextMenuPolicy(Qt::CustomContextMenu);
 
 	connect(m_Menu.addAction(tr("Reply")), &QAction::triggered, this, &ChatMessageWidget::onReply);
@@ -30,16 +27,24 @@ ChatMessageWidget::ChatMessageWidget(QWidget *parent, bool isMine)
 	connect(this, &ChatMessageWidget::dateChanged, this, &ChatMessageWidget::onDateChanged);
 	connect(this, &ChatMessageWidget::attachmentsChanged, this, &ChatMessageWidget::onAttachmentsChanged);
 	connect(this, &QWidget::customContextMenuRequested, this, &ChatMessageWidget::onMenuCalled);
+
+	onThemeChanged(theme());
 }
 
 void ChatMessageWidget::setText(const QString &t)
 {
+	if (m_Text == t)
+		return;
+
 	m_Text = t;
 	emit textChanged();
 }
 
 void ChatMessageWidget::setDateTime(const QDateTime &t)
 {
+	if (m_DateTime == t)
+		return;
+
 	m_DateTime = t;
 	emit dateChanged();
 }
@@ -61,30 +66,32 @@ bool ChatMessageWidget::isMine() const
 
 void ChatMessageWidget::onDateChanged()
 {
-	update();
+	rebuildLayout();
+	//update();
 }
 
 void ChatMessageWidget::onAttachmentsChanged()
 {
-	int i = 0;
-	QFont defaultFont("Segoe UI", 12, QFont::Normal);
-	QFontMetrics fontMetrics(defaultFont);
-	int skipHeight = fontMetrics.boundingRect(m_Text).height();
-	for (const ChatMessageAttachment& a : m_Attachments)
-	{
-		AttachmentButtonWidget* btn = new AttachmentButtonWidget(this);
-		uint64 id = a.id;
-		connect(btn, &QAbstractButton::clicked, this, [this, id] { onDownloadClicked(id); });
-		btn->setFileName(a.name);
-		btn->setFileSize(a.size / 1024.0);
-		btn->setPixmap(QPixmap(":/r/resources/images/file.png"));
-		btn->setFixedSize(width() - 20, 30);
-		btn->move(10, ATTACHMENT_HEIGHT * i + skipHeight + 5);
-		btn->show();
-		i++;
-	}
+	// int i = 0;
+	// QFontMetrics fontMetrics(font());
+	// int skipHeight = fontMetrics.boundingRect(m_Text).height();
+	// for (const ChatMessageAttachment& a : m_Attachments)
+	// {
+	// 	AttachmentButtonWidget* btn = new AttachmentButtonWidget(this);
+	// 	uint64 id = a.id;
+	// 	connect(btn, &QAbstractButton::clicked, this, [this, id] { onDownloadClicked(id); });
+	// 	btn->setFileName(a.name);
+	// 	btn->setFileSize(a.size / 1024.0);
+	// 	btn->setPixmap(QPixmap(":/r/resources/images/file.png"));
+	// 	btn->setFixedSize(width() - 20, 30);
+	// 	btn->move(10, ATTACHMENT_HEIGHT * i + skipHeight + 5);
+	// 	btn->show();
+	// 	i++;
+	// }
 
-	onTextChanged();
+	// onTextChanged();
+	rebuildAttachmentButtons();
+	rebuildLayout();
 }
 
 void ChatMessageWidget::onMenuCalled(const QPoint&)
@@ -140,45 +147,189 @@ void ChatMessageWidget::setAttachments(const QList<ChatMessageAttachment> &newAt
 
 void ChatMessageWidget::onTextChanged()
 {
-	QFont font("Segoe UI", 12, QFont::Normal);
-
-	QFontMetrics fontMetrics(font);
-
-	const int attachmentHeight = m_Attachments.size() * ATTACHMENT_HEIGHT;
-
-	//setFixedSize(fontMetrics.boundingRect(m_Text).width() + 100, fontMetrics.boundingRect(m_Text).height() + 30 + attachmentHeight);
-	int maxTextWidth = static_cast<int>(client::window->width() * 0.4f);
-	QRect boundingRect = fontMetrics.boundingRect(QRect(0, 0, maxTextWidth, 0), Qt::TextWordWrap, m_Text);
-
-	setFixedSize(boundingRect.width() + 100, boundingRect.height() + 30 + attachmentHeight);
-
-	update();
+	rebuildLayout();
 }
 
 void ChatMessageWidget::paintEvent(QPaintEvent *)
 {
+	const ThemeData& t = theme();
+
 	QPainter painter(this);
-	painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+	painter.setRenderHint(QPainter::Antialiasing, true);
+	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
-	//draw bubble
-	painter.setPen(Qt::NoPen);
-	painter.setBrush(m_Colors.background);
-	painter.drawRoundedRect(rect(), 10, 10);
+	QRectF bubbleRect = rect();
+	bubbleRect.adjust(
+		t.metrics.borderWidth / 2.0,
+		t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0
+	);
 
-	//draw text
-	QFont font("Segoe UI", 12, QFont::Normal);
-	painter.setFont(font);
-	painter.setPen(m_Colors.text);
-	painter.drawText(rect().adjusted(10, 5, -5, -10), Qt::AlignLeft | Qt::TextWordWrap, m_Text);
+	painter.setPen(QPen(t.colors.border, t.metrics.borderWidth));
+	painter.setBrush(isMine() ? t.colors.accent : t.colors.cardBackground);
+	painter.drawRoundedRect(bubbleRect, t.radii.large, t.radii.large);
 
-	//draw datetime
-	QFont dateTimeFont("Segoe UI", 8, QFont::Normal);
-	painter.setFont(dateTimeFont);
-	painter.setPen(m_Colors.date);
-	painter.drawText(rect().adjusted(10, 10, -5, -10), Qt::AlignLeft | Qt::AlignBottom, m_DateTime.toString("dd.MM.yyyy hh:mm"));
+	const int paddingX = t.metrics.chatBubblePaddingX;
+	const int paddingY = t.metrics.chatBubblePaddingY;
+	const int spacing = t.metrics.chatBubbleSpacing;
+	const int dateHeight = t.metrics.chatBubbleDateHeight;
+
+	const QRect textArea(
+		paddingX,
+		paddingY,
+		width() - paddingX * 2,
+		height() - paddingY * 2 - dateHeight - spacing
+	);
+
+	painter.setFont(t.fonts.message);
+
+	painter.setPen(t.colors.textPrimary);
+
+	painter.drawText(
+		textArea,
+		Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap,
+		m_Text
+	);
+
+	const QRect dateArea(
+		paddingX,
+		height() - paddingY - dateHeight,
+		width() - paddingX * 2,
+		dateHeight
+	);
+
+	painter.setFont(t.fonts.messageDate);
+	painter.setPen(isMine() ? QColor(255, 255, 255, 180) : t.colors.textSecondary);
+
+	painter.drawText(
+		dateArea,
+		Qt::AlignRight | Qt::AlignVCenter,
+		m_DateTime.toString("dd.MM.yyyy hh:mm")
+	);
+}
+
+void ChatMessageWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+
+	for (AttachmentButtonWidget* btn : m_AttachmentButtons)
+		btn->setFont(theme.fonts.button);
+
+	rebuildLayout();
+
+	updateGeometry();
+	update();
 }
 
 void ChatMessageWidget::onDownloadClicked(uint64 id)
 {
 	client::window->acc->downloadFile(id);
+}
+
+int ChatMessageWidget::maxBubbleWidth()
+{
+	const ThemeData& t = theme();
+
+	QWidget* root = window();
+	const int baseWidth = root ? root->width() : 800;
+
+	return static_cast<int>(baseWidth * (t.metrics.chatBubbleMaxWidthPercent / 100.0));
+}
+
+void ChatMessageWidget::rebuildAttachmentButtons()
+{
+	qDeleteAll(m_AttachmentButtons);
+	m_AttachmentButtons.clear();
+
+	for (const ChatMessageAttachment& a : m_Attachments)
+	{
+		auto* btn = new AttachmentButtonWidget(this);
+
+		const uint64 id = a.id;
+
+		connect(btn, &QAbstractButton::clicked, this, [this, id] {
+			onDownloadClicked(id);
+		});
+
+		btn->setFileName(a.name);
+		btn->setFileSize(a.size / 1024.0);
+		btn->setPixmap(QPixmap(":/r/resources/images/file.png"));
+		btn->show();
+
+		m_AttachmentButtons.append(btn);
+	}
+}
+
+void ChatMessageWidget::rebuildLayout()
+{
+	const ThemeData& t = theme();
+
+	const int paddingX = t.metrics.chatBubblePaddingX;
+	const int paddingY = t.metrics.chatBubblePaddingY;
+	const int spacing = t.metrics.chatBubbleSpacing;
+	const int dateHeight = t.metrics.chatBubbleDateHeight;
+	const int attachmentButtonHeight = t.metrics.attachmentButtonHeight;
+
+	const int maxWidth = maxBubbleWidth();
+	const int contentMaxWidth = qMax(50, maxWidth - paddingX * 2);
+
+	QFontMetrics textFm(t.fonts.message);
+	QFontMetrics dateFm(t.fonts.messageDate);
+
+	const QRect textRect = textFm.boundingRect(
+		QRect(0, 0, contentMaxWidth, 0),
+		Qt::TextWordWrap,
+		m_Text
+	);
+
+	const QString dateString = m_DateTime.toString("dd.MM.yyyy hh:mm");
+	const int dateWidth = dateFm.horizontalAdvance(dateString);
+
+	int attachmentsHeight = 0;
+	if (!m_Attachments.isEmpty())
+	{
+		attachmentsHeight =
+			m_Attachments.size() * attachmentButtonHeight +
+			(m_Attachments.size() - 1) * spacing;
+	}
+
+	const int contentWidth = std::max({
+		textRect.width(),
+		dateWidth,
+		m_Attachments.isEmpty() ? 0 : contentMaxWidth,
+		t.metrics.chatBubbleMinWidth
+	});
+
+	int totalHeight = paddingY;
+	totalHeight += textRect.height();
+
+	if (!m_Attachments.isEmpty())
+	{
+		totalHeight += spacing;
+		totalHeight += attachmentsHeight;
+	}
+
+	totalHeight += spacing;
+	totalHeight += dateHeight;
+	totalHeight += paddingY;
+
+	const int totalWidth = qMin(maxWidth, contentWidth + paddingX * 2);
+
+	setFixedSize(totalWidth, totalHeight);
+
+	int y = paddingY + textRect.height();
+
+	if (!m_Attachments.isEmpty())
+		y += spacing;
+
+	for (AttachmentButtonWidget* btn : m_AttachmentButtons)
+	{
+		btn->setFixedSize(width() - paddingX * 2, attachmentButtonHeight);
+		btn->move(paddingX, y);
+		y += attachmentButtonHeight + spacing;
+	}
+
+	updateGeometry();
+	update();
 }
