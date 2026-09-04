@@ -54,25 +54,15 @@ namespace
 		QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override
 		{
 			QSize s = QStyledItemDelegate::sizeHint(option, index);
-			s.setHeight(30);
+			s.setHeight(ThemeManager::instance().theme().metrics.smallControlHeight);
 			return s;
 		}
 
-		void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override
-		{
-			painter->save();
-			painter->setRenderHint(QPainter::Antialiasing);
-			painter->setBrush(QBrush(QColor(0, 0, 0, 30)));
-			painter->setPen(Qt::NoPen);
-			painter->drawRect(option.rect);
-			painter->restore();
-			QStyledItemDelegate::paint(painter, option, index);
-		}
 	};
 }
 
 ProfileWidget::ProfileWidget(QWidget *parent) :
-	QWidget(parent),
+	ThemedWidget(parent),
 	ui(new Ui::ProfileWidget)
 {
 	ui->setupUi(this);
@@ -141,6 +131,8 @@ ProfileWidget::ProfileWidget(QWidget *parent) :
 	});
 
 	connect(avatarWgt, &ProfileAvatarWidget::clicked, this, &ProfileWidget::avatarClicked);
+
+	onThemeChanged(theme());
 }
 
 ProfileWidget::~ProfileWidget()
@@ -330,4 +322,42 @@ QHash<QString, QVariant> ProfileWidget::getChanges()
 	changes.insert("privacy", privacySettings);
 
 	return changes;
+}
+
+void ProfileWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+
+	ui->gridLayout_2->setContentsMargins(
+		theme.metrics.spacingMd,
+		theme.metrics.spacingMd,
+		theme.metrics.spacingMd,
+		theme.metrics.spacingMd
+	);
+	ui->gridLayout_2->setSpacing(theme.metrics.spacingMd);
+	ui->gridLayout->setSpacing(theme.metrics.spacingSm);
+	ui->verticalLayout->setSpacing(theme.metrics.spacingSm);
+	ui->verticalLayout_2->setSpacing(theme.metrics.spacingSm);
+	ui->settingsLayout->setHorizontalSpacing(theme.metrics.spacingMd);
+	ui->settingsLayout->setVerticalSpacing(theme.metrics.spacingSm);
+	ui->commentsLayout->setSpacing(theme.metrics.spacingSm);
+
+	ui->leFirstname->setFixedHeight(theme.metrics.controlHeight);
+	ui->lePatronymic->setFixedHeight(theme.metrics.controlHeight);
+	ui->leSurname->setFixedHeight(theme.metrics.controlHeight);
+	ui->lePost->setFixedHeight(theme.metrics.controlHeight);
+	ui->btnProfileLink->setFixedHeight(theme.metrics.controlHeight);
+	ui->btnUpdate->setFixedSize(theme.metrics.controlHeight, theme.metrics.controlHeight);
+	ui->btnSendComment->setFixedHeight(theme.metrics.controlHeight);
+
+	ui->btnProfileLink->setFont(theme.fonts.button);
+	ui->btnSendComment->setFont(theme.fonts.button);
+	ui->leFirstname->setFont(theme.fonts.title);
+	ui->lePatronymic->setFont(theme.fonts.title);
+	ui->leSurname->setFont(theme.fonts.title);
+	ui->lePost->setFont(theme.fonts.base);
+	ui->textAboutMe->setFont(theme.fonts.base);
+	ui->textComment->setFont(theme.fonts.base);
+
+	ThemedWidget::onThemeChanged(theme);
 }

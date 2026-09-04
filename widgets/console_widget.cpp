@@ -55,12 +55,12 @@ namespace chatswidget
 }
 
 ConsoleWidget::ConsoleWidget(QWidget *parent) :
-	QWidget(parent),
+	ThemedWidget(parent),
 	ui(new Ui::ConsoleWidget)
 {
 	ui->setupUi(this);
-	setStyleSheet("#plainTextEdit { color: rgb(255, 230, 50); background: black; font-family: 'Cascadia Mono'; font-size: 12pt; }");
 	ui->plainTextEdit->setWordWrapMode(QTextOption::WordWrap);
+	onThemeChanged(theme());
 	show();
 }
 
@@ -174,4 +174,21 @@ void ConsoleWidget::printHelp()
 	writeLine("gpt                       - Add ChatGPT to chats.");
 	writeLine("set_proxy                 - Sets proxy for ChatGPT or other Network Services.");
 	writeLine("receive <ID>              - Force simulate receive network packet by ID.");
+}
+
+void ConsoleWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+	ui->plainTextEdit->setFont(theme.fonts.monospace);
+	ui->lineEdit->setFont(theme.fonts.monospace);
+	ui->lineEdit->setMinimumHeight(theme.metrics.controlHeight);
+	ui->verticalLayout->setSpacing(theme.metrics.spacingSm);
+	ui->verticalLayout->setContentsMargins(
+		theme.metrics.spacingMd,
+		theme.metrics.spacingMd,
+		theme.metrics.spacingMd,
+		theme.metrics.spacingMd
+	);
+
+	ThemedWidget::onThemeChanged(theme);
 }

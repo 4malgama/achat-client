@@ -8,7 +8,7 @@
 
 
 CallNotifyWidget::CallNotifyWidget(QWidget *parent)
-	: QWidget{parent}
+	: ThemedWidget{parent}
 {
 	acceptButton = new QToolButton(this);
 	rejectButton = new QToolButton(this);
@@ -16,8 +16,8 @@ CallNotifyWidget::CallNotifyWidget(QWidget *parent)
 	acceptButton->setFixedSize(30, 30);
 	rejectButton->setFixedSize(30, 30);
 
-	acceptButton->setProperty("role", QVariant("call"));
-	rejectButton->setProperty("role", QVariant("call"));
+	acceptButton->setProperty("callAction", QVariant("accept"));
+	rejectButton->setProperty("callAction", QVariant("reject"));
 
 	acceptButton->setIcon(QIcon(":/r/resources/images/call.png"));
 	rejectButton->setIcon(QIcon(":/r/resources/images/close.png"));
@@ -43,18 +43,21 @@ CallNotifyWidget::CallNotifyWidget(QWidget *parent)
 	connect(rejectButton, &QAbstractButton::clicked, this, [this]{
 		setCallState(RESET);
 	});
+
+	onThemeChanged(theme());
 }
 
 void CallNotifyWidget::paintEvent(QPaintEvent *)
 {
+	const ThemeData& t = theme();
+
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 
-	QFont nameFont("Roboto", 12, QFont::Bold);
-	QFont stateFont("Roboto", 10);
+	QFont nameFont = t.fonts.button;
+	QFont stateFont = t.fonts.small;
 
 	QFontMetrics nameMetrics(nameFont);
-	QFontMetrics stateMetrics(stateFont);
 
 	QString stateString;
 	switch (m_callState)
@@ -70,27 +73,39 @@ void CallNotifyWidget::paintEvent(QPaintEvent *)
 			break;
 	}
 
-	//draw background
-	painter.setPen(Qt::NoPen);
-	painter.setBrush(QColor(0, 0, 0, 100));
-	painter.drawRoundedRect(0, 0, width(), height(), 10, 10);
+	QRectF backgroundRect = rect();
+	backgroundRect.adjust(
+		t.metrics.borderWidth / 2.0,
+		t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0
+	);
+	painter.setPen(QPen(t.colors.borderStrong, t.metrics.borderWidth));
+	painter.setBrush(t.colors.panelBackground);
+	painter.drawRoundedRect(backgroundRect, t.radii.large, t.radii.large);
 
 	//draw image
-	QImage image;
-	if (m_callerImage.isNull())
-		setCallerImage(ImageUtils::makeImageFromName(m_callerName));
-	image = ImageUtils::makeCircularAvatar(m_callerImage, 40);
+	const QImage sourceImage = m_callerImage.isNull()
+		? ImageUtils::makeImageFromName(m_callerName)
+		: m_callerImage;
+	const QImage image = ImageUtils::makeCircularAvatar(sourceImage, 40);
 	painter.drawImage(QRect(10, height() / 2 - 20, 40, 40), image);
 
 	//draw name
-	painter.setPen(QColor(40, 100, 250));
+	painter.setPen(t.colors.accentHover);
 	painter.setFont(nameFont);
-	painter.drawText(60, height() / 2 - 5, m_callerName);
+	const int controlsWidth = acceptButton->isVisible() ? 100 : 55;
+	const QRect nameRect(60, 8, width() - 60 - controlsWidth, height() / 2);
+	painter.drawText(
+		nameRect,
+		Qt::AlignLeft | Qt::AlignVCenter,
+		nameMetrics.elidedText(m_callerName, Qt::ElideRight, nameRect.width())
+	);
 
 	//draw state
-	painter.setPen(Qt::white);
+	painter.setPen(t.colors.textSecondary);
 	painter.setFont(stateFont);
-	painter.drawText(60, height() / 2 + stateMetrics.height(), stateString);
+	painter.drawText(QRect(60, height() / 2, width() - 120, height() / 2 - 8), Qt::AlignLeft | Qt::AlignVCenter, stateString);
 }
 
 void CallNotifyWidget::resizeEvent(QResizeEvent *)
@@ -142,5 +157,12 @@ void CallNotifyWidget::setCallerImage(const QImage &newCallerImage)
 		return;
 	m_callerImage = newCallerImage;
 	emit callerImageChanged();
+	update();
+}
+
+void CallNotifyWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+	updateGeometry();
 	update();
 }

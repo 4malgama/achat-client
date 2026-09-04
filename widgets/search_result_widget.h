@@ -1,10 +1,11 @@
 #ifndef SEARCHRESULTWIDGET_H
 #define SEARCHRESULTWIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
+#include <QPixmap>
 
 
-class SearchResultWidget : public QWidget
+class SearchResultWidget : public ThemedWidget
 {
 	Q_OBJECT
 public:
@@ -35,21 +36,11 @@ protected:
 	void leaveEvent(QEvent*) override;
 	void mousePressEvent(QMouseEvent *event) override;
 	void mouseReleaseEvent(QMouseEvent *event) override;
+	void onThemeChanged(const ThemeData& theme) override;
 
 private:
-	struct
-	{
-		struct
-		{
-			QColor common = QColor(36, 64, 89);
-			QColor hovered = QColor(60, 92, 121);
-			QColor pressed = QColor(44, 59, 72);
-		} bg;
-	} colors;
-	QFont font;
-
-	bool hovered;
-	bool pressed;
+	bool hovered = false;
+	bool pressed = false;
 
 	QPixmap pixmap;
 	QString login;

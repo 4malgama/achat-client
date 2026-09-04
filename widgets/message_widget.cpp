@@ -1,16 +1,20 @@
 #include "message_widget.h"
+#include "../client.h"
 
 #include <QPushButton>
 #include <QPainter>
+#include <QVariant>
 
 MessageWidget::MessageWidget(Client *client)
-	: QWidget{client}
+	: ThemedWidget{client}
 {
 	if (client == nullptr)
 		throw std::invalid_argument("client can't be nullptr");
+	icon = UNKNOWN;
 	btnClose = new QPushButton(this);
 	btnClose->setText(tr("Close"));
 	btnClose->setCursor(Qt::CursorShape::PointingHandCursor);
+	btnClose->setProperty("role", "primary");
 
 	setWindowFlags(Qt::WindowType::FramelessWindowHint);
 	setAttribute(Qt::WidgetAttribute::WA_TranslucentBackground);
@@ -25,50 +29,67 @@ MessageWidget::MessageWidget(Client *client)
 		move(size.width() / 2 - width() / 2, size.height() / 2 - height() / 2);
 	});
 	connect(btnClose, &QPushButton::pressed, this, &MessageWidget::close);
+
+	onThemeChanged(theme());
 }
 
 void MessageWidget::paintEvent(QPaintEvent *event)
 {
+	Q_UNUSED(event)
+
+	const ThemeData& t = theme();
+
 	QPainter painter(this);
 	painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing | QPainter::Antialiasing);
 
 	QColor tone = (icon == MessageWidget::INFO) ?
-		QColor(18, 70, 108)
+		t.colors.accent
 		: (icon == MessageWidget::WARNING) ?
-			QColor(170, 110, 0)
+			t.colors.warning
 			: (icon == MessageWidget::ERROR) ?
-				QColor(170, 40, 40)
-				: QColor(50, 50, 50);
+				t.colors.danger
+				: t.colors.surfaceBackground;
 
-	//background
-	QColor backgroundColor(tone);
-	QBrush brush(backgroundColor);
-	QPen pen(Qt::white);
-	pen.setWidth(2);
+	QRectF backgroundRect = rect();
+	backgroundRect.adjust(
+		t.metrics.borderWidth / 2.0,
+		t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0
+	);
+	QPen pen(tone, t.metrics.borderWidth);
 	painter.setPen(pen);
-	painter.setBrush(brush);
-	painter.drawRoundedRect(rect(), 10, 10);
+	painter.setBrush(t.colors.panelBackground);
+	painter.drawRoundedRect(backgroundRect, t.radii.large, t.radii.large);
 
-	//titlebar
-	QColor titleBarColor(tone);
-	titleBarColor = titleBarColor.lighter(200);
-	titleBarColor.setAlpha(200);
-	QBrush titleBarBrush(titleBarColor);
-	QPen titleBarPen(Qt::white);
-	titleBarPen.setWidth(1);
-	painter.setPen(titleBarPen);
-	painter.setBrush(titleBarBrush);
-	painter.drawRoundedRect(0, 0, width(), 30, 10, 10);
+	painter.setPen(Qt::NoPen);
+	painter.setBrush(tone);
+	painter.drawRoundedRect(QRectF(0, 0, width(), 34), t.radii.large, t.radii.large);
+	painter.fillRect(QRectF(0, 20, width(), 14), tone);
 
-	//title
-	QFont titleFont("Segoe UI", 14, QFont::Bold);
-	painter.setFont(titleFont);
-	painter.drawText(rect(), Qt::AlignHCenter | Qt::AlignTop, windowTitle());
+	painter.setPen(t.colors.textOnAccent);
+	painter.setFont(t.fonts.button);
+	painter.drawText(QRect(12, 0, width() - 24, 34), Qt::AlignCenter, windowTitle());
 
-	//message
-	QFont messageFont("Segoe UI", 12, QFont::Normal);
-	painter.setFont(messageFont);
-	painter.drawText(rect().adjusted(0, 40, 0, 0), Qt::AlignHCenter | Qt::AlignTop, message);
+	painter.setPen(t.colors.textPrimary);
+	painter.setFont(t.fonts.base);
+	painter.drawText(
+		QRect(20, 50, width() - 40, height() - 110),
+		Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap,
+		message
+	);
+}
 
-	//buttons
+void MessageWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+	btnClose->setFont(theme.fonts.button);
+	btnClose->setGeometry(
+		width() / 2 - 55,
+		height() - theme.metrics.smallControlHeight - theme.metrics.spacingLg,
+		110,
+		theme.metrics.smallControlHeight
+	);
+	updateGeometry();
+	update();
 }

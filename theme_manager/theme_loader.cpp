@@ -69,11 +69,15 @@ bool ThemeLoader::loadTheme(const QString& themeName, ThemeData& outTheme, QStri
 
 	theme.colors.windowBackground = readColor(colors, "windowBackground");
 	theme.colors.panelBackground = readColor(colors, "panelBackground");
+	theme.colors.surfaceBackground = readColor(colors, "surfaceBackground", theme.colors.panelBackground);
+	theme.colors.surfaceHover = readColor(colors, "surfaceHover", theme.colors.surfaceBackground.lighter(115));
+	theme.colors.surfacePressed = readColor(colors, "surfacePressed", theme.colors.surfaceBackground.lighter(125));
 	theme.colors.cardBackground = readColor(colors, "cardBackground");
 
 	theme.colors.textPrimary = readColor(colors, "textPrimary");
 	theme.colors.textSecondary = readColor(colors, "textSecondary");
 	theme.colors.textMuted = readColor(colors, "textMuted");
+	theme.colors.textOnAccent = readColor(colors, "textOnAccent", theme.colors.textPrimary);
 
 	theme.colors.accent = readColor(colors, "accent");
 	theme.colors.accentHover = readColor(colors, "accentHover");
@@ -88,6 +92,11 @@ bool ThemeLoader::loadTheme(const QString& themeName, ThemeData& outTheme, QStri
 
 	theme.colors.avatarBorder = readColor(colors, "avatarBorder");
 	theme.colors.avatarHoverOverlay = readColor(colors, "avatarHoverOverlay");
+
+	theme.colors.success = readColor(colors, "success", QColor("#22C55E"));
+	theme.colors.warning = readColor(colors, "warning", QColor("#F59E0B"));
+	theme.colors.danger = readColor(colors, "danger", QColor("#EF4444"));
+	theme.colors.consoleText = readColor(colors, "consoleText", theme.colors.success);
 
 	const QJsonObject metrics = root.value("metrics").toObject();
 
@@ -127,6 +136,7 @@ bool ThemeLoader::loadTheme(const QString& themeName, ThemeData& outTheme, QStri
 	theme.fonts.small = readFont(fonts, "small", QFont("Segoe UI", 9));
 	theme.fonts.button = readFont(fonts, "button", QFont("Segoe UI", 10, QFont::Medium));
 	theme.fonts.title = readFont(fonts, "title", QFont("Segoe UI", 16, QFont::DemiBold));
+	theme.fonts.monospace = readFont(fonts, "monospace", QFont("Cascadia Mono", 10));
 	theme.fonts.message = readFont(fonts, "message", theme.fonts.base);
 	theme.fonts.messageDate = readFont(fonts, "messageDate", theme.fonts.small);
 

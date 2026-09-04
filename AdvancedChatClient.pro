@@ -208,6 +208,5 @@ RESOURCES += \
 
 DISTFILES += \
 	AdvancedChatClient_ru_RU.ts \
-	themes/dark.qss \
 	themes/dark/dark.qss \
 	themes/dark/dark.json

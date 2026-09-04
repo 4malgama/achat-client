@@ -1,11 +1,12 @@
 #ifndef CALLNOTIFYWIDGET_H
 #define CALLNOTIFYWIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
+#include <QImage>
 
 class QToolButton;
 
-class CallNotifyWidget : public QWidget
+class CallNotifyWidget : public ThemedWidget
 {
 	Q_OBJECT
 public:
@@ -21,6 +22,7 @@ public:
 protected:
 	void paintEvent(QPaintEvent*) override;
 	void resizeEvent(QResizeEvent*) override;
+	void onThemeChanged(const ThemeData& theme) override;
 
 public:
 	CallState callState() const;
@@ -43,7 +45,7 @@ private:
 	QToolButton *acceptButton;
 	QToolButton *rejectButton;
 
-	CallState m_callState;
+	CallState m_callState = RESET;
 	QString m_callerName;
 	QImage m_callerImage;
 	Q_PROPERTY(CallState callState READ callState WRITE setCallState NOTIFY callStateChanged FINAL)

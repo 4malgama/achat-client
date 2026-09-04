@@ -1,7 +1,7 @@
 #ifndef CHATS_WIDGET_H
 #define CHATS_WIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
 
 class GPTService;
 class QFileInfo;
@@ -15,7 +15,7 @@ namespace Ui {
 	class ChatsWidget;
 }
 
-class ChatsWidget : public QWidget
+class ChatsWidget : public ThemedWidget
 {
 	Q_OBJECT
 
@@ -54,6 +54,9 @@ public:
 
 signals:
 	void event_close();
+
+protected:
+	void onThemeChanged(const ThemeData& theme) override;
 
 private:
 	Ui::ChatsWidget *ui;

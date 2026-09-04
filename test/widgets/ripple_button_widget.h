@@ -2,6 +2,7 @@
 #define RIPPLEBUTTONWIDGET_H
 
 #include <QPushButton>
+#include <QColor>
 
 class RippleButtonWidget : public QPushButton
 {
@@ -9,6 +10,8 @@ class RippleButtonWidget : public QPushButton
 
 	QRect m_rippleRect;
 	int m_opacity = 0;
+	QColor m_rippleColor;
+	int m_cornerRadius = 0;
 
 public:
 	explicit RippleButtonWidget(QWidget* parent = nullptr);

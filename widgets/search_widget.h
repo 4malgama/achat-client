@@ -1,7 +1,7 @@
 #ifndef SEARCH_WIDGET_H
 #define SEARCH_WIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
 
 namespace Ui {
 	class SearchWidget;
@@ -9,7 +9,7 @@ namespace Ui {
 
 class SearchResultWidget;
 
-class SearchWidget : public QWidget
+class SearchWidget : public ThemedWidget
 {
 	Q_OBJECT
 
@@ -28,6 +28,9 @@ private slots:
 
 signals:
 	void event_close();
+
+protected:
+	void onThemeChanged(const ThemeData& theme) override;
 
 private:
 	Ui::SearchWidget *ui;

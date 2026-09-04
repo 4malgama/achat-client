@@ -91,6 +91,8 @@ void AuthorizationWidget::updateForm()
 		ui->le_confirm->hide();
 	}
 	onInputChanged();
+	layout()->activate();
+	adjustSize();
 }
 
 void AuthorizationWidget::onInputChanged()
@@ -162,6 +164,8 @@ void AuthorizationWidget::onThemeChanged(const ThemeData &theme)
 	layout()->setSpacing(theme.metrics.spacingSm);
 	ui->formLayout->setSpacing(theme.metrics.spacingSm);
 
+	layout()->activate();
+	adjustSize();
 	updateGeometry();
 	update();
 }

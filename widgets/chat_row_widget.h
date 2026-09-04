@@ -15,17 +15,6 @@ class ChatRowWidget : public ThemedWidget
 	bool hovered = false;
 	bool pressed = false;
 
-	struct
-	{
-		struct
-		{
-			QColor common = QColor(35, 45, 65);
-			QColor selected = QColor(30, 50, 75);
-			QColor hovered = QColor(30, 50, 75);
-			QColor pressed = QColor(35, 45, 70);
-		} bg;
-	} colors;
-
 public:
 	quint64 chatId;
 

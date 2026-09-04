@@ -25,16 +25,19 @@ ChatRowWidget::ChatRowWidget(QWidget *parent, quint64 chatId, const QImage &avat
 void ChatRowWidget::setAvatar(const QImage &avatar)
 {
 	this->avatar = avatar;
+	update();
 }
 
 void ChatRowWidget::setDisplayName(const QString &displayName)
 {
 	this->displayName = displayName;
+	update();
 }
 
 void ChatRowWidget::setPost(const QString &post)
 {
 	this->post = post;
+	update();
 }
 
 QImage ChatRowWidget::getAvatar()
@@ -71,15 +74,14 @@ void ChatRowWidget::click()
 void ChatRowWidget::onThemeChanged(const ThemeData &theme)
 {
 	setFont(theme.fonts.base);
-
-	updateGeometry();
-	update();
+	ThemedWidget::onThemeChanged(theme);
 }
 
 void ChatRowWidget::initialize()
 {
 	setFixedHeight(60);
 	setCursor(Qt::PointingHandCursor);
+	onThemeChanged(theme());
 }
 
 void ChatRowWidget::paintEvent(QPaintEvent *)
@@ -89,39 +91,57 @@ void ChatRowWidget::paintEvent(QPaintEvent *)
 	QPainter painter(this);
 	painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
 
-	QColor bgColor = selected ? colors.bg.selected : colors.bg.common;
+	QColor bgColor = selected ? t.colors.accentPressed : t.colors.surfaceBackground;
 
 	if (pressed)
 	{
-		bgColor = colors.bg.pressed;
+		bgColor = t.colors.surfacePressed;
 	}
 	else if (hovered)
 	{
-		bgColor = colors.bg.hovered;
+		bgColor = t.colors.surfaceHover;
 	}
 
-	QPen pen = Qt::NoPen;
-
 	painter.setBrush(bgColor);
-	painter.setPen(pen);
-	painter.drawRect(rect());
+	painter.setPen(QPen(selected ? t.colors.accentHover : t.colors.border, t.metrics.borderWidth));
+	QRectF backgroundRect = rect();
+	backgroundRect.adjust(
+		t.metrics.borderWidth / 2.0,
+		t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0
+	);
+	//painter.drawRoundedRect(backgroundRect, t.radii.small, t.radii.small);
+	painter.drawRect(backgroundRect);
 
 	//draw name
-	painter.setFont(t.fonts.base);
+	painter.setFont(t.fonts.button);
 	painter.setPen(t.colors.textPrimary);
-	painter.drawText(rect().adjusted(height(), 10, 0, 0), Qt::AlignLeft | Qt::AlignTop, displayName);
+	const QRect nameRect = rect().adjusted(height(), 8, -t.metrics.spacingSm, -height() / 2);
+	painter.drawText(
+		nameRect,
+		Qt::AlignLeft | Qt::AlignVCenter,
+		QFontMetrics(t.fonts.button).elidedText(displayName, Qt::ElideRight, nameRect.width())
+	);
 
 	//draw post
-	painter.setFont(t.fonts.base);
+	painter.setFont(t.fonts.small);
 	painter.setPen(t.colors.textSecondary);
-	painter.drawText(rect().adjusted(height(), 30, 0, 0), Qt::AlignLeft | Qt::AlignTop, post);
+	const QRect postRect = rect().adjusted(height(), height() / 2, -t.metrics.spacingSm, -6);
+	painter.drawText(
+		postRect,
+		Qt::AlignLeft | Qt::AlignVCenter,
+		QFontMetrics(t.fonts.small).elidedText(post, Qt::ElideRight, postRect.width())
+	);
 
 	//draw round avatar
-	QPixmap avatarPixmap = QPixmap::fromImage(avatar.scaled(height() * 0.75f, height() * 0.75f, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+	const int avatarExtent = qRound(height() * 0.75);
+	const QRect avatarRect(8, (height() - avatarExtent) / 2, avatarExtent, avatarExtent);
+	QPixmap avatarPixmap = QPixmap::fromImage(avatar.scaled(avatarExtent, avatarExtent, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation));
 	QPainterPath path;
-	path.addRoundedRect(avatarPixmap.rect().adjusted(8, 8, 8, 8), 22, 22);
+	path.addEllipse(avatarRect);
 	painter.setClipPath(path);
-	painter.drawPixmap(QRect(8, 8, height() * 0.75f, height() * 0.75f), avatarPixmap);
+	painter.drawPixmap(avatarRect, avatarPixmap);
 }
 
 void ChatRowWidget::enterEvent(QEvent *)
@@ -145,6 +165,7 @@ void ChatRowWidget::mousePressEvent(QMouseEvent *e)
 
 void ChatRowWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-	pressed = e->buttons() &~ Qt::LeftButton;
+	Q_UNUSED(e)
+	pressed = false;
 	update();
 }

@@ -2,6 +2,7 @@
 #define ATTACHMENTBUTTONWIDGET_H
 
 #include <QPushButton>
+#include <QColor>
 
 class ThemeData;
 
@@ -30,17 +31,22 @@ signals:
 
 private:
 	QString fileName;
-	double fileSize;	//Kb
+	double fileSize = 0.0;	//Kb
 	QPixmap pixmap;
 	Q_PROPERTY(QString fileName READ getFileName WRITE setFileName NOTIFY fileNameChanged FINAL)
-	Q_PROPERTY(quint32 fileSize READ getFileSize WRITE setFileSize NOTIFY fileSizeChanged FINAL)
+	Q_PROPERTY(double fileSize READ getFileSize WRITE setFileSize NOTIFY fileSizeChanged FINAL)
 	Q_PROPERTY(QPixmap pixmap READ getPixmap WRITE setPixmap NOTIFY pixmapChanged FINAL)
 
 	bool hovered = false;
 
 	QColor textColor;
 	QColor textSecondary;
+	QColor backgroundColor;
 	QColor hoverColor;
+	QColor borderColor;
+	int cornerRadius = 0;
+	int borderWidth = 1;
+	int spacing = 8;
 
 protected:
 	void paintEvent(QPaintEvent*) override;
