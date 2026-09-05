@@ -1,17 +1,17 @@
 #include "network.h"
 #include "packet_factory.h"
 #include "packets/ipacket.h"
-#include "stream_builder.h"
-#include "../secure/encryption/aes.h"
+
 #include <QTimer>
-#include <QDataStream>
+#include <QSslConfiguration>
+#include <QSslError>
+#include <QScopedValueRollback>
+#include <QtEndian>
+
+#include <exception>
 
 #include <QDebug>
 
-namespace crypto
-{
-	QByteArray md5(const QByteArray& data);
-}
 
 namespace console
 {
@@ -19,28 +19,49 @@ namespace console
 	extern bool isViewPackets;
 }
 
-const quint32 Network::TIMEOUT = 5000;
 
 Network::Network(QObject *parent)
 	: QObject{parent}
+	, timeoutTimer(new QTimer(this))
 {
-	connected = false;
-	encryption = false;
-	aes = nullptr;
-	timeoutTimer = new QTimer(this);
-	timeoutTimer->setInterval(TIMEOUT);
+	timeoutTimer->setInterval(CONNECT_TIMEOUT_MS);
+	timeoutTimer->setSingleShot(true);
 	timeoutTimer->setTimerType(Qt::PreciseTimer);
+
+	socket.setReadBufferSize(1024 * 1024);	//1Mb
+
+	connect(&socket, &QSslSocket::encrypted, this, &Network::onEncrypted);
 	connect(&socket, &QAbstractSocket::stateChanged, this, &Network::onStateChanged);
 	connect(&socket, &QIODevice::readyRead, this, &Network::onReadEvent);
-	connect(timeoutTimer, &QTimer::timeout, this, &Network::onTimeout);
 	connect(&socket, &QAbstractSocket::errorOccurred, this, &Network::handleError);
+	connect(&socket, QOverload<const QList<QSslError> &>::of(&QSslSocket::sslErrors), this, [this] (const QList<QSslError>& errors)
+	{
+		if (!connected && !connecting)
+			return;
+
+		QStringList descriptions;
+
+		for (const QSslError& error : errors)
+			descriptions.append(error.errorString());
+
+		endConnection(tr("TLS certificate verification failed:\n%1").arg(descriptions.join('\n')));
+	});
+
+	connect(timeoutTimer, &QTimer::timeout, this, &Network::onTimeout);
 }
 
 Network::~Network()
 {
-	tryDisconnect();
-	if (aes != nullptr)
-		delete aes;
+	QObject::disconnect(&socket, nullptr, this, nullptr);
+	QObject::disconnect(timeoutTimer, nullptr, this, nullptr);
+
+	timeoutTimer->stop();
+
+	connected = false;
+	connecting = false;
+
+	socket.abort();
+	buffer.clear();
 }
 
 void Network::setInetAddress(const InetAddress &endPoint)
@@ -50,14 +71,54 @@ void Network::setInetAddress(const InetAddress &endPoint)
 
 bool Network::isConnected() const
 {
-	return connected;
+	return connected
+		&& socket.state() == QAbstractSocket::ConnectedState
+		&& socket.isEncrypted();
+}
+
+QString Network::lastNetworkError() const
+{
+	return lastError;
 }
 
 void Network::tryConnect()
 {
-	console::writeLine("Trying connect to " + inetAddress.ip + ":" + QString::number(inetAddress.port));
-	socket.connectToHost(inetAddress.ip, inetAddress.port);
+	tryDisconnect();
+
+	lastError.clear();
+	connecting = true;
+
+	if (inetAddress.ip.trimmed().isEmpty() || inetAddress.port == 0)
+	{
+		endConnection(tr("Invalid server address or port."));
+		return;
+	}
+
+	if (!QSslSocket::supportsSsl())
+	{
+		endConnection(tr("TLS is unavailable."));
+		return;
+	}
+
+	QSslConfiguration configuration = QSslConfiguration::defaultConfiguration();
+
+	configuration.setProtocol(QSsl::TlsV1_2OrLater);
+	configuration.setPeerVerifyMode(QSslSocket::VerifyPeer);
+
+	socket.setSslConfiguration(configuration);
+
+	console::writeLine(
+		QStringLiteral("Connecting with TLS to %1:%2")
+			.arg(inetAddress.ip)
+			.arg(inetAddress.port)
+	);
+
 	timeoutTimer->start();
+
+	socket.connectToHostEncrypted(
+		inetAddress.ip.trimmed(),
+		inetAddress.port
+	);
 }
 
 void Network::tryConnect(const QString &ip, quint16 port)
@@ -71,54 +132,67 @@ void Network::tryDisconnect()
 {
 	timeoutTimer->stop();
 
-	if (connected)
+	connected = false;
+	connecting = false;
+
+	buffer.clear();
+	socket.abort();
+}
+
+void Network::onEncrypted()
+{
+	if (!connecting)
 	{
-		connected = false;
-		socket.disconnectFromHost();
-		socket.close();
+		socket.abort();
+		return;
 	}
+
+	timeoutTimer->stop();
+
+	connecting = false;
+	connected = true;
+	lastError.clear();
+
+	console::writeLine(QStringLiteral("TLS connection established."));
+
+	connectedEvent();
 }
 
 void Network::send(const IPacket *packet)
 {
-	if (packet == nullptr || packet->getId() == 0)
+	if (!packet || packet->getId() == 0 || !isConnected())
 		return;
 
-	QByteArray data = packet->prepareToSend();
+	const QByteArray data = packet->prepareToSend();
+
+	if (data.size() < 2 || data.size() > MAX_PACKET_SIZE)
+	{
+		endConnection(tr("Invalid outgoing packet size."));
+		return;
+	}
+
+	const qint64 pending = socket.bytesToWrite() + socket.encryptedBytesToWrite();
+
+	if (pending > MAX_PENDING_WRITE - data.size())
+	{
+		endConnection(tr("Outgoing network buffer limit exceeded."));
+		return;
+	}
 
 	if (console::isViewPackets)
 	{
-		console::writeLine("[SEND ID=" + QString::number(packet->getId()) + "]: " + data.toHex(' ').mid(0, 50));
+		console::writeLine(
+			QStringLiteral("[SEND ID=%1 SIZE=%2]")
+				.arg(packet->getId())
+				.arg(data.size())
+		);
 	}
 
-	if (encryption == true && aes != nullptr)
+	if (socket.write(data) != data.size())
 	{
-		try {
-			QByteArray cipher = aes->encrypt(data);
-			QDataStream stream(&data, QIODevice::WriteOnly);
-			stream << cipher;
-		}
-		catch (int e)
-		{
-			console::writeLine(QString("Error of AES occured (%1)").arg(e));
-			return;
-		}
-	}
-	sendData(data);
-}
-
-void Network::sendOpen(const IPacket *packet)
-{
-	if (packet == nullptr || packet->getId() == 0)
+		endConnection(tr("Failed to queue the outgoing packet."));
 		return;
-	QByteArray data = packet->prepareToSend();
-	sendData(data);
-}
-
-void Network::sendData(const QByteArray &data)
-{
-	socket.write(data);
-	socket.flush();
+	}
 }
 
 std::unique_ptr<IPacket> Network::getPacketByID(quint32 id)
@@ -128,103 +202,128 @@ std::unique_ptr<IPacket> Network::getPacketByID(quint32 id)
 
 void Network::onStateChanged(QAbstractSocket::SocketState state)
 {
-	switch (state)
-		{
-			case QTcpSocket::BoundState:
-				break;
-			case QTcpSocket::HostLookupState:
-				break;
-			case QTcpSocket::ClosingState:
-				break;
-			case QTcpSocket::ConnectedState:
-			{
-				timeoutTimer->stop();
-				connected = true;
-				connectedEvent();
-				break;
-			}
-			case QTcpSocket::ConnectingState:
-				break;
-			case QTcpSocket::ListeningState:
-				break;
-			case QTcpSocket::UnconnectedState:
-			{
-				if (connected)
-				{
-					connected = false;
-					disconnectEvent();
-				}
-				break;
-			}
-			default:
-				break;
-		}
+	if (state != QAbstractSocket::UnconnectedState)
+		return;
+
+	if (connected || connecting)
+		endConnection(tr("The connection was closed."));
+}
+
+void Network::endConnection(const QString& reason)
+{
+	const bool wasConnected = connected;
+	const bool wasConnecting = connecting;
+
+	lastError = reason;
+	console::writeLine(reason);
+
+	tryDisconnect();
+
+	if (wasConnected)
+		disconnectEvent();
+	else if (wasConnecting)
+		failConnect();
 }
 
 void Network::onReadEvent()
 {
-	buffer.append(socket.readAll());
+	if (!isConnected() || reading)
+		return;
 
-	for (;buffer.size() > 3;)
+	QScopedValueRollback<bool> readingGuard(reading, true);
+
+	while (isConnected() && socket.bytesAvailable() > 0)
 	{
-		int packetSize = *(int*) QByteArray(buffer.mid(0, 4)).data();
-		packetSize = _byteswap_ulong(packetSize);
+		const qint64 remaining = MAX_PACKET_SIZE - buffer.size();
 
-		if (buffer.size() < packetSize)
+		if (remaining <= 0)
+		{
+			endConnection(tr("Incoming network buffer limit exceeded."));
+			return;
+		}
+
+		const qint64 count = qMin<qint64>(remaining, 64 * 1024);
+		const QByteArray chunk = socket.read(count);
+
+		if (chunk.isEmpty())
 			return;
 
-		QByteArray data;
-
-		if (encryption)
-		{
-			data = buffer.mid(4, packetSize);
-			data = aes->decrypt(data);
-		}
-		else
-		{
-			data =  buffer.mid(0, packetSize);
-		}
-
-		quint16 id = *(quint16*) QByteArray(data.mid(4, 2)).data();
-		id = _byteswap_ushort(id);
-
-		std::unique_ptr<IPacket> packet = PacketFactory::createPacket(id);
-
-
-		if (packet != nullptr)
-		{
-			packet->prepareToRead(data.mid(6, packetSize - 6));
-
-			if (console::isViewPackets)
-			{
-				console::writeLine("[RECV ID=" + QString::number(id) + " SIZE=" + QString::number(packetSize) + "]: " + data.mid(4).toHex(' ').mid(0, 50));
-			}
-
-			readEvent(packet.get());
-		}
-
-		if (encryption)
-		{
-			buffer.remove(0, packetSize + 4);
-		}
-		else
-		{
-			buffer.remove(0, packetSize);
-		}
-
-		if (buffer.isEmpty()) break;
+		buffer.append(chunk);
+		processBuffer();
 	}
 }
 
 void Network::onTimeout()
 {
-	console::writeLine("Connection timeout.");
-	tryDisconnect();
-	failConnect();
+	if (connecting)
+		endConnection(tr("TCP/TLS connection timeout."));
 }
 
 void Network::handleError(QAbstractSocket::SocketError socketError)
 {
-	Q_UNUSED(socketError)
-	console::writeLine(socket.errorString());
+	Q_UNUSED(socketError);
+
+	if (connected || connecting)
+		endConnection(socket.errorString());
+}
+
+void Network::processBuffer()
+{
+	// [4:size][2:ID][N:data]
+	while (isConnected() && buffer.size() >= 4)
+	{
+		const quint32 packetSize = qFromBigEndian<quint32>(buffer.constData());
+
+		if (packetSize < 6 || packetSize > MAX_PACKET_SIZE)
+		{
+			endConnection(tr("Invalid incoming packet size."));
+			return;
+		}
+
+		if (buffer.size() < static_cast<qsizetype>(packetSize))
+			return;
+
+		const quint16 id = qFromBigEndian<quint16>(buffer.constData() + 4);
+
+		const QByteArray payload = buffer.mid(
+			6,
+			static_cast<qsizetype>(packetSize) - 6
+		);
+
+		buffer.remove(0, static_cast<qsizetype>(packetSize));
+
+		auto packet = PacketFactory::createPacket(id);
+
+		if (!packet)
+		{
+			endConnection(tr("Unknown incoming packet ID: %1").arg(id));
+			return;
+		}
+
+		try
+		{
+			packet->prepareToRead(payload);
+		}
+		catch (const std::exception&)
+		{
+			endConnection(tr("Malformed incoming packet."));
+			return;
+		}
+		catch (...)
+		{
+			endConnection(tr("Failed to decode the incoming packet."));
+			return;
+		}
+
+		if (console::isViewPackets)
+		{
+			console::writeLine(
+				QStringLiteral("[RECV ID=%1 SIZE=%2]")
+					.arg(id)
+					.arg(packetSize)
+			);
+		}
+
+		readEvent(packet.get());
+	}
 }

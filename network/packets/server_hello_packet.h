@@ -8,9 +8,6 @@ class ServerHelloPacket : public IPacket
 {
 public:
 	QString protocol;
-	QString certificate;
-	QString key;
-	QString iv;
 
 	ServerHelloPacket();
 	~ServerHelloPacket();

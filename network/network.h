@@ -1,7 +1,12 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <QTcpSocket>
+#include <QObject>
+#include <QSslSocket>
+#include <QString>
+#include <QByteArray>
+
+#include <memory>
 
 class QTimer;
 class IPacket;
@@ -15,7 +20,7 @@ public:
 	struct InetAddress
 	{
 		QString ip;
-		quint16 port;
+		quint16 port = 0;
 
 		//InetAddress()
 
@@ -34,18 +39,6 @@ public:
 		}
 	};
 
-private:
-
-	static const quint32 TIMEOUT;
-
-	bool connected;
-	QTcpSocket socket;
-	QTimer* timeoutTimer;
-	QByteArray buffer;
-
-	InetAddress inetAddress;
-
-public:
 	explicit Network(QObject *parent = nullptr);
 	virtual ~Network();
 
@@ -53,9 +46,6 @@ public:
 	bool isConnected() const;
 
 protected:
-	bool encryption;
-	AES* aes;
-
 	virtual void readEvent(IPacket* packet) = 0;
 	virtual void disconnectEvent() = 0;
 	virtual void connectedEvent() = 0;
@@ -64,19 +54,37 @@ protected:
 	void tryConnect();
 	void tryConnect(const QString& ip, quint16 port);
 	void tryDisconnect();
+
 	void send(const IPacket* packet);
-	void sendOpen(const IPacket* packet);
-	void sendData(const QByteArray& data);
+
+	QString lastNetworkError() const;
 
 	std::unique_ptr<IPacket> getPacketByID(quint32 id);
 
-private:
+private:	// Variables
+	static constexpr int CONNECT_TIMEOUT_MS = 15000;
+	static constexpr qint64 MAX_PACKET_SIZE = 64LL * 1024 * 1024;		//64MiB
+	static constexpr qint64 MAX_PENDING_WRITE = 64LL * 1024 * 1024;		//64MiB
+
+	bool connected = false;
+	bool connecting = false;
+	bool reading = false;
+
+	QSslSocket socket;
+	QTimer* timeoutTimer = nullptr;
+
+	QByteArray buffer;
+	InetAddress inetAddress;
+	QString lastError;
+
+private:	// Methods
 	void onStateChanged(QAbstractSocket::SocketState state);
 	void onReadEvent();
 	void onTimeout();
 	void handleError(QAbstractSocket::SocketError socketError);
 	void processBuffer();
-
+	void onEncrypted();
+	void endConnection(const QString& reason);
 };
 
 #endif // NETWORK_H

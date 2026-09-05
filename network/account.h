@@ -5,6 +5,9 @@
 #include "../types/classes.h"
 #include "voip/voip_service.h"
 
+#include <QTimer>
+
+
 class Account : public Network
 {
 	QString token;
@@ -38,6 +41,17 @@ public:
 	const ProfileData* getData() const;
 
 private:
+	enum class HandshakeState
+	{
+		Offline,
+		WaitingServerHello,
+		WaitingServerReady,
+		Ready
+	};
+
+	HandshakeState handshakeState = HandshakeState::Offline;
+	QTimer handshakeTimer;
+
 	void readEvent(IPacket* packet) override;
 	void disconnectEvent() override;
 	void connectedEvent() override;
