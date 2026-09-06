@@ -1,11 +1,12 @@
 #ifndef MESSAGEWIDGET_H
 #define MESSAGEWIDGET_H
 
-#include "../client.h"
+#include "themed_widget.h"
 
+class Client;
 class QPushButton;
 
-class MessageWidget : public QWidget
+class MessageWidget : public ThemedWidget
 {
 	Q_OBJECT
 
@@ -25,6 +26,7 @@ public:
 
 protected:
 	void paintEvent(QPaintEvent *event);
+	void onThemeChanged(const ThemeData& theme) override;
 
 signals:
 

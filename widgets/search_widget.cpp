@@ -36,10 +36,11 @@ namespace console
 }
 
 SearchWidget::SearchWidget(QWidget *parent) :
-	QWidget(parent),
+	ThemedWidget(parent),
 	ui(new Ui::SearchWidget)
 {
 	ui->setupUi(this);
+	onThemeChanged(theme());
 	hide();
 }
 
@@ -112,3 +113,14 @@ void SearchWidget::clearLayout(QLayout *l)
 	}
 }
 
+void SearchWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+	ui->leText->setFont(theme.fonts.title);
+	ui->btnSearch->setFont(theme.fonts.button);
+	ui->verticalLayout->setSpacing(theme.metrics.spacingMd);
+	ui->horizontalLayout->setSpacing(theme.metrics.spacingSm);
+	ui->verticalLayout_2->setSpacing(theme.metrics.spacingSm);
+
+	ThemedWidget::onThemeChanged(theme);
+}

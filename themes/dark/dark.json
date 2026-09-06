@@ -4,11 +4,15 @@
   "colors": {
 	"windowBackground": "#090E17",
 	"panelBackground": "#101827",
+	"surfaceBackground": "#172235",
+	"surfaceHover": "#1E293B",
+	"surfacePressed": "#243247",
 	"cardBackground": "#004a80",
 
 	"textPrimary": "#F8FAFC",
 	"textSecondary": "#CBD5E1",
 	"textMuted": "#94A3B8",
+	"textOnAccent": "#F8FAFC",
 
 	"accent": "#0072bc",
 	"accentHover": "#0EA5E9",
@@ -22,7 +26,12 @@
 	"inputFocusBorder": "#38BDF8",
 
 	"avatarBorder": [255, 255, 255, 45],
-	"avatarHoverOverlay": [56, 189, 248, 40]
+	"avatarHoverOverlay": [56, 189, 248, 40],
+
+	"success": "#22C55E",
+	"warning": "#F59E0B",
+	"danger": "#EF4444",
+	"consoleText": "#FDE047"
   },
 
   "metrics": {
@@ -80,6 +89,12 @@
 	  "family": "Inter",
 	  "pointSize": 16,
 	  "weight": 600
+	},
+
+	"monospace": {
+	  "family": "Cascadia Mono",
+	  "pointSize": 10,
+	  "weight": 400
 	},
 
 	"message": {

@@ -1,7 +1,7 @@
 #ifndef PROFILE_WIDGET_H
 #define PROFILE_WIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
 #include <QVariant>
 #include <QHash>
 
@@ -12,7 +12,7 @@ namespace Ui {
 
 class ProfileAvatarWidget;
 
-class ProfileWidget : public QWidget
+class ProfileWidget : public ThemedWidget
 {
 	Q_OBJECT
 
@@ -58,6 +58,9 @@ public:
 
 signals:
 	void event_close();
+
+protected:
+	void onThemeChanged(const ThemeData& theme) override;
 
 private:
 	Ui::ProfileWidget *ui;

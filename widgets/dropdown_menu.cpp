@@ -1,7 +1,7 @@
 #include "dropdown_menu.h"
+#include "../theme_manager/theme_binding.h"
 #include <QPropertyAnimation>
 #include <QShowEvent>
-#include <QPainter>
 
 
 DropdownMenu::DropdownMenu(QWidget *parent)
@@ -11,6 +11,16 @@ DropdownMenu::DropdownMenu(QWidget *parent)
 	animation = new QPropertyAnimation(this, "geometry");
 	animation->setDuration(400);
 	animation->setEasingCurve(QEasingCurve::OutCubic);
+
+	theme::bind(this, [this] (const ThemeData& theme) {
+		setFont(theme.fonts.base);
+		setContentsMargins(
+			theme.metrics.spacingXs,
+			theme.metrics.spacingXs,
+			theme.metrics.spacingXs,
+			theme.metrics.spacingXs
+		);
+	});
 }
 
 QAction *DropdownMenu::makeAction(const QString &text, QMenu *parentMenu, void (*slot)())
@@ -40,33 +50,4 @@ void DropdownMenu::showEvent(QShowEvent *e)
 
 	animation->start();
 	QMenu::showEvent(e);
-}
-
-void DropdownMenu::paintEvent(QPaintEvent *)
-{
-	QPainter painter(this);
-
-	//background
-	painter.setBrush(QColor(65, 110, 150));
-	painter.setPen(Qt::NoPen);
-	painter.drawRect(rect());
-
-	//selected item
-	QAction* selectedAction = activeAction();
-	if (selectedAction != nullptr)
-	{
-		QRect actionRect = actionGeometry(selectedAction);
-		painter.setBrush(QColor(85, 130, 170));
-		painter.setPen(Qt::NoPen);
-		painter.drawRect(actionRect);
-	}
-
-	//texts
-	for (QAction* action : actions())
-	{
-		QRect actionRect = actionGeometry(action);
-		painter.setPen(QPen(Qt::white));
-		painter.setFont(QFont("Segoe UI", 10));
-		painter.drawText(actionRect, Qt::AlignVCenter | Qt::AlignLeft, action->text());
-	}
 }

@@ -1,4 +1,5 @@
 #include "ripple_button_widget.h"
+#include "../../theme_manager/theme_binding.h"
 
 #include <QPropertyAnimation>
 #include <QPainter>
@@ -8,7 +9,11 @@
 RippleButtonWidget::RippleButtonWidget(QWidget *parent)
     : QPushButton{parent}
 {
-    setStyleSheet("QPushButton { color: white; border: 1px solid white; border-radius: 10px; background-color: rgba(255, 255, 255, 0.3); }");
+    theme::bind(this, [this] (const ThemeData& theme) {
+        setFont(theme.fonts.button);
+        m_rippleColor = theme.colors.textOnAccent;
+        m_cornerRadius = theme.radii.medium;
+    });
     connect(this, &QPushButton::pressed, this, &RippleButtonWidget::startRippleAnimation);
 }
 
@@ -19,10 +24,12 @@ void RippleButtonWidget::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
 
     QPainterPath clipPath;
-    clipPath.addRoundedRect(rect(), 10, 10);
+    clipPath.addRoundedRect(rect(), m_cornerRadius, m_cornerRadius);
     painter.setClipPath(clipPath);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(QColor(255, 255, 255, m_opacity));
+    QColor rippleColor = m_rippleColor;
+    rippleColor.setAlpha(m_opacity);
+    painter.setBrush(rippleColor);
     painter.drawEllipse(m_rippleRect.intersected(rect()));
 }
 

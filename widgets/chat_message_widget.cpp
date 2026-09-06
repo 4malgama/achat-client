@@ -200,7 +200,10 @@ void ChatMessageWidget::paintEvent(QPaintEvent *)
 	);
 
 	painter.setFont(t.fonts.messageDate);
-	painter.setPen(isMine() ? QColor(255, 255, 255, 180) : t.colors.textSecondary);
+	QColor dateColor = isMine() ? t.colors.textOnAccent : t.colors.textSecondary;
+	if (isMine())
+		dateColor.setAlpha(180);
+	painter.setPen(dateColor);
 
 	painter.drawText(
 		dateArea,

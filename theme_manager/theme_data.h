@@ -9,11 +9,15 @@ struct ThemeColors
 {
 	QColor windowBackground;
 	QColor panelBackground;
+	QColor surfaceBackground;
+	QColor surfaceHover;
+	QColor surfacePressed;
 	QColor cardBackground;
 
 	QColor textPrimary;
 	QColor textSecondary;
 	QColor textMuted;
+	QColor textOnAccent;
 
 	QColor accent;
 	QColor accentHover;
@@ -28,6 +32,11 @@ struct ThemeColors
 
 	QColor avatarBorder;
 	QColor avatarHoverOverlay;
+
+	QColor success;
+	QColor warning;
+	QColor danger;
+	QColor consoleText;
 };
 
 struct ThemeMetrics
@@ -73,6 +82,7 @@ struct ThemeFonts
 	QFont small;
 	QFont button;
 	QFont title;
+	QFont monospace;
 
 	QFont message;
 	QFont messageDate;

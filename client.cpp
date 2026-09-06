@@ -95,7 +95,7 @@ Client::Client(QWidget *parent)
 	acc = new Account(this);
 	acc->setInetAddress(SettingsManager::getInstance().getEndPoint());
 
-	AdvertWidget* advert = new AdvertWidget(QColor(0, 210, 180), QColor(80, 200, 250), this);
+	AdvertWidget* advert = new AdvertWidget(this);
 	advert->setTitle(tr("Amalgama's Chat is available for free!"));
 	advert->setDescription(tr("To get started, create an account or sign in."));
 	advert->setLinkText(tr("Sign in"));

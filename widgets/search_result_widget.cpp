@@ -5,8 +5,7 @@
 
 
 SearchResultWidget::SearchResultWidget(QWidget *parent)
-	: QWidget{parent}
-	, font("Segoe UI", 14)
+	: ThemedWidget{parent}
 {
 	connect(this, SIGNAL(pixmapChanged()), this, SLOT(onSomeChanged()));
 	connect(this, SIGNAL(loginChanged()), this, SLOT(onSomeChanged()));
@@ -14,11 +13,11 @@ SearchResultWidget::SearchResultWidget(QWidget *parent)
 	setFixedHeight(80);
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
 	setCursor(Qt::PointingHandCursor);
+	onThemeChanged(theme());
 }
 
 SearchResultWidget::SearchResultWidget(QWidget *parent, const QPixmap &pixmap, const QString &login, const QString &displayName)
-	: QWidget{parent}
-	, font("Segoe UI", 14)
+	: ThemedWidget{parent}
 {
 	this->pixmap = pixmap;
 	this->login = login;
@@ -30,31 +29,51 @@ SearchResultWidget::SearchResultWidget(QWidget *parent, const QPixmap &pixmap, c
 	setFixedHeight(80);
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
 	setCursor(Qt::PointingHandCursor);
+	onThemeChanged(theme());
 }
 
 void SearchResultWidget::paintEvent(QPaintEvent *)
 {
+	const ThemeData& t = theme();
+
 	QPainter painter(this);
-	painter.setFont(font);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 	int offset = height();
 
-	//background
-	QColor bgColor = (pressed ? colors.bg.pressed : (hovered ? colors.bg.hovered : colors.bg.common));
+	QColor bgColor = pressed
+		? t.colors.surfacePressed
+		: (hovered ? t.colors.surfaceHover : t.colors.surfaceBackground);
 
-	painter.setPen(Qt::NoPen);
+	painter.setPen(QPen(t.colors.border, t.metrics.borderWidth));
 	painter.setBrush(bgColor);
-
-	painter.drawRoundedRect(rect(), 10, 10);
+	QRectF backgroundRect = rect();
+	backgroundRect.adjust(
+		t.metrics.borderWidth / 2.0,
+		t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0
+	);
+	painter.drawRoundedRect(backgroundRect, t.radii.medium, t.radii.medium);
 
 	//displayName
-	painter.setPen(Qt::white);
-
-	painter.drawText(rect().adjusted(offset, 10, -10, -10), displayName, Qt::AlignLeft | Qt::AlignTop);
+	painter.setFont(t.fonts.button);
+	painter.setPen(t.colors.textPrimary);
+	const QRect displayNameRect = rect().adjusted(offset, t.metrics.spacingSm, -t.metrics.spacingMd, -height() / 2);
+	painter.drawText(
+		displayNameRect,
+		Qt::AlignLeft | Qt::AlignVCenter,
+		QFontMetrics(t.fonts.button).elidedText(displayName, Qt::ElideRight, displayNameRect.width())
+	);
 
 	//login
-	painter.setPen(Qt::gray);
-
-	painter.drawText(rect().adjusted(offset, 10, -10, -10), login, Qt::AlignLeft | Qt::AlignBottom);
+	painter.setFont(t.fonts.small);
+	painter.setPen(t.colors.textSecondary);
+	const QRect loginRect = rect().adjusted(offset, height() / 2, -t.metrics.spacingMd, -t.metrics.spacingSm);
+	painter.drawText(
+		loginRect,
+		Qt::AlignLeft | Qt::AlignVCenter,
+		QFontMetrics(t.fonts.small).elidedText(login, Qt::ElideRight, loginRect.width())
+	);
 
 	//avatar
 	QRect avatarRect(0, 0, offset, offset);
@@ -85,7 +104,8 @@ void SearchResultWidget::mouseReleaseEvent(QMouseEvent *event)
 {
 	if (event->button() == Qt::LeftButton)
 	{
-		emit clicked();
+		if (pressed)
+			emit clicked();
 		pressed = false;
 	}
 	update();
@@ -133,4 +153,10 @@ void SearchResultWidget::setPixmap(const QPixmap &newPixmap)
 		return;
 	pixmap = newPixmap;
 	emit pixmapChanged();
+}
+
+void SearchResultWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+	ThemedWidget::onThemeChanged(theme);
 }

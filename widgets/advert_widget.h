@@ -1,18 +1,13 @@
 #ifndef ADVERTWIDGET_H
 #define ADVERTWIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
+#include <QImage>
 #include <QPropertyAnimation>
 
-class AdvertWidget : public QWidget
+class AdvertWidget : public ThemedWidget
 {
 	Q_OBJECT
-
-	struct
-	{
-		QColor a;
-		QColor b;
-	} background;
 
 	qreal m_offset = 0.0;
 	QPropertyAnimation* anim;
@@ -26,7 +21,6 @@ class AdvertWidget : public QWidget
 
 public:
 	explicit AdvertWidget(QWidget *parent = nullptr);
-	AdvertWidget(QColor a, QColor b, QWidget *parent = nullptr);
 
 	void setTitle(const QString& title);
 	void setDescription(const QString& description);
@@ -44,6 +38,7 @@ signals:
 private:
 	void paintEvent(QPaintEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
+	void onThemeChanged(const ThemeData& theme) override;
 
 	Q_PROPERTY(qreal offset READ offset WRITE setOffset NOTIFY offsetChanged FINAL)
 };

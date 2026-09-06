@@ -1,9 +1,10 @@
 #ifndef PROFILE_AVATAR_WIDGET_H
 #define PROFILE_AVATAR_WIDGET_H
 
-#include <QWidget>
+#include "themed_widget.h"
+#include <QImage>
 
-class ProfileAvatarWidget : public QWidget
+class ProfileAvatarWidget : public ThemedWidget
 {
 	Q_OBJECT
 
@@ -22,6 +23,7 @@ protected:
 	virtual void mousePressEvent(QMouseEvent*) override;
 	virtual void enterEvent(QEvent*) override;
 	virtual void leaveEvent(QEvent*) override;
+	void onThemeChanged(const ThemeData& theme) override;
 
 private:
 	QImage m_image;

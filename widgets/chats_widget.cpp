@@ -53,7 +53,7 @@ namespace client { extern Client* window; }
 namespace console { void writeLine(const QString& text); }
 
 ChatsWidget::ChatsWidget(QWidget *parent) :
-	QWidget(parent),
+	ThemedWidget(parent),
 	MAX_FILE_SIZE(MAX_ATTACH_FILE_SIZE),
 	ui(new Ui::ChatsWidget)
 {
@@ -95,6 +95,8 @@ ChatsWidget::ChatsWidget(QWidget *parent) :
 			isTyping = false;
 		}
 	});
+
+	onThemeChanged(theme());
 
 	hide();
 }
@@ -613,4 +615,17 @@ void ChatsWidget::setHeader(const QPixmap &pixmap, const QString &nickname)
 	ui->avatar->setPixmap(pixmap);
 	ui->nickname->setText(nickname);
 	ui->headerFrame->show();
+}
+
+void ChatsWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+	ui->nickname->setFont(theme.fonts.button);
+	ui->typingLabel->setFont(theme.fonts.small);
+	ui->txtMessage->setFont(theme.fonts.base);
+	ui->horizontalLayout->setSpacing(theme.metrics.spacingSm);
+	ui->gridLayout_4->setHorizontalSpacing(theme.metrics.spacingXs);
+	ui->gridLayout_4->setVerticalSpacing(theme.metrics.spacingXs);
+
+	ThemedWidget::onThemeChanged(theme);
 }

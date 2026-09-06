@@ -22,6 +22,7 @@ void AttachmentButtonWidget::setFileName(const QString &newFileName)
 		return;
 	fileName = newFileName;
 	emit fileNameChanged();
+	update();
 }
 
 double AttachmentButtonWidget::getFileSize() const
@@ -35,6 +36,7 @@ void AttachmentButtonWidget::setFileSize(double newFileSize)
 		return;
 	fileSize = newFileSize;
 	emit fileSizeChanged();
+	update();
 }
 
 QPixmap AttachmentButtonWidget::getPixmap() const
@@ -48,6 +50,7 @@ void AttachmentButtonWidget::setPixmap(const QPixmap &newPixmap)
 		return;
 	pixmap = newPixmap;
 	emit pixmapChanged();
+	update();
 }
 
 void AttachmentButtonWidget::paintEvent(QPaintEvent *e)
@@ -55,33 +58,49 @@ void AttachmentButtonWidget::paintEvent(QPaintEvent *e)
 	Q_UNUSED(e)
 
 	QPainter painter(this);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
-	//background
-	painter.setPen(Qt::NoPen);
-	painter.setBrush(hovered ? hoverColor : Qt::transparent);
-	painter.drawRoundedRect(rect(), 5, 5);
+	QRectF backgroundRect = rect();
+	backgroundRect.adjust(borderWidth / 2.0, borderWidth / 2.0, -borderWidth / 2.0, -borderWidth / 2.0);
+	painter.setPen(QPen(borderColor, borderWidth));
+	painter.setBrush(hovered ? hoverColor : backgroundColor);
+	painter.drawRoundedRect(backgroundRect, cornerRadius, cornerRadius);
 
-	//pixmap
-	painter.drawPixmap(0, 0, 30, 30, pixmap);
+	const int iconExtent = qMax(16, height() - spacing);
+	const QRect iconRect(spacing / 2, (height() - iconExtent) / 2, iconExtent, iconExtent);
+	painter.drawPixmap(iconRect, pixmap);
 
-	//text
 	painter.setFont(font());
+	const int textLeft = iconRect.right() + spacing;
+	const int textWidth = qMax(0, width() - textLeft - spacing);
+	const int halfHeight = height() / 2;
+	const QFontMetrics metrics(font());
 
 	painter.setPen(textColor);
-	painter.drawText(40, 13, fileName);
+	painter.drawText(
+		QRect(textLeft, 0, textWidth, halfHeight),
+		Qt::AlignLeft | Qt::AlignBottom,
+		metrics.elidedText(fileName, Qt::ElideMiddle, textWidth)
+	);
 
 	painter.setPen(textSecondary);
-	painter.drawText(40, 27, QString::number(fileSize, 'f', 2) + tr(" Kb"));
+	painter.drawText(
+		QRect(textLeft, halfHeight, textWidth, height() - halfHeight),
+		Qt::AlignLeft | Qt::AlignTop,
+		QString::number(fileSize, 'f', 2) + tr(" Kb")
+	);
 }
 
 void AttachmentButtonWidget::enterEvent(QEvent *)
 {
 	hovered = true;
+	update();
 }
 
 void AttachmentButtonWidget::leaveEvent(QEvent *)
 {
 	hovered = false;
+	update();
 }
 
 void AttachmentButtonWidget::applyTheme(const ThemeData &theme)
@@ -92,8 +111,12 @@ void AttachmentButtonWidget::applyTheme(const ThemeData &theme)
 
 	textSecondary = theme.colors.textSecondary;
 
-	hoverColor = theme.colors.textPrimary;
-	hoverColor.setAlphaF(0.35f);
+	backgroundColor = QColor(0, 0, 0, 100);
+	hoverColor = theme.colors.surfaceHover;
+	borderColor = theme.colors.border;
+	cornerRadius = theme.radii.medium;
+	borderWidth = theme.metrics.borderWidth;
+	spacing = theme.metrics.spacingSm;
 
 	update();
 }

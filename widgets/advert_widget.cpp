@@ -13,17 +13,9 @@
 
 
 AdvertWidget::AdvertWidget(QWidget *parent)
-	: QWidget{parent}
+	: ThemedWidget{parent}
 {
 	setLayout(new QHBoxLayout(this));
-	setCursor(Qt::PointingHandCursor);
-}
-
-AdvertWidget::AdvertWidget(QColor a, QColor b, QWidget *parent)
-	: AdvertWidget{parent}
-{
-	background.a = a;
-	background.b = b;
 	setCursor(Qt::PointingHandCursor);
 
 	anim = new QPropertyAnimation(this, "offset");
@@ -34,10 +26,14 @@ AdvertWidget::AdvertWidget(QColor a, QColor b, QWidget *parent)
 	anim->setLoopCount(-1);
 	anim->setEasingCurve(QEasingCurve::InOutSine);
 	anim->start();
+
+	onThemeChanged(theme());
 }
 
 void AdvertWidget::paintEvent(QPaintEvent *)
 {
+	const ThemeData& t = theme();
+
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 
@@ -46,15 +42,24 @@ void AdvertWidget::paintEvent(QPaintEvent *)
 			rect().bottomRight() + QPointF(rect().width() * m_offset, 0)
 	);
 
-	gradient.setColorAt(0.0, background.a);
-	gradient.setColorAt(1.0, background.b);
+	gradient.setColorAt(0.0, t.colors.accentPressed);
+	gradient.setColorAt(1.0, t.colors.accentHover);
 
-	painter.fillRect(rect(), gradient);
+	QRectF backgroundRect = rect();
+	backgroundRect.adjust(
+		t.metrics.borderWidth / 2.0,
+		t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0,
+		-t.metrics.borderWidth / 2.0
+	);
+	painter.setPen(QPen(t.colors.borderStrong, t.metrics.borderWidth));
+	painter.setBrush(gradient);
+	painter.drawRoundedRect(backgroundRect, t.radii.medium, t.radii.medium);
 
-	painter.setPen(Qt::white);
+	painter.setPen(t.colors.textOnAccent);
 
-	QFont titleFont("Segoe UI", 20, QFont::Bold);
-	QFont descriptionFont("Segoe UI", 12, QFont::Normal);
+	QFont titleFont = t.fonts.title;
+	QFont descriptionFont = t.fonts.base;
 
 	painter.setFont(titleFont);
 	painter.drawText(rect(), Qt::AlignHCenter | Qt::AlignTop, title);
@@ -66,13 +71,14 @@ void AdvertWidget::paintEvent(QPaintEvent *)
 	if (linkText.isEmpty() == false)
 	{
 		QPen pen;
-		pen.setColor(Qt::white);
-		pen.setWidth(2);
+		pen.setColor(t.colors.textOnAccent);
+		pen.setWidth(t.metrics.borderWidth);
 		painter.setPen(pen);
 
-		QFontMetrics fm(descriptionFont);
+		painter.setFont(t.fonts.button);
+		QFontMetrics fm(t.fonts.button);
 		QString elidedText = fm.elidedText(linkText, Qt::ElideMiddle, rect().width() - 20);
-		int buttonHeight = 30;
+		int buttonHeight = t.metrics.smallControlHeight;
 		int buttonWidth = fm.horizontalAdvance(elidedText) + 20;
 		QRect buttonRect = QRect(
 			(rect().width() - buttonWidth) / 2,
@@ -81,10 +87,12 @@ void AdvertWidget::paintEvent(QPaintEvent *)
 			buttonHeight
 		);
 		QPainterPath path;
-		path.addRoundedRect(buttonRect, 10, 10);
-		//painter.fillPath(path, Qt::white);
+		path.addRoundedRect(buttonRect, t.radii.medium, t.radii.medium);
+		QColor buttonBackground = t.colors.panelBackground;
+		buttonBackground.setAlpha(90);
+		painter.fillPath(path, buttonBackground);
 		painter.drawText(buttonRect, Qt::AlignCenter, elidedText);
-		painter.drawPath(path.translated(0, 2));
+		painter.drawPath(path);
 	}
 }
 
@@ -102,26 +110,31 @@ void AdvertWidget::mouseReleaseEvent(QMouseEvent *event)
 void AdvertWidget::setTitle(const QString& title)
 {
 	this->title = title;
+	update();
 }
 
 void AdvertWidget::setDescription(const QString& description)
 {
 	this->description = description;
+	update();
 }
 
 void AdvertWidget::setLink(const QString& link)
 {
 	this->link = link;
+	update();
 }
 
 void AdvertWidget::setLinkText(const QString& linkText)
 {
 	this->linkText = linkText;
+	update();
 }
 
 void AdvertWidget::setImage(const QImage& image)
 {
 	this->image = image;
+	update();
 }
 
 
@@ -136,5 +149,12 @@ void AdvertWidget::setOffset(qreal newOffset)
 		return;
 	m_offset = newOffset;
 	emit offsetChanged();
+	update();
+}
+
+void AdvertWidget::onThemeChanged(const ThemeData &theme)
+{
+	setFont(theme.fonts.base);
+	updateGeometry();
 	update();
 }

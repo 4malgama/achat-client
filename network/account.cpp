@@ -7,8 +7,6 @@
 #include "../utils/image_utils.h"
 #include "settings/settings_manager.h"
 #include "../types/classes.h"
-#include "../secure/certification/certification_manager.h"
-#include "../secure/encryption/aes.h"
 #include "../widgets/search_result_widget.h"
 #include "../widgets/search_widget.h"
 
@@ -25,7 +23,7 @@
 
 
 static QVector<QString> vProtocols = {
-	"1.0"
+	"2.0"
 };
 
 static bool CheckAvailabilityProtocol(const QString& protocol)
@@ -64,7 +62,22 @@ namespace console
 Account::Account(QObject *parent)
 	: Network{parent}
 {
+	handshakeTimer.setSingleShot(true);
+	handshakeTimer.setInterval(15000);
 
+	connect(
+		&handshakeTimer,
+		&QTimer::timeout,
+		this,
+		[this]()
+		{
+			if (handshakeState == HandshakeState::WaitingServerHello
+				|| handshakeState == HandshakeState::WaitingServerReady)
+			{
+				handShakeFailed();
+			}
+		}
+	);
 }
 
 Account::~Account()
@@ -127,34 +140,44 @@ void Account::registration(const QString &login, const QString &password)
 
 void Account::readEvent(IPacket* packet)
 {
-	if (ServerHelloPacket* P = dynamic_cast<ServerHelloPacket*>(packet))
+	if (!packet || !isConnected())
+		return;
+
+	if (auto* hello = dynamic_cast<ServerHelloPacket*>(packet))
 	{
-		bool ok = false;
-		if (CheckAvailabilityProtocol(P->protocol))
+		if (handshakeState != HandshakeState::WaitingServerHello
+			|| !CheckAvailabilityProtocol(hello->protocol))
 		{
-			if (CertificationManager::verifyCertificate(P->certificate.toUtf8()))
-			{
-				QByteArray key = QByteArray::fromBase64(P->key.toUtf8());
-				QByteArray iv = QByteArray::fromBase64(P->iv.toUtf8());
-				if (key.size() == 32 && iv.size() == 16)
-				{
-					this->aes = new AES(AES::CBC_256);
-					this->aes->setKey(key);
-					this->aes->setIV(iv);
-					ok = true;
-					encryption = true;
-				}
-			}
+			handShakeFailed();
+			return;
 		}
-		if (!ok) handShakeFailed();
-		else handShakeSuccessful();
+
+		handShakeSuccessful();
 		return;
 	}
-	else if (dynamic_cast<ServerReadyPacket*>(packet))
+
+	if (dynamic_cast<ServerReadyPacket*>(packet))
 	{
+		if (handshakeState != HandshakeState::WaitingServerReady)
+		{
+			handShakeFailed();
+			return;
+		}
+
+		handshakeTimer.stop();
+		handshakeState = HandshakeState::Ready;
+
 		authorization();
+		return;
 	}
-	else if (AuthRejectPacket* P = dynamic_cast<AuthRejectPacket*>(packet))
+
+	if (handshakeState != HandshakeState::Ready)
+	{
+		handShakeFailed();
+		return;
+	}
+
+	if (AuthRejectPacket* P = dynamic_cast<AuthRejectPacket*>(packet))
 	{
 		client::window->showMessage(P->reason, 2);
 		client::window->disableSideButtons();
@@ -635,20 +658,36 @@ void Account::onLoginSuccess(const QString& token)
 
 void Account::handShake()
 {
+	handshakeState = HandshakeState::WaitingServerHello;
+	handshakeTimer.start();
+
 	ClientHelloPacket packet;
 	send(&packet);
 }
 
 void Account::handShakeFailed()
 {
+	handshakeTimer.stop();
+	handshakeState = HandshakeState::Offline;
+
 	tryDisconnect();
-	client::window->showMessage(tr("An error occurred while trying to\nestablish a secure connection."), 2);
+
+	client::window->closeAuthWindow();
+	client::window->disableSideButtons();
+
+	client::window->showMessage(
+		tr("Application handshake failed.\n"
+		   "The server response is invalid, incompatible, or timed out."),
+		2
+	);
 }
 
 void Account::handShakeSuccessful()
 {
+	handshakeState = HandshakeState::WaitingServerReady;
+
 	ClientReadyPacket packet;
-	sendOpen(&packet);
+	send(&packet);
 }
 
 void Account::authorization()
@@ -685,9 +724,18 @@ void Account::onReceiveTyping(quint64 chatId, bool isTyping)
 
 void Account::disconnectEvent()
 {
-	ServerMessageWidget::open(client::window, tr("Disconnected."));
+	handshakeTimer.stop();
+	handshakeState = HandshakeState::Offline;
+
 	client::window->closeAuthWindow();
 	client::window->disableSideButtons();
+
+	const QString reason = lastNetworkError();
+
+	ServerMessageWidget::open(
+		client::window,
+		reason.isEmpty() ? tr("Disconnected.") : reason
+	);
 }
 
 void Account::connectedEvent()
@@ -697,6 +745,16 @@ void Account::connectedEvent()
 
 void Account::failConnect()
 {
-	ServerMessageWidget::open(client::window, tr("Connection timeout."));
+	handshakeTimer.stop();
+	handshakeState = HandshakeState::Offline;
+
+	client::window->closeAuthWindow();
 	client::window->disableSideButtons();
+
+	const QString reason = lastNetworkError();
+
+	ServerMessageWidget::open(
+		client::window,
+		reason.isEmpty() ? tr("Connection failed.") : reason
+	);
 }

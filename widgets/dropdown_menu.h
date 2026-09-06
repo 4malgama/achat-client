@@ -18,7 +18,6 @@ public:
 
 protected:
 	void showEvent(QShowEvent*) override;
-	void paintEvent(QPaintEvent*) override;
 
 	QPropertyAnimation* animation;
 };
